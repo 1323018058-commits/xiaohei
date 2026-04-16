@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+*.env.local
+
+# Docker volumes
+docker/postgres/data/
+docker/redis/data/
+
+# Backend
+backend/output/
+backend/data/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite3
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Celery
+celerybeat-schedule
+celerybeat-schedule.db
+
+# Logs
+*.log
+logs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Generated
+*.csv
+*.xlsx
+*.xlsm
+*.har

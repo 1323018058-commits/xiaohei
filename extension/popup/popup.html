@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=320">
+    <title>小黑ERP Takealot 助手</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            width: 320px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(180deg,#f5f9ff 0%,#edf4ff 100%);
+            color: #13233d;
+        }
+        .popup-container { padding: 16px; }
+        .header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 14px 14px;
+            border: 1px solid #dce7fb;
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(247,250,255,.92));
+            box-shadow: 0 12px 28px rgba(91,121,182,.10);
+        }
+        .header-icon {
+            width: 36px; height: 36px; border-radius: 12px;
+            background: linear-gradient(135deg, #2b67f6, #1f4fd8);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: #fff;
+        }
+        .header-text h1 {
+            font-size: 15px; font-weight: 700; color: #13233d;
+        }
+        .header-text p {
+            font-size: 11px; color: #6d7f9e; margin-top: 2px;
+        }
+        .status-section { padding: 14px 0 10px; }
+        .status-card {
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 14px;
+            border-radius: 18px;
+            background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(247,250,255,.90));
+            border: 1px solid #dce7fb;
+        }
+        .status-card.connected { border-color: rgba(43,103,246,.16); }
+        .status-dot {
+            width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+        }
+        .status-dot.green { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,.35); }
+        .status-dot.red { background: #ef4444; }
+        .status-info { flex: 1; }
+        .status-label { font-size: 13px; font-weight: 700; }
+        .status-detail { font-size: 11px; color: #6d7f9e; margin-top: 3px; line-height: 1.6; }
+        .store-detail { font-size: 11px; color: #6d7f9e; margin-top: 4px; line-height: 1.6; }
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 6px 0 12px;
+        }
+        .stat-item {
+            text-align: center;
+            border-radius: 16px;
+            border: 1px solid #dce7fb;
+            background: linear-gradient(180deg, rgba(255,255,255,.94), rgba(247,250,255,.90));
+            padding: 12px 10px;
+        }
+        .stat-value { font-size: 20px; font-weight: 800; color: #2b67f6; }
+        .stat-label { font-size: 11px; color: #6d7f9e; margin-top: 3px; }
+        .error-msg {
+            font-size: 11px; color: #ef4444; text-align: center; padding: 6px 0 10px; line-height: 1.6;
+        }
+        .history-section {
+            margin-top: 6px;
+            padding: 12px;
+            border-radius: 18px;
+            border: 1px solid #dce7fb;
+            background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(247,250,255,.92));
+            box-shadow: 0 10px 22px rgba(91,121,182,.08);
+        }
+        .history-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .history-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #13233d;
+        }
+        .history-hint {
+            font-size: 10px;
+            color: #6d7f9e;
+        }
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .history-item {
+            border-radius: 14px;
+            border: 1px solid #e3ebfb;
+            background: rgba(255,255,255,.88);
+            padding: 10px 11px;
+        }
+        .history-item.failed {
+            border-color: rgba(239,68,68,.20);
+            background: rgba(254,242,242,.82);
+        }
+        .history-item.processing,
+        .history-item.queued {
+            border-color: rgba(245,158,11,.22);
+            background: rgba(255,251,235,.82);
+        }
+        .history-topline {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+        .history-main {
+            min-width: 0;
+            font-size: 11px;
+            font-weight: 600;
+            color: #13233d;
+            line-height: 1.45;
+            word-break: break-word;
+        }
+        .history-badge {
+            flex-shrink: 0;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: #e8efff;
+            color: #2b67f6;
+        }
+        .history-badge.failed {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        .history-badge.processing,
+        .history-badge.queued {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        .history-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+            font-size: 10px;
+            color: #6d7f9e;
+            line-height: 1.5;
+        }
+        .history-note {
+            margin-top: 6px;
+            font-size: 10px;
+            line-height: 1.5;
+            color: #dc2626;
+        }
+        .history-empty {
+            font-size: 11px;
+            color: #6d7f9e;
+            text-align: center;
+            padding: 6px 2px 2px;
+        }
+        .actions { padding-top: 6px; }
+        .btn {
+            display: block; width: 100%; padding: 11px 16px;
+            border: none; border-radius: 16px;
+            font-size: 13px; font-weight: 600; cursor: pointer;
+            transition: all 0.2s; text-align: center; text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2b67f6, #1f4fd8);
+            color: white;
+        }
+        .btn-primary:hover { opacity: .92; transform: translateY(-1px); box-shadow: 0 12px 24px rgba(43,103,246,.22); }
+        .btn-outline {
+            background: rgba(255,255,255,.96);
+            color: #6d7f9e;
+            border: 1px solid #d8e3f8;
+        }
+        .btn-outline:hover { background: #f7faff; }
+        .btn + .btn { margin-top: 8px; }
+        .footer { padding-top: 10px; text-align: center; }
+        .footer p { font-size: 10px; color: #9ca3af; }
+    </style>
+</head>
+<body>
+    <div class="popup-container">
+        <div class="header">
+            <div class="header-icon">⚡</div>
+            <div class="header-text">
+                <h1>小黑ERP Takealot 助手</h1>
+                <p>利润测算 + 页面一键上架</p>
+            </div>
+        </div>
+
+        <div class="status-section">
+            <div id="status-card" class="status-card disconnected">
+                <div id="status-dot" class="status-dot red"></div>
+                <div class="status-info">
+                    <div id="status-label" class="status-label">未连接</div>
+                    <div id="status-detail" class="status-detail">请先连接小黑 ERP</div>
+                    <div id="store-detail" class="store-detail" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="stats-section" class="stats" style="display:none;">
+            <div class="stat-item">
+                <div id="count-value" class="stat-value">0</div>
+                <div class="stat-label">今日操作</div>
+            </div>
+            <div class="stat-item">
+                <div id="list-count-value" class="stat-value">0</div>
+                <div class="stat-label">今日上架</div>
+            </div>
+        </div>
+
+        <div id="error-section" class="error-msg" style="display:none;"></div>
+
+        <div id="history-section" class="history-section" style="display:none;">
+            <div class="history-header">
+                <div>
+                    <div class="history-title">最近上架记录</div>
+                    <div class="history-hint">展示最近几条动作与失败原因</div>
+                </div>
+                <div id="history-count" class="history-hint"></div>
+            </div>
+            <div id="history-list" class="history-list"></div>
+        </div>
+
+        <div class="actions">
+            <button id="connect-btn" class="btn btn-primary">🔗 连接小黑ERP</button>
+            <button id="open-erp-btn" class="btn btn-outline" style="display:none;">打开 ERP</button>
+            <button id="disconnect-btn" class="btn btn-outline" style="display:none;">断开连接</button>
+        </div>
+
+        <div class="footer">
+            <p>v1.2.0 · 小黑ERP Takealot 助手</p>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>

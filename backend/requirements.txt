@@ -1,0 +1,50 @@
+# FastAPI + Uvicorn
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+uvloop==0.21.0
+httptools==0.6.4
+python-multipart==0.0.18
+
+# SQLAlchemy + PostgreSQL
+sqlalchemy[asyncio]==2.0.36
+asyncpg==0.30.0
+psycopg2-binary==2.9.10
+alembic==1.14.1
+greenlet==3.1.1
+
+# Redis
+redis[hiredis]==5.2.1
+
+# Celery
+celery[redis]==5.4.0
+flower==2.0.1
+
+# Auth + Security
+pyjwt==2.10.1
+passlib[bcrypt]==1.7.4
+cryptography==44.0.0
+
+# HTTP client
+httpx==0.28.1
+aiofiles==24.1.0
+
+# Pydantic
+pydantic==2.10.4
+pydantic-settings==2.7.1
+
+# Utilities
+python-dateutil==2.9.0
+openpyxl==3.1.5
+orjson==3.10.13
+Pillow==11.1.0
+imagehash==4.3.2
+
+# Monitoring
+structlog==24.4.0
+
+# Testing
+pytest==8.3.4
+pytest-asyncio==0.25.0
+
+# Excel processing (listing module)
+xlsxwriter==3.2.0
