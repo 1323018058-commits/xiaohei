@@ -458,7 +458,10 @@ class ListingService:
         request: ListingSubmissionCreateRequest,
         request_headers: dict[str, str] | None = None,
     ) -> ListingSubmissionCreateResponse:
-        preview_request = ListingLoadsheetPreviewRequest(store_id=store_id, **request.model_dump())
+        preview_request = ListingLoadsheetPreviewRequest(
+            store_id=store_id,
+            **request.model_dump(exclude={"submit_immediately"}),
+        )
         prepared = self._prepare_loadsheet_preview(actor, preview_request)
         preview = prepared["preview"]
         if not preview["valid"]:
@@ -533,19 +536,25 @@ class ListingService:
                 }
             )
             if submission.get("reused_existing"):
-                existing_payload = submission.get("loadsheet_payload") or {}
-                return ListingSubmissionCreateResponse(
-                    submission_id=submission["id"],
+                immediate_task = None
+                if request.submit_immediately and submission.get("task_id") and not submission.get("takealot_submission_id"):
+                    # Idempotent retries should still give the user an immediate
+                    # Takealot answer. Reusing the original task avoids creating
+                    # duplicate tasks, while the submission row claim still gates
+                    # the external loadsheet POST.
+                    immediate_task = self._process_listing_submission_task_inline(str(submission["task_id"]))
+                    submission = self._get_submission_or_current(submission)
+                return self._to_submission_create_response(
+                    submission=submission,
                     task_id=submission.get("task_id"),
-                    status=submission["status"],
-                    stage=submission["stage"],
-                    message="Existing listing submission reused by idempotency key.",
+                    message=self._submission_create_message(
+                        submission=submission,
+                        task=immediate_task,
+                        fallback="Existing listing submission reused by idempotency key.",
+                    ),
                     reused_existing=True,
-                    loadsheet_asset=self._to_loadsheet_asset(existing_payload["loadsheet_asset"])
-                    if existing_payload.get("loadsheet_asset")
-                    else None,
-                    validation_issues=existing_payload.get("validation_issues") or [],
-                    warnings=existing_payload.get("warnings") or [],
+                    submit_immediately=request.submit_immediately,
+                    task=immediate_task,
                 )
             generated_asset = self.catalog_repository.insert_listing_asset(
                 tenant_id=prepared["tenant_id"],
@@ -611,15 +620,25 @@ class ListingService:
         except ListingCatalogUnavailable as exc:
             raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=exc.message) from exc
 
-        return ListingSubmissionCreateResponse(
-            submission_id=submission["id"],
+        immediate_task = None
+        if request.submit_immediately:
+            # The API request now performs the first Takealot side effect inline
+            # so the UI can show a real submitted/failed result. The queued task
+            # remains the durable audit record and retry handle; row-level claims
+            # below prevent duplicate external POSTs if a worker races this call.
+            immediate_task = self._process_listing_submission_task_inline(task["id"])
+            submission = self._get_submission_or_current(submission)
+
+        return self._to_submission_create_response(
+            submission=submission,
             task_id=task["id"],
-            status=submission["status"],
-            stage=submission["stage"],
-            message="Listing submission queued for worker loadsheet submit.",
-            loadsheet_asset=loadsheet_payload["loadsheet_asset"],
-            validation_issues=loadsheet_payload["validation_issues"],
-            warnings=loadsheet_payload["warnings"],
+            message=self._submission_create_message(
+                submission=submission,
+                task=immediate_task,
+                fallback="Listing submission queued for worker loadsheet submit.",
+            ),
+            submit_immediately=request.submit_immediately,
+            task=immediate_task,
         )
 
     def list_listing_submissions(
@@ -947,6 +966,45 @@ class ListingService:
             worker_id=LISTING_WORKER_SOURCE_ID,
         )
         return [self.process_listing_task(task["id"], adapter_factory=adapter_factory) for task in claimed_tasks]
+
+    def _process_listing_submission_task_inline(self, task_id: str) -> dict[str, Any] | None:
+        task = app_state.get_task(task_id)
+        if task is None:
+            return None
+        if task.get("status") == "succeeded":
+            return task
+        if task.get("status") in {"cancelled", "dead_letter"}:
+            return task
+
+        now = datetime.now(UTC)
+        lease_token = f"api-inline:{uuid4().hex}"
+        leased = app_state.update_task(
+            task_id,
+            status="leased",
+            stage="leased",
+            progress_percent=max(int(task.get("progress_percent") or 0), 1),
+            started_at=task.get("started_at") or now,
+            finished_at=None,
+            last_heartbeat_at=now,
+            lease_owner="listing-api-inline",
+            lease_token=lease_token,
+            lease_expires_at=now + timedelta(seconds=LISTING_LOADSHEET_SUBMIT_CLAIM_SECONDS),
+            error_code=None,
+            error_msg=None,
+            error_details=None,
+        )
+        app_state.add_task_event(
+            task_id=task_id,
+            event_type="task.inline_submit_started",
+            from_status=str(task.get("status") or ""),
+            to_status="leased",
+            stage="leased",
+            message="Listing submission is being submitted to Takealot inline.",
+            details={"target_id": task.get("target_id")},
+            source="api",
+            source_id="listing-api-inline",
+        )
+        return self.process_listing_submission_task(str(leased["id"]))
 
     def process_listing_task(
         self,
@@ -1319,6 +1377,31 @@ class ListingService:
             )
 
         secrets = self._credential_secrets(credentials_payload)
+        try:
+            loadsheet_asset = self._ensure_official_loadsheet_asset(
+                submission=submission,
+                current_asset=loadsheet_asset,
+                api_key=str(credentials_payload.get("api_key") or ""),
+            )
+        except ListingLoadsheetSubmitError as exc:
+            return self._fail_submission_task(
+                task=task,
+                submission=submission,
+                error_code="LISTING_OFFICIAL_LOADSHEET_GENERATION_FAILED",
+                error_msg=exc.message,
+                official_response=exc.official_response,
+                claim_token=claim_token,
+                secrets=secrets,
+            )
+        except ListingCatalogUnavailable as exc:
+            return self._fail_submission_task(
+                task=task,
+                submission=submission,
+                error_code="LISTING_OFFICIAL_LOADSHEET_ASSET_FAILED",
+                error_msg=exc.message,
+                claim_token=claim_token,
+                secrets=secrets,
+            )
         try:
             submit_result = self.loadsheet_service.submit_loadsheet_to_takealot(
                 loadsheet_asset=loadsheet_asset,
@@ -2088,6 +2171,65 @@ class ListingService:
             finalized_at=submission.get("finalized_at"),
         )
 
+    def _to_submission_create_response(
+        self,
+        *,
+        submission: dict[str, Any],
+        task_id: str | None,
+        message: str,
+        reused_existing: bool = False,
+        submit_immediately: bool = False,
+        task: dict[str, Any] | None = None,
+    ) -> ListingSubmissionCreateResponse:
+        loadsheet_payload = submission.get("loadsheet_payload") or {}
+        asset_payload = loadsheet_payload.get("loadsheet_asset")
+        takealot_submission_id = str(submission.get("takealot_submission_id") or "")
+        task_status = str((task or {}).get("status") or "")
+        submit_succeeded: bool | None = None
+        if submit_immediately:
+            if takealot_submission_id:
+                submit_succeeded = True
+            elif task_status == "failed":
+                submit_succeeded = False
+
+        return ListingSubmissionCreateResponse(
+            submission_id=submission["id"],
+            task_id=task_id,
+            status=submission["status"],
+            stage=submission["stage"],
+            message=message,
+            reused_existing=reused_existing,
+            submit_immediately=submit_immediately,
+            submit_succeeded=submit_succeeded,
+            takealot_submission_id=takealot_submission_id,
+            official_status=str(submission.get("official_status") or ""),
+            error_code=submission.get("error_code") or (task or {}).get("error_code"),
+            error_message=submission.get("error_message") or (task or {}).get("error_msg"),
+            loadsheet_asset=self._to_loadsheet_asset(asset_payload) if asset_payload else None,
+            validation_issues=loadsheet_payload.get("validation_issues") or [],
+            warnings=loadsheet_payload.get("warnings") or [],
+        )
+
+    def _submission_create_message(
+        self,
+        *,
+        submission: dict[str, Any],
+        task: dict[str, Any] | None,
+        fallback: str,
+    ) -> str:
+        takealot_submission_id = str(submission.get("takealot_submission_id") or "")
+        if takealot_submission_id:
+            return "Takealot loadsheet submitted successfully."
+        if task and task.get("status") == "failed":
+            return str(task.get("error_msg") or submission.get("error_message") or "Takealot loadsheet submit failed.")
+        return fallback
+
+    def _get_submission_or_current(self, submission: dict[str, Any]) -> dict[str, Any]:
+        try:
+            return self.catalog_repository.get_listing_submission(submission["id"]) or submission
+        except ListingCatalogUnavailable:
+            return submission
+
     @staticmethod
     def _to_submission_status_item(
         submission: dict[str, Any],
@@ -2147,7 +2289,7 @@ class ListingService:
     def _loadsheet_submission_file_name(submission: dict[str, Any]) -> str:
         safe_sku = re.sub(r"[^A-Za-z0-9_.-]+", "-", str(submission.get("sku") or "")).strip("-") or "listing"
         timestamp = datetime.now(UTC).strftime("%Y%m%d%H%M%S")
-        return f"{safe_sku}_{timestamp}.xlsx"
+        return f"{safe_sku}_{timestamp}.xlsm"
 
     @staticmethod
     def _submission_idempotency_key(
@@ -2216,6 +2358,110 @@ class ListingService:
             if value is not None:
                 official_response[key] = ListingLoadsheetService.sanitize_official_response(value, secrets=secrets)
         return ListingLoadsheetService.sanitize_official_response(official_response, secrets=secrets)
+
+    def _ensure_official_loadsheet_asset(
+        self,
+        *,
+        submission: dict[str, Any],
+        current_asset: dict[str, Any] | None,
+        api_key: str,
+    ) -> dict[str, Any]:
+        if self.loadsheet_service.is_official_template_asset(current_asset):
+            return current_asset or {}
+
+        category, catalog_ready = self.catalog_repository.get_category_requirements(int(submission["category_id"]))
+        if category is None and not catalog_ready:
+            raise ListingLoadsheetSubmitError(CATALOG_IMPORT_REQUIRED_MESSAGE)
+        if category is None:
+            raise ListingLoadsheetSubmitError("Takealot category not found for official loadsheet generation.")
+
+        category["path_en"] = self._category_path_en(category)
+        category["path_zh"] = self.category_matcher.path_zh(category)
+        content_payload = submission.get("content_payload") if isinstance(submission.get("content_payload"), dict) else {}
+        weight_g = content_payload.get("weight_g")
+        if weight_g in (None, "") and submission.get("weight_kg") is not None:
+            try:
+                weight_g = float(submission["weight_kg"]) * 1000
+            except (TypeError, ValueError):
+                weight_g = None
+
+        request = ListingLoadsheetPreviewRequest(
+            store_id=str(submission["store_id"]),
+            category_id=int(submission["category_id"]),
+            brand_id=str(submission.get("brand_id") or content_payload.get("brand_id") or ""),
+            brand_name=str(submission.get("brand_name") or content_payload.get("brand_name") or ""),
+            sku=str(submission.get("sku") or content_payload.get("sku") or ""),
+            barcode=str(submission.get("barcode") or content_payload.get("barcode") or ""),
+            title=str(submission.get("title") or content_payload.get("title") or ""),
+            subtitle=str(submission.get("subtitle") or content_payload.get("subtitle") or ""),
+            description=str(submission.get("description") or content_payload.get("description") or ""),
+            whats_in_the_box=str(submission.get("whats_in_the_box") or content_payload.get("whats_in_the_box") or ""),
+            selling_price=submission.get("selling_price") or content_payload.get("selling_price"),
+            rrp=submission.get("rrp") or content_payload.get("rrp"),
+            stock_quantity=int(submission.get("stock_quantity") or content_payload.get("stock_quantity") or 0),
+            minimum_leadtime_days=int(
+                submission.get("minimum_leadtime_days") or content_payload.get("minimum_leadtime_days") or 0
+            ),
+            seller_warehouse_id=str(
+                submission.get("seller_warehouse_id") or content_payload.get("seller_warehouse_id") or ""
+            ),
+            length_cm=submission.get("length_cm") or content_payload.get("length_cm"),
+            width_cm=submission.get("width_cm") or content_payload.get("width_cm"),
+            height_cm=submission.get("height_cm") or content_payload.get("height_cm"),
+            weight_g=weight_g,
+            image_urls=submission.get("image_urls") or content_payload.get("image_urls") or [],
+            dynamic_attributes=submission.get("dynamic_attributes") or content_payload.get("dynamic_attributes") or {},
+        )
+        allowed_attributes = self._normalize_attribute_definitions(
+            category.get("required_attributes") or [],
+            category.get("optional_attributes") or [],
+            [],
+            [],
+        )
+        brand = None
+        if request.brand_id or request.brand_name:
+            brand = {"brand_id": request.brand_id or None, "brand_name": request.brand_name}
+
+        preview = self.loadsheet_service.build_preview(
+            request=request,
+            category=category,
+            allowed_attributes=allowed_attributes,
+            assets=[],
+            brand=brand,
+            brand_catalog_ready=True,
+            api_key=api_key,
+        )
+        if not preview.get("valid"):
+            issue_messages = [
+                str(issue.get("message") or issue)
+                for issue in preview.get("issues") or []
+                if isinstance(issue, dict)
+            ]
+            raise ListingLoadsheetSubmitError(
+                "Official Takealot loadsheet generation failed: " + "; ".join(issue_messages[:3])
+            )
+
+        generated_asset = self.catalog_repository.insert_listing_asset(
+            tenant_id=str(submission["tenant_id"]),
+            store_id=str(submission["store_id"]),
+            submission_id=str(submission["id"]),
+            asset=self.loadsheet_service.asset_payload_for_generated_loadsheet(preview["loadsheet_asset"] or {}),
+        )
+        loadsheet_payload = dict(submission.get("loadsheet_payload") or {})
+        loadsheet_payload.update(
+            {
+                "loadsheet_asset": self._to_loadsheet_asset(generated_asset),
+                "validation_issues": preview.get("issues") or [],
+                "warnings": preview.get("warnings") or [],
+                "missing_required_fields": preview.get("missing_required_fields") or [],
+                "generated_fields": preview.get("generated_fields") or loadsheet_payload.get("generated_fields") or {},
+            }
+        )
+        self.catalog_repository.update_listing_submission_loadsheet_payload(
+            submission_id=str(submission["id"]),
+            loadsheet_payload=loadsheet_payload,
+        )
+        return generated_asset
 
     @staticmethod
     def _extract_offer_id(payload: dict[str, Any]) -> str:

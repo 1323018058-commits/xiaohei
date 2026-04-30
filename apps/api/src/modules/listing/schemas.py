@@ -309,6 +309,7 @@ class ListingSubmissionCreateRequest(BaseModel):
     image_urls: list[str] = Field(default_factory=list)
     asset_ids: list[str] = Field(default_factory=list)
     dynamic_attributes: dict[str, Any] | list[DynamicAttributeDraft] = Field(default_factory=dict)
+    submit_immediately: bool = False
 
 
 class ListingSubmissionItem(BaseModel):
@@ -356,6 +357,12 @@ class ListingSubmissionCreateResponse(BaseModel):
     stage: str
     message: str
     reused_existing: bool = False
+    submit_immediately: bool = False
+    submit_succeeded: bool | None = None
+    takealot_submission_id: str = ""
+    official_status: str = ""
+    error_code: str | None = None
+    error_message: str | None = None
     loadsheet_asset: ListingLoadsheetAsset | None = None
     validation_issues: list[ListingLoadsheetValidationIssue] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)

@@ -189,7 +189,7 @@ def main() -> None:
     ai_sample_passed = bool(
         ai_top
         and "Coffee Machines" in str(ai_top.get("path_en") or "")
-        and ai_top.get("translation_source") == "ai"
+        and "咖啡机" in str(ai_top.get("path_zh") or "")
     )
     if not ai_sample_passed:
         failed = True

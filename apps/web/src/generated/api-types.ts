@@ -2626,6 +2626,11 @@ export interface components {
             asset_ids?: string[];
             /** Dynamic Attributes */
             dynamic_attributes?: Record<string, never> | components["schemas"]["DynamicAttributeDraft"][];
+            /**
+             * Submit Immediately
+             * @default false
+             */
+            submit_immediately: boolean;
         };
         /** ListingSubmissionCreateResponse */
         ListingSubmissionCreateResponse: {
@@ -2644,6 +2649,27 @@ export interface components {
              * @default false
              */
             reused_existing: boolean;
+            /**
+             * Submit Immediately
+             * @default false
+             */
+            submit_immediately: boolean;
+            /** Submit Succeeded */
+            submit_succeeded?: boolean | null;
+            /**
+             * Takealot Submission Id
+             * @default
+             */
+            takealot_submission_id: string;
+            /**
+             * Official Status
+             * @default
+             */
+            official_status: string;
+            /** Error Code */
+            error_code?: string | null;
+            /** Error Message */
+            error_message?: string | null;
             loadsheet_asset?: components["schemas"]["ListingLoadsheetAsset"] | null;
             /** Validation Issues */
             validation_issues?: components["schemas"]["ListingLoadsheetValidationIssue"][];

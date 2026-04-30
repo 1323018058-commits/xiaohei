@@ -9559,6 +9559,11 @@
               }
             ],
             "title": "Dynamic Attributes"
+          },
+          "submit_immediately": {
+            "type": "boolean",
+            "title": "Submit Immediately",
+            "default": false
           }
         },
         "type": "object",
@@ -9607,6 +9612,54 @@
             "type": "boolean",
             "title": "Reused Existing",
             "default": false
+          },
+          "submit_immediately": {
+            "type": "boolean",
+            "title": "Submit Immediately",
+            "default": false
+          },
+          "submit_succeeded": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submit Succeeded"
+          },
+          "takealot_submission_id": {
+            "type": "string",
+            "title": "Takealot Submission Id",
+            "default": ""
+          },
+          "official_status": {
+            "type": "string",
+            "title": "Official Status",
+            "default": ""
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          },
+          "error_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Message"
           },
           "loadsheet_asset": {
             "anyOf": [

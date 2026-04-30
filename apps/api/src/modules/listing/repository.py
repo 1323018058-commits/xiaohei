@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import math
 import re
+import time
 from datetime import datetime
+from difflib import SequenceMatcher
+from threading import RLock
 from typing import Any
 
 from psycopg import Error as PsycopgError
@@ -18,6 +21,7 @@ LOADSHEET_SUBMIT_CLAIMABLE_STAGES = {"queued", "failed", "submitting"}
 OFFER_FINALIZE_TERMINAL_STATUSES = {"offer_submitting", "offer_submitted"}
 JSON_EMBEDDING_FALLBACK_PAGE_SIZE = 1000
 JSON_EMBEDDING_FALLBACK_WARNING_THRESHOLD = 10000
+CATEGORY_CATALOG_CACHE_TTL_SECONDS = 300
 
 
 class ListingCatalogUnavailable(RuntimeError):
@@ -27,6 +31,10 @@ class ListingCatalogUnavailable(RuntimeError):
 
 
 class ListingCatalogRepository:
+    _category_catalog_cache_lock = RLock()
+    _category_catalog_cache_rows: list[dict[str, Any]] | None = None
+    _category_catalog_cache_loaded_at = 0.0
+
     def get_store_tenant_id(self, store_id: str) -> str | None:
         try:
             with get_db_session() as connection:
@@ -206,31 +214,28 @@ class ListingCatalogRepository:
     ) -> tuple[list[dict[str, Any]], bool]:
         terms = self._dedupe_terms(keywords)
         try:
-            with get_db_session() as connection:
-                with connection.cursor() as cursor:
-                    catalog_ready = self._has_rows(cursor, "takealot_categories")
-                    if not terms:
-                        return [], catalog_ready
-                    where_sql, where_params = self._category_recall_where(terms)
-                    rows = cursor.execute(
-                        f"""
-                        {self._category_select_sql()}
-                        {where_sql}
-                        order by
-                          {self._category_recall_rank_sql(terms)}
-                          c.path_en asc
-                        limit %s
-                        """,
-                        [
-                            *where_params,
-                            *self._category_recall_rank_params(terms),
-                            limit,
-                        ],
-                    ).fetchall()
+            catalog_rows = self._category_catalog_rows()
         except (PsycopgError, RuntimeError, TimeoutError) as exc:
             raise ListingCatalogUnavailable() from exc
 
-        return [self._normalize_category(row) for row in rows], catalog_ready
+        catalog_ready = bool(catalog_rows)
+        if not terms:
+            return [], catalog_ready
+        # Category matching is an interactive path. Keep the catalog source of
+        # truth in PostgreSQL, but avoid repeated multi-column ILIKE scans by
+        # searching a short-lived in-process snapshot of the imported catalog.
+        matches = [
+            row
+            for row in catalog_rows
+            if self._category_cache_matches_terms(row, terms)
+        ]
+        matches.sort(
+            key=lambda row: (
+                -self._category_cache_recall_rank(row, terms),
+                str(row.get("path_en") or ""),
+            )
+        )
+        return [dict(row) for row in matches[:limit]], catalog_ready
 
     def fuzzy_recall_category_candidates(
         self,
@@ -244,27 +249,29 @@ class ListingCatalogRepository:
             if len(term) >= 2 and not re.fullmatch(r"[\u4e00-\u9fff]+", term)
         ][:16]
         try:
-            with get_db_session() as connection:
-                with connection.cursor() as cursor:
-                    catalog_ready = self._has_rows(cursor, "takealot_categories")
-                    if not terms:
-                        return [], catalog_ready
-                    score_sql, score_params = self._category_fuzzy_score_sql(terms)
-                    rows = cursor.execute(
-                        f"""
-                        {self._category_select_sql(extra_columns=f", {score_sql} as fuzzy_score")}
-                        order by
-                          fuzzy_score desc,
-                          c.min_required_images desc,
-                          c.path_en asc
-                        limit %s
-                        """,
-                        [*score_params, limit],
-                    ).fetchall()
+            catalog_rows = self._category_catalog_rows()
         except (PsycopgError, RuntimeError, TimeoutError) as exc:
             raise ListingCatalogUnavailable() from exc
 
-        return [self._normalize_category(row) for row in rows], catalog_ready
+        catalog_ready = bool(catalog_rows)
+        if not terms:
+            return [], catalog_ready
+        scored: list[dict[str, Any]] = []
+        for row in catalog_rows:
+            fuzzy_score = self._category_cache_fuzzy_score(row, terms)
+            if fuzzy_score <= 0:
+                continue
+            candidate = dict(row)
+            candidate["fuzzy_score"] = fuzzy_score
+            scored.append(candidate)
+        scored.sort(
+            key=lambda row: (
+                -(float(row.get("fuzzy_score") or 0)),
+                -(int(row.get("min_required_images") or 0)),
+                str(row.get("path_en") or ""),
+            )
+        )
+        return scored[:limit], catalog_ready
 
     def upsert_category_embedding(
         self,
@@ -421,6 +428,7 @@ class ListingCatalogRepository:
         embedding_model: str,
         embedding_dimensions: int,
         top_k: int = 50,
+        timeout_seconds: float | None = None,
     ) -> list[dict[str, Any]]:
         normalized_vector = self._normalize_vector(query_vector)
         if len(normalized_vector) != embedding_dimensions:
@@ -428,6 +436,14 @@ class ListingCatalogRepository:
         try:
             with get_db_session() as connection:
                 with connection.cursor() as cursor:
+                    if timeout_seconds is not None:
+                        # Interactive category matching has a strict latency
+                        # budget. pgvector remains the recommended path; this
+                        # statement timeout prevents a slow JSONB fallback page
+                        # from blocking the UI while keeping offline fallback
+                        # searches exhaustive when no timeout is provided.
+                        timeout_ms = max(250, int(timeout_seconds * 1000))
+                        cursor.execute("set local statement_timeout = %s", (timeout_ms,))
                     if not self._table_exists(cursor, "takealot_category_embeddings"):
                         return []
                     if embedding_dimensions == 1024 and self._embedding_vector_pg_available(cursor):
@@ -1707,8 +1723,93 @@ class ListingCatalogRepository:
           updated_at
         """
 
+    def _category_catalog_rows(self) -> list[dict[str, Any]]:
+        now = time.monotonic()
+        with self._category_catalog_cache_lock:
+            cached = self._category_catalog_cache_rows
+            if cached is not None and now - self._category_catalog_cache_loaded_at <= CATEGORY_CATALOG_CACHE_TTL_SECONDS:
+                return cached
+
+            with get_db_session() as connection:
+                with connection.cursor() as cursor:
+                    rows = cursor.execute(
+                        f"""
+                        {self._category_select_sql(extra_columns=", c.search_text", include_raw_payload=False)}
+                        order by c.path_en asc
+                        """
+                    ).fetchall()
+
+            # The cache is intentionally short-lived. It makes repeated typing
+            # and match attempts fast, while PostgreSQL remains the authority
+            # after catalog imports or template syncs.
+            self.__class__._category_catalog_cache_rows = [
+                self._normalize_category(row)
+                for row in rows
+            ]
+            self.__class__._category_catalog_cache_loaded_at = time.monotonic()
+            return self.__class__._category_catalog_cache_rows or []
+
     @staticmethod
-    def _category_select_sql(*, extra_columns: str = "") -> str:
+    def _category_cache_matches_terms(row: dict[str, Any], terms: list[str]) -> bool:
+        category_id = str(row.get("category_id") or "").lower()
+        match_text = str(row.get("_match_text") or "").lower()
+        path_zh = str(row.get("path_zh") or "").lower()
+        for term in terms:
+            normalized = term.lower()
+            if normalized == category_id or normalized in match_text or normalized in path_zh:
+                return True
+        return False
+
+    @staticmethod
+    def _category_cache_recall_rank(row: dict[str, Any], terms: list[str]) -> int:
+        category_id = str(row.get("category_id") or "").lower()
+        leaf = str(row.get("lowest_category_name") or "").lower()
+        path = str(row.get("path_en") or "").lower()
+        search_text = str(row.get("_search_text") or "").lower()
+        rank = 0
+        for term in terms:
+            normalized = term.lower()
+            if category_id == normalized:
+                rank += 120
+            elif leaf == normalized:
+                rank += 100
+            elif leaf.startswith(normalized):
+                rank += 88
+            elif normalized in path:
+                rank += 72
+            elif normalized in search_text:
+                rank += 60
+        return rank
+
+    @classmethod
+    def _category_cache_fuzzy_score(cls, row: dict[str, Any], terms: list[str]) -> float:
+        leaf = str(row.get("lowest_category_name") or "").lower()
+        main = str(row.get("main_category_name") or "").lower()
+        path = str(row.get("path_en") or "").lower()
+        search_text = str(row.get("_search_text") or row.get("_match_text") or "").lower()
+        score = 0.0
+        for term in terms:
+            normalized = term.lower()
+            if normalized in search_text:
+                score = max(score, 1.0)
+                continue
+            score = max(
+                score,
+                cls._string_similarity(leaf, normalized),
+                cls._string_similarity(main, normalized),
+                cls._string_similarity(path, normalized),
+            )
+        return round(score, 6)
+
+    @staticmethod
+    def _string_similarity(left: str, right: str) -> float:
+        if not left or not right:
+            return 0.0
+        return SequenceMatcher(None, left, right).ratio()
+
+    @staticmethod
+    def _category_select_sql(*, extra_columns: str = "", include_raw_payload: bool = True) -> str:
+        raw_payload_sql = ", c.raw_payload" if include_raw_payload else ""
         return f"""
             select
               c.id::text as id,
@@ -1729,8 +1830,8 @@ class ListingCatalogRepository:
               t.template_key as loadsheet_template_key,
               (t.template_key is not null) as has_loadsheet_template_cache,
               coalesce(t.template_id, c.loadsheet_template_id) as loadsheet_template_id,
-              coalesce(t.template_name, c.loadsheet_template_name, '') as loadsheet_template_name,
-              c.raw_payload
+              coalesce(t.template_name, c.loadsheet_template_name, '') as loadsheet_template_name
+              {raw_payload_sql}
               {extra_columns}
             from takealot_categories c
             left join lateral (
@@ -1973,6 +2074,23 @@ class ListingCatalogRepository:
             item["vector_embedding_hash"] = row.get("vector_embedding_hash")
         if "fuzzy_score" in row:
             item["fuzzy_score"] = cls._float_or_none(row.get("fuzzy_score"))
+        if "search_text" in row:
+            search_text = str(row.get("search_text") or "")
+            item["_search_text"] = search_text
+            item["_match_text"] = " ".join(
+                value
+                for value in [
+                    str(item.get("category_id") or ""),
+                    str(item.get("division") or ""),
+                    str(item.get("department") or ""),
+                    str(item.get("main_category_name") or ""),
+                    str(item.get("lowest_category_name") or ""),
+                    str(item.get("path_en") or ""),
+                    str(item.get("path_zh") or ""),
+                    search_text,
+                ]
+                if value
+            ).lower()
         if include_raw:
             item["raw_payload"] = row.get("raw_payload")
         return item

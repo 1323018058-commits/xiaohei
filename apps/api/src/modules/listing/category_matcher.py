@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import time
 from dataclasses import dataclass
 from typing import Any
 
@@ -265,6 +266,57 @@ INTENT_SYNONYMS: dict[str, list[str]] = {
         "espresso machine",
         "hot drink machines",
     ],
+    "cooking_pot": [
+        "锅",
+        "汤锅",
+        "炖锅",
+        "煮锅",
+        "铸铁锅",
+        "pot",
+        "pots",
+        "potjie pot",
+        "potjie pots",
+        "cooking pots",
+        "cookware",
+        "braais accessories",
+    ],
+    "air_fryer": [
+        "空气炸锅",
+        "空气炸",
+        "air fryer",
+        "air fryers",
+        "fryers",
+        "kitchen appliances",
+    ],
+    "humidifier": [
+        "加湿器",
+        "空气加湿器",
+        "humidifier",
+        "humidifiers",
+        "health equipment",
+    ],
+    "hair_dryer": [
+        "吹风机",
+        "电吹风",
+        "hair dryer",
+        "hair dryers",
+        "hair styling tools",
+    ],
+    "keyboard": [
+        "键盘",
+        "电脑键盘",
+        "keyboard",
+        "keyboards",
+        "input devices",
+    ],
+    "cat_litter_box": [
+        "猫砂盆",
+        "猫厕所",
+        "cat litter box",
+        "cat litter boxes",
+        "litter boxes",
+        "cat supplies",
+    ],
     "umbrella": [
         "雨伞",
         "遮阳伞",
@@ -336,6 +388,12 @@ PREFERRED_CATEGORY_PHRASES: dict[str, list[str]] = {
     "water_bottle": ["water bottles", "drinking bottle", "food & beverage carriers"],
     "pet_toy": ["pet toys & scratchers", "chew toys", "interactive toys", "pet toys"],
     "coffee_machine": ["coffee machines", "hot drink machines", "coffee machine"],
+    "cooking_pot": ["potjie pots", "cooking pots", "pots", "cookware", "braais accessories"],
+    "air_fryer": ["air fryers", "air fryer", "kitchen appliances"],
+    "humidifier": ["humidifiers", "health equipment", "humidifier"],
+    "hair_dryer": ["hair dryers", "hair styling tools & accessories", "hair dryer"],
+    "keyboard": ["keyboards", "input devices", "keyboard"],
+    "cat_litter_box": ["cat litter boxes", "cat supplies", "cat litter box"],
     "umbrella": ["outdoor umbrellas & sunshades", "umbrellas", "sunshades"],
     "toy_car": ["toy cars", "play vehicles"],
     "curtains": ["curtains & drapes", "window treatments", "curtains"],
@@ -364,6 +422,10 @@ SEGMENT_TRANSLATIONS: dict[str, str] = {
     "motor vehicle interior accessories": "汽车内饰配件",
     "pet beds & blankets": "宠物床垫与毯子",
     "pets": "宠物",
+    "cat supplies": "猫用品",
+    "cat litter boxes": "猫砂盆",
+    "cat litter box": "猫砂盆",
+    "litter boxes": "猫砂盆",
     "phone holders": "手机支架",
     "pots & planters": "花盆与种植盆",
     "safety gloves": "安全手套",
@@ -402,6 +464,11 @@ SEGMENT_TRANSLATIONS: dict[str, str] = {
     "small appliances": "小家电",
     "large appliances": "大家电",
     "kitchen appliances": "厨房电器",
+    "braais & outdoor cooking": "烧烤与户外烹饪",
+    "braais accessories": "烧烤配件",
+    "potjie pots": "铸铁炖锅",
+    "cooking pots": "锅具",
+    "cookware": "锅具",
     "air fryers": "空气炸锅",
     "hot drink machines": "热饮机",
     "coffee machines": "咖啡机",
@@ -560,6 +627,13 @@ INTENT_SUPPRESSIONS: dict[str, list[str]] = {
     "power_bank": ["charger"],
 }
 
+AI_RECALL_MIN_CANDIDATES = 12
+AI_RERANK_CONFIDENCE_THRESHOLD = 0.9
+AI_RERANK_CLOSE_MARGIN = 0.04
+CATEGORY_MATCH_BUDGET_SECONDS = 2.8
+AI_CATEGORY_CALL_TIMEOUT_SECONDS = 1.2
+EMBEDDING_QUERY_TIMEOUT_SECONDS = 1.2
+
 
 @dataclass
 class CategoryMatchResult:
@@ -599,11 +673,32 @@ class CategoryMatcher:
         limit: int = 5,
         use_ai: bool = True,
     ) -> CategoryMatchResult:
+        started_at = time.monotonic()
         keywords = self.normalize_keywords(description)
         avoid_keywords = self.avoid_keywords(description, keywords)
+        local_intents = self._detect_intents([description, *keywords])
         ai_used = False
-        if use_ai and self.ai_service.enabled:
-            ai_keywords = self.ai_service.extract_category_intent(description)
+        keyword_candidates, catalog_ready = self.repository.recall_category_candidates(
+            keywords=keywords,
+            limit=max(50, limit * 10),
+        )
+        if (
+            use_ai
+            and self.ai_service.enabled
+            and self._has_match_budget(started_at)
+            and self._needs_ai_recall(keyword_candidates, limit)
+            and not (local_intents and keyword_candidates)
+        ):
+            # Local rules and catalog substring recall are sub-100ms for common
+            # Chinese categories. AI is reserved for low-recall searches so the
+            # UI stays responsive without losing the long-tail semantic fallback.
+            ai_keywords = self._call_with_budget(
+                started_at=started_at,
+                service=self.ai_service,
+                timeout_seconds=AI_CATEGORY_CALL_TIMEOUT_SECONDS,
+                fallback=[],
+                callback=lambda: self.ai_service.extract_category_intent(description),
+            )
             if ai_keywords:
                 ai_used = True
                 avoid_keywords = self._dedupe(
@@ -628,15 +723,14 @@ class CategoryMatcher:
                         ),
                     ]
                 )
-
-        keyword_candidates, catalog_ready = self.repository.recall_category_candidates(
-            keywords=keywords,
-            limit=max(50, limit * 10),
-        )
+                keyword_candidates, catalog_ready = self.repository.recall_category_candidates(
+                    keywords=keywords,
+                    limit=max(50, limit * 10),
+                )
         fuzzy_candidates: list[dict[str, Any]] = []
         vector_candidates: list[dict[str, Any]] = []
         vector_used = False
-        if use_ai and self.embedding_service.enabled:
+        if use_ai and self.embedding_service.enabled and self._has_match_budget(started_at):
             # Embedding calls are useful only after the local catalog has been
             # vectorized. Checking the DB first avoids paying for a query vector
             # when there are no persisted Takealot category vectors to search.
@@ -649,13 +743,20 @@ class CategoryMatcher:
                 # into the embedding query. The vector index still returns only real
                 # catalog rows; this just improves cross-language recall.
                 embedding_query = "\n".join(self._dedupe([description, *keywords[:16]]))
-                query_vector = self.embedding_service.embed_text(embedding_query)
+                query_vector = self._call_with_budget(
+                    started_at=started_at,
+                    service=self.embedding_service,
+                    timeout_seconds=EMBEDDING_QUERY_TIMEOUT_SECONDS,
+                    fallback=[],
+                    callback=lambda: self.embedding_service.embed_text(embedding_query),
+                )
                 if query_vector:
                     vector_candidates = self.repository.search_category_embeddings(
                         query_vector=query_vector,
                         embedding_model=self.embedding_service.model,
                         embedding_dimensions=self.embedding_service.dimensions,
                         top_k=50,
+                        timeout_seconds=max(0.25, min(EMBEDDING_QUERY_TIMEOUT_SECONDS, self._remaining_match_budget(started_at) - 0.1)),
                     )
                     vector_used = bool(vector_candidates)
 
@@ -679,7 +780,9 @@ class CategoryMatcher:
         # English terms and those terms are not always an exact substring of the
         # Takealot path. Fuzzy recall keeps recall broad while still returning
         # only category rows from the local catalog.
-        if use_ai and self.ai_service.enabled and len(keyword_candidates) < max(40, limit * 8):
+        if use_ai and self.ai_service.enabled and self._has_match_budget(started_at) and (
+            not keyword_candidates or (ai_used and len(keyword_candidates) < max(20, limit * 4))
+        ):
             try:
                 fuzzy_candidates, fuzzy_catalog_ready = self.repository.fuzzy_recall_category_candidates(
                     keywords=keywords,
@@ -726,10 +829,26 @@ class CategoryMatcher:
             candidate_sources=candidate_sources,
         )
         ranked_ids: list[int] = []
-        if use_ai and self.ai_service.enabled and scored:
-            ranked_ids = self.ai_service.rerank_category_candidates(
-                description=description,
-                candidates=[item["category"] for item in scored[:20]],
+        strong_local_winner = bool(local_intents and scored and float(scored[0].get("confidence") or 0) >= 0.9)
+        if (
+            use_ai
+            and self.ai_service.enabled
+            and self._has_match_budget(started_at)
+            and not strong_local_winner
+            and self._needs_ai_rerank(scored)
+        ):
+            # Reranking is a second model call. Skip it when the rule/vector
+            # score already has a clear winner; keep it for ambiguous or weak
+            # candidate sets where semantic judgment is worth the latency.
+            ranked_ids = self._call_with_budget(
+                started_at=started_at,
+                service=self.ai_service,
+                timeout_seconds=AI_CATEGORY_CALL_TIMEOUT_SECONDS,
+                fallback=[],
+                callback=lambda: self.ai_service.rerank_category_candidates(
+                    description=description,
+                    candidates=[item["category"] for item in scored[:20]],
+                ),
             )
             ai_used = ai_used or bool(ranked_ids)
 
@@ -749,8 +868,8 @@ class CategoryMatcher:
 
         suggestions = [self._to_suggestion(item) for item in scored[:limit]]
         translation_used = False
-        if use_ai and self.ai_service.enabled:
-            translation_used = self._apply_ai_path_translations(suggestions)
+        if use_ai and self.ai_service.enabled and self._has_match_budget(started_at):
+            translation_used = self._apply_ai_path_translations(suggestions, started_at=started_at)
             ai_used = ai_used or translation_used
         fallback_warning = next(
             (
@@ -1018,16 +1137,30 @@ class CategoryMatcher:
             "source": item["source"],
         }
 
-    def _apply_ai_path_translations(self, suggestions: list[dict[str, Any]]) -> bool:
+    def _apply_ai_path_translations(self, suggestions: list[dict[str, Any]], *, started_at: float | None = None) -> bool:
         translate_paths = getattr(self.ai_service, "translate_category_paths", None)
         if not callable(translate_paths):
+            return False
+        if suggestions and not self._needs_ai_translation(suggestions[0]) and float(suggestions[0].get("confidence") or 0) >= 0.9:
             return False
         paths = [
             str(suggestion.get("path_en") or "").strip()
             for suggestion in suggestions
-            if str(suggestion.get("path_en") or "").strip()
+            if str(suggestion.get("path_en") or "").strip() and self._needs_ai_translation(suggestion)
         ]
-        translations = translate_paths(paths)
+        # Category matching is an interactive flow with a hard UI budget. AI
+        # translation is display-only, so it must never delay returning a real
+        # catalog category_id; if the budget is gone we keep the rule translation.
+        if started_at is None:
+            translations = translate_paths(paths)
+        else:
+            translations = self._call_with_budget(
+                started_at=started_at,
+                service=self.ai_service,
+                timeout_seconds=AI_CATEGORY_CALL_TIMEOUT_SECONDS,
+                fallback={},
+                callback=lambda: translate_paths(paths),
+            )
         if not translations:
             return False
         changed = False
@@ -1042,6 +1175,68 @@ class CategoryMatcher:
             suggestion["translation_source"] = "ai"
             changed = True
         return changed
+
+    @staticmethod
+    def _needs_ai_recall(keyword_candidates: list[dict[str, Any]], limit: int) -> bool:
+        return len(keyword_candidates) < max(AI_RECALL_MIN_CANDIDATES, limit * 3)
+
+    @staticmethod
+    def _remaining_match_budget(started_at: float) -> float:
+        return CATEGORY_MATCH_BUDGET_SECONDS - (time.monotonic() - started_at)
+
+    @classmethod
+    def _has_match_budget(cls, started_at: float, minimum_seconds: float = 0.25) -> bool:
+        return cls._remaining_match_budget(started_at) > minimum_seconds
+
+    @classmethod
+    def _call_with_budget(
+        cls,
+        *,
+        started_at: float,
+        service: Any,
+        timeout_seconds: float,
+        fallback: Any,
+        callback: Any,
+    ) -> Any:
+        remaining = cls._remaining_match_budget(started_at)
+        if remaining <= 0.25:
+            return fallback
+        previous_timeout = getattr(service, "timeout_seconds", None)
+        if previous_timeout is not None:
+            setattr(service, "timeout_seconds", max(0.25, min(float(previous_timeout), timeout_seconds, remaining - 0.1)))
+        try:
+            return callback()
+        except Exception:
+            return fallback
+        finally:
+            if previous_timeout is not None:
+                setattr(service, "timeout_seconds", previous_timeout)
+
+    @staticmethod
+    def _needs_ai_rerank(scored: list[dict[str, Any]]) -> bool:
+        if not scored:
+            return False
+        top_confidence = float(scored[0].get("confidence") or 0)
+        if top_confidence < AI_RERANK_CONFIDENCE_THRESHOLD:
+            return True
+        if len(scored) < 2:
+            return False
+        second_confidence = float(scored[1].get("confidence") or 0)
+        return (top_confidence - second_confidence) <= AI_RERANK_CLOSE_MARGIN
+
+    @classmethod
+    def _needs_ai_translation(cls, suggestion: dict[str, Any]) -> bool:
+        path_zh = str(suggestion.get("path_zh") or "").strip()
+        if not path_zh:
+            return True
+        # Rule translations cover common marketplace terms. Only call AI when a
+        # segment is still mostly English, which keeps precise display text while
+        # avoiding a model round trip for already translated paths.
+        for segment in PATH_SPLIT_RE.split(path_zh):
+            normalized = segment.strip()
+            if normalized and not cls._contains_cjk(normalized) and re.search(r"[A-Za-z]", normalized):
+                return True
+        return False
 
     def path_zh(self, candidate: dict[str, Any]) -> str:
         existing = str(candidate.get("path_zh") or "").strip()

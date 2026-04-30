@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, type ChangeEvent, type ReactNode 
 import {
   AlertCircle,
   Bot,
+  ChevronDown,
   CheckCircle2,
   ClipboardCheck,
   FileSpreadsheet,
@@ -143,6 +144,8 @@ const textareaClassName =
   "min-h-24 w-full resize-y rounded-[6px] border border-[#EBEBEB] bg-[#FFFFFF] px-3 py-2 text-sm leading-6 text-[#000000] outline-none placeholder:text-[#595959] focus:border-[#000000] disabled:cursor-not-allowed disabled:bg-[#FAFAFA] disabled:text-[#B3B3B3]";
 
 const listingDraftStorageKey = "xiaohei_listing_new_draft_v1";
+const takealotSkuMaxLength = 128;
+const categoryMatchTimeoutMs = 3000;
 
 const fieldLabelMap: Record<string, string> = {
   asset_ids: "图片资产",
@@ -185,6 +188,7 @@ export default function NewListingPage() {
   const [form, setForm] = useState<ListingForm>(initialForm);
   const [categoryMatch, setCategoryMatch] = useState<CategoryMatchResponse | null>(null);
   const [categoryError, setCategoryError] = useState("");
+  const [categoryMatchElapsedMs, setCategoryMatchElapsedMs] = useState<number | null>(null);
   const [requirements, setRequirements] = useState<CategoryRequirements | null>(null);
   const [categorySearchQuery, setCategorySearchQuery] = useState("");
   const [categoryOptions, setCategoryOptions] = useState<CategoryItem[]>([]);
@@ -215,12 +219,15 @@ export default function NewListingPage() {
 
   const [busyAction, setBusyAction] = useState<BusyAction | null>(null);
   const [formCheckOpen, setFormCheckOpen] = useState(false);
+  const [optionalAttributesOpen, setOptionalAttributesOpen] = useState(false);
   const [draftStatus, setDraftStatus] = useState("");
   const brandSearchRequestRef = useRef(0);
   const categorySearchRequestRef = useRef(0);
   const categorySearchSelectionRef = useRef("");
   const draftHydratedRef = useRef(false);
   const skipNextDraftSaveRef = useRef(false);
+  const lastAutoSkuRef = useRef("");
+  const categoryAttributeKeysRef = useRef<Set<string>>(new Set());
 
   const selectedStore = useMemo(
     () => stores.find((store) => store.store_id === selectedStoreId) ?? null,
@@ -231,6 +238,10 @@ export default function NewListingPage() {
   const assetIds = useMemo(() => uploadedAssets.map((asset) => asset.id).filter(isPresent), [uploadedAssets]);
   const imageCount = imageUrls.length + assetIds.length;
   const minRequiredImages = requirements?.min_required_images ?? selectedSuggestionMinImages(categoryMatch, categoryId);
+  const selectedCategorySuggestion = useMemo(
+    () => (categoryId ? (categoryMatch?.suggestions ?? []).find((suggestion) => suggestion.category_id === categoryId) ?? null : null),
+    [categoryId, categoryMatch],
+  );
   const attributeSpecs = useMemo(() => buildAttributeSpecs(requirements), [requirements]);
   const requiredAttributeSpecs = useMemo(
     () => attributeSpecs.filter((attribute) => attribute.required),
@@ -393,10 +404,13 @@ export default function NewListingPage() {
   function clearListingDraft() {
     skipNextDraftSaveRef.current = true;
     window.localStorage.removeItem(listingDraftStorageKey);
+    lastAutoSkuRef.current = "";
+    categoryAttributeKeysRef.current = new Set();
     setForm(initialForm);
     setImageUrlsText("");
     setUploadedAssets([]);
     setDynamicAttributes([]);
+    setOptionalAttributesOpen(false);
     setPreview(null);
     setSubmissionResult(null);
     setImageValidations({});
@@ -497,6 +511,9 @@ export default function NewListingPage() {
   }
 
   function updateForm<Key extends keyof ListingForm>(key: Key, value: ListingForm[Key]) {
+    if (key === "sku" && String(value).trim() !== lastAutoSkuRef.current) {
+      lastAutoSkuRef.current = "";
+    }
     setForm((current) => ({ ...current, [key]: value }));
     if (key === "categoryId") {
       setPreview(null);
@@ -515,6 +532,11 @@ export default function NewListingPage() {
 
     setBusyAction("match");
     setCategoryError("");
+    setCategoryMatchElapsedMs(null);
+    const startedAt = performance.now();
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), categoryMatchTimeoutMs);
+    let recordedElapsed = false;
     try {
       const payload: CategoryMatchRequest = {
         description: form.productDescription.trim(),
@@ -525,35 +547,84 @@ export default function NewListingPage() {
       const data = await apiFetch<CategoryMatchResponse>("/api/listing/categories/match", {
         method: "POST",
         body: JSON.stringify(payload),
+        signal: controller.signal,
       });
+      const elapsedMs = Math.round(performance.now() - startedAt);
+      const elapsedText = formatElapsedMs(elapsedMs);
+      setCategoryMatchElapsedMs(elapsedMs);
+      recordedElapsed = true;
       setCategoryMatch(data);
-      toast.success(data.suggestions.length ? "已完成类目匹配" : "没有匹配到可用类目");
+      const topSuggestion = data.suggestions[0];
+      if (topSuggestion && topSuggestion.confidence >= 0.9) {
+        await applyCategory(topSuggestion, { autoGenerateContent: false, showToast: false });
+        toast.success("已匹配并套用推荐类目", {
+          description: `${topSuggestion.path_zh || topSuggestion.path_en || String(topSuggestion.category_id)} · ${elapsedText}`,
+        });
+      } else {
+        toast.success(data.suggestions.length ? "已完成类目匹配" : "没有匹配到可用类目", {
+          description: elapsedText,
+        });
+      }
     } catch (error) {
-      const message = formatError(error, "类目匹配失败");
+      const message =
+        error instanceof Error && error.name === "AbortError"
+          ? "类目匹配超过 3 秒，已停止等待。请重试或先构建类目向量索引提升长尾匹配速度。"
+          : formatError(error, "类目匹配失败");
       setCategoryError(message);
       toast.error("类目匹配失败", { description: message });
     } finally {
+      window.clearTimeout(timeoutId);
+      if (!recordedElapsed) {
+        setCategoryMatchElapsedMs(Math.round(performance.now() - startedAt));
+      }
       setBusyAction(null);
     }
   }
 
-  async function applyCategory(suggestion: CategoryMatchSuggestion) {
-    setForm((current) => ({ ...current, categoryId: String(suggestion.category_id) }));
+  async function applyCategory(
+    suggestion: CategoryMatchSuggestion,
+    options: { autoGenerateContent?: boolean; showToast?: boolean } = {},
+  ) {
+    const shouldGenerateContent = options.autoGenerateContent ?? true;
+    const shouldShowToast = options.showToast ?? true;
+    setImageCheck(null);
+    setPreview(null);
+    setForm((current) => {
+      const nextSku = shouldRefreshGeneratedSku(current.sku, lastAutoSkuRef.current)
+        ? buildGeneratedSku(current, suggestion)
+        : current.sku;
+      if (nextSku !== current.sku) {
+        lastAutoSkuRef.current = nextSku;
+      }
+      return { ...current, categoryId: String(suggestion.category_id), sku: nextSku };
+    });
     const label = categoryItemDisplayPath(suggestion);
     categorySearchSelectionRef.current = label;
     setCategorySearchQuery(label);
     setCategoryOptions([]);
     const loadedRequirements = await loadCategoryRequirements(suggestion.category_id);
-    toast.success("已套用类目", {
-      description: suggestion.path_zh || suggestion.path_en || String(suggestion.category_id),
-    });
-    if (form.productDescription.trim()) {
+    if (shouldShowToast) {
+      toast.success("已套用类目", {
+        description: suggestion.path_zh || suggestion.path_en || String(suggestion.category_id),
+      });
+    }
+    if (shouldGenerateContent && form.productDescription.trim()) {
       await generateAiContent(suggestion.category_id, loadedRequirements, { auto: true });
     }
   }
 
   async function selectCategory(category: CategoryItem) {
-    setForm((current) => ({ ...current, categoryId: String(category.category_id) }));
+    setImageCheck(null);
+    setPreview(null);
+    setForm((current) => {
+      const nextSku = shouldRefreshGeneratedSku(current.sku, lastAutoSkuRef.current)
+        ? buildGeneratedSku(current, category)
+        : current.sku;
+      if (nextSku !== current.sku) {
+        lastAutoSkuRef.current = nextSku;
+      }
+      return { ...current, categoryId: String(category.category_id), sku: nextSku };
+    });
     const label = categoryItemDisplayPath(category);
     categorySearchSelectionRef.current = label;
     setCategorySearchQuery(label);
@@ -580,9 +651,10 @@ export default function NewListingPage() {
         `/api/listing/categories/${encodeURIComponent(String(targetCategoryId))}/requirements`,
       );
       setRequirements(data);
-      // 套用类目时同时初始化必填和选填属性；提交前仍会过滤空值，
-      // 所以选填项不会因为自动展示而误写入 loadsheet。
-      ensureDynamicAttributes(buildAttributeSpecs(data));
+      // Category attributes are template-scoped. When the category changes,
+      // keep custom/manual extras but remove stale attributes from the previous
+      // category so required and optional fields always match the selected row.
+      syncDynamicAttributesForCategory(buildAttributeSpecs(data));
       return data;
     } catch (error) {
       const message = formatError(error, "读取类目要求失败");
@@ -832,9 +904,21 @@ export default function NewListingPage() {
         },
       );
       setSubmissionResult(data);
-      toast.success("提交上架请求已创建", {
-        description: data.submission_id ?? data.task_id ?? data.message,
-      });
+      if (data.takealot_submission_id || data.submit_succeeded) {
+        toast.success("Takealot 提交成功", {
+          description: data.takealot_submission_id
+            ? `官方 submission id：${data.takealot_submission_id}`
+            : data.message,
+        });
+      } else if (data.submit_succeeded === false || submissionCreateFailed(data)) {
+        toast.error("Takealot 提交失败", {
+          description: data.error_message || data.message,
+        });
+      } else {
+        toast.info("已创建上架提交", {
+          description: data.message,
+        });
+      }
       await loadSubmissions(selectedStoreId);
     } catch (error) {
       toast.error("提交上架失败", {
@@ -872,7 +956,11 @@ export default function NewListingPage() {
     setBrandOptions([]);
   }
 
-  function ensureDynamicAttributes(attributes: AttributeSpec[]) {
+  function syncDynamicAttributesForCategory(attributes: AttributeSpec[]) {
+    const previousCategoryKeys = categoryAttributeKeysRef.current;
+    const nextCategoryKeys = new Set(attributes.map((attribute) => attribute.key));
+    categoryAttributeKeysRef.current = nextCategoryKeys;
+    setOptionalAttributesOpen(false);
     setDynamicAttributes((current) => {
       const existingKeys = new Set(current.map((attribute) => attribute.key));
       const additions = attributes
@@ -882,7 +970,10 @@ export default function NewListingPage() {
           value: "",
           source: "manual",
         }));
-      return additions.length ? [...current, ...additions] : current;
+      const carried = current.filter(
+        (attribute) => nextCategoryKeys.has(attribute.key) || !previousCategoryKeys.has(attribute.key),
+      );
+      return additions.length ? [...carried, ...additions] : carried;
     });
   }
 
@@ -956,6 +1047,7 @@ export default function NewListingPage() {
       image_urls: imageUrls,
       asset_ids: assetIds,
       dynamic_attributes: cleanDynamicAttributes(dynamicAttributes),
+      submit_immediately: true,
     };
   }
 
@@ -998,22 +1090,6 @@ export default function NewListingPage() {
 
         <div className="flex flex-wrap items-center gap-2">
           <ActionButton
-            icon={Sparkles}
-            loading={busyAction === "match"}
-            disabled={!form.productDescription.trim()}
-            onClick={() => void matchCategories()}
-          >
-            智能匹配类目
-          </ActionButton>
-          <ActionButton
-            icon={Bot}
-            loading={busyAction === "ai"}
-            disabled={!categoryId || !form.productDescription.trim()}
-            onClick={() => void generateAiContent()}
-          >
-            AI 生成内容
-          </ActionButton>
-          <ActionButton
             icon={FileSpreadsheet}
             loading={busyAction === "preview"}
             onClick={() => void previewLoadsheet()}
@@ -1022,7 +1098,6 @@ export default function NewListingPage() {
           </ActionButton>
           <ActionButton
             icon={PackagePlus}
-            variant="primary"
             loading={busyAction === "submit"}
             onClick={() => void submitListing()}
           >
@@ -1046,8 +1121,40 @@ export default function NewListingPage() {
         submissionResult={submissionResult}
       />
 
-      <section className="rounded-[6px] border border-[#EBEBEB] bg-[#FFFFFF] p-4">
-        <div className="grid gap-4 xl:grid-cols-[260px_minmax(0,1fr)]">
+      <section className="rounded-[6px] border border-[#EBEBEB] bg-[#FFFFFF] p-4 shadow-sm">
+        <div className="mb-4 flex flex-col gap-3 xl:flex-row xl:items-start xl:justify-between">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <h2 className="text-base font-semibold text-[#000000]">AI 上架代驾</h2>
+              <StatusPill tone={categoryId ? "success" : "muted"}>
+                {categoryId ? `已套用类目 ${categoryId}` : "等待类目匹配"}
+              </StatusPill>
+            </div>
+            <p className="mt-1 text-xs leading-5 text-[#595959]">
+              输入商品品类、型号或卖点后，先匹配 Takealot 类目；套用后自动生成 SKU、同步图片限制、证书和属性字段。
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <ActionButton
+              icon={Sparkles}
+              loading={busyAction === "match"}
+              disabled={!form.productDescription.trim()}
+              onClick={() => void matchCategories()}
+            >
+              智能匹配类目
+            </ActionButton>
+            <ActionButton
+              icon={Bot}
+              loading={busyAction === "ai"}
+              disabled={!categoryId || !form.productDescription.trim()}
+              onClick={() => void generateAiContent()}
+            >
+              AI 生成内容
+            </ActionButton>
+          </div>
+        </div>
+
+        <div className="grid gap-3 xl:grid-cols-[240px_minmax(0,1fr)]">
           <Field label="店铺" required>
             <select
               value={selectedStoreId}
@@ -1069,28 +1176,88 @@ export default function NewListingPage() {
             ) : null}
           </Field>
 
-          <Field label="商品描述" required>
-            <textarea
+          <Field label="产品简短描述 / 型号" required>
+            <input
               value={form.productDescription}
               onChange={(event) => updateForm("productDescription", event.target.value)}
-              placeholder="粘贴供应商描述、商品卖点、规格、适用场景，供类目匹配和 AI 生成使用"
-              className={textareaClassName}
+              placeholder="例如：空气炸锅 6L 可视窗口 / Bluetooth gaming keyboard"
+              className={inputClassName}
+              maxLength={1000}
             />
           </Field>
+        </div>
+
+        <div className="mt-4 border-t border-[#EBEBEB] pt-4">
+          <div className="mb-3 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+            <div>
+              <div className="text-sm font-semibold text-[#000000]">智能类目匹配结果</div>
+              <div className="mt-1 text-xs leading-5 text-[#595959]">
+                从候选中点击“套用”，系统会加载该类目的图片、证书、必填项和选填项。
+              </div>
+            </div>
+            {categoryMatch ? (
+              <div className="flex flex-wrap gap-2 text-xs text-[#595959]">
+                <StatusPill tone={categoryMatch.catalog_ready ? "success" : "warning"}>
+                  {categoryMatch.catalog_ready ? "类目库可用" : "类目库未就绪"}
+                </StatusPill>
+                <StatusPill tone={categoryMatch.ai_used ? "success" : "muted"}>
+                  {categoryMatch.ai_used ? "已使用 AI" : "规则匹配"}
+                </StatusPill>
+                {categoryMatchElapsedMs !== null ? (
+                  <StatusPill tone={categoryMatchElapsedMs <= categoryMatchTimeoutMs ? "success" : "warning"}>
+                    用时 {formatElapsedMs(categoryMatchElapsedMs)}
+                  </StatusPill>
+                ) : null}
+                <StatusPill tone="muted">候选 {categoryMatch.total_candidates}</StatusPill>
+              </div>
+            ) : null}
+          </div>
+          {categoryError ? <InlineError message={categoryError} /> : null}
+          {busyAction === "match" ? <LoadingLine text="正在匹配类目" /> : null}
+          {categoryMatch?.message ? (
+            <div className="mb-3 text-xs leading-5 text-[#595959]">{categoryMatch.message}</div>
+          ) : null}
+          {categoryMatch?.suggestions.length ? (
+            <div className="grid gap-2 lg:grid-cols-2 2xl:grid-cols-3">
+              {categoryMatch.suggestions.map((suggestion) => (
+                <CategorySuggestionRow
+                  key={suggestion.category_id}
+                  suggestion={suggestion}
+                  active={suggestion.category_id === categoryId}
+                  onApply={() => void applyCategory(suggestion)}
+                />
+              ))}
+            </div>
+          ) : (
+            <EmptyLine text="点击智能匹配类目后，这里会展示最多 5 个候选类目。" />
+          )}
+          {categoryId ? (
+            <SelectedCategorySummary
+              requirements={requirements}
+              suggestion={selectedCategorySuggestion}
+              imageCount={imageCount}
+              requiredAttributes={requiredAttributeSpecs}
+              optionalAttributes={optionalAttributeSpecs}
+            />
+          ) : null}
         </div>
       </section>
 
       <section className="grid gap-4 2xl:grid-cols-[minmax(0,1fr)_430px]">
         <main className="overflow-hidden rounded-[6px] border border-[#EBEBEB] bg-[#FFFFFF]">
           <FormBlock title="基础信息">
-            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-4">
               <Field label="SKU" required>
                 <input
                   value={form.sku}
                   onChange={(event) => updateForm("sku", event.target.value)}
                   className={inputClassName}
+                  maxLength={takealotSkuMaxLength}
                   placeholder="内部 SKU"
                 />
+                <div className="mt-1 text-xs leading-5 text-[#595959]">
+                  套用类目后自动生成，格式为品类/商品关键词-日期-随机数，最长 {takealotSkuMaxLength} 位。
+                </div>
               </Field>
               <Field label="条码" required>
                 <input
@@ -1100,6 +1267,9 @@ export default function NewListingPage() {
                   placeholder="EAN / UPC"
                 />
               </Field>
+            </div>
+
+            <div className="mt-4 grid items-start gap-3 md:grid-cols-2">
               <Field label="类目 ID" required>
                 <div className="flex gap-2">
                   <input
@@ -1135,7 +1305,7 @@ export default function NewListingPage() {
               </Field>
             </div>
 
-            <div className="mt-3 grid gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_220px]">
+            <div className="mt-4 grid items-start gap-3 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_220px]">
               <Field label="类目搜索">
                 <div className="relative">
                   <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#595959]" />
@@ -1362,7 +1532,19 @@ export default function NewListingPage() {
                   <div className="mt-1 text-sm font-medium text-[#000000]">
                     {imageCount} / {minRequiredImages || "--"}
                   </div>
+                  {minRequiredImages > 0 && imageCount < minRequiredImages ? (
+                    <div className="mt-1 text-xs leading-5 text-[#92400E]">
+                      当前类目还差 {minRequiredImages - imageCount} 张图片
+                    </div>
+                  ) : null}
                 </div>
+                {requirements?.image_requirement_texts?.length ? (
+                  <div className="rounded-[6px] border border-[#EBEBEB] bg-[#FFFFFF] px-3 py-2 text-xs leading-5 text-[#595959]">
+                    {requirements.image_requirement_texts.slice(0, 3).map((text) => (
+                      <div key={text}>{text}</div>
+                    ))}
+                  </div>
+                ) : null}
                 <label className="inline-flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-[6px] border border-[#EBEBEB] bg-[#FFFFFF] px-3 text-sm font-medium text-[#000000] hover:bg-[#FAFAFA]">
                   {busyAction === "upload-images" ? (
                     <Loader2 className="h-4 w-4 animate-spin stroke-[1.8]" />
@@ -1440,20 +1622,15 @@ export default function NewListingPage() {
             {attributeSpecs.length === 0 ? (
               <EmptyLine text="套用类目后会在这里显示必填属性和选填属性。" />
             ) : (
-              <div className="space-y-4">
-                <AttributeGrid
-                  title="必填属性"
-                  attributes={requiredAttributeSpecs}
-                  dynamicAttributes={dynamicAttributes}
-                  onChange={updateDynamicAttribute}
-                />
-                <AttributeGrid
-                  title="选填属性"
-                  attributes={optionalAttributeSpecs}
-                  dynamicAttributes={dynamicAttributes}
-                  onChange={updateDynamicAttribute}
-                />
-              </div>
+              <CategoryAttributeEditor
+                requirements={requirements}
+                requiredAttributes={requiredAttributeSpecs}
+                optionalAttributes={optionalAttributeSpecs}
+                dynamicAttributes={dynamicAttributes}
+                optionalOpen={optionalAttributesOpen}
+                onToggleOptional={() => setOptionalAttributesOpen((current) => !current)}
+                onChange={updateDynamicAttribute}
+              />
             )}
 
             <div className="mt-4 border-t border-[#EBEBEB] pt-4">
@@ -1513,74 +1690,17 @@ export default function NewListingPage() {
         </main>
 
         <aside className="space-y-4 2xl:sticky 2xl:top-[70px] 2xl:self-start">
-          <Panel title="类目匹配" icon={Sparkles}>
-            {categoryError ? <InlineError message={categoryError} /> : null}
-            {categoryMatch ? (
-              <div className="mb-3 rounded-[6px] border border-[#EBEBEB] bg-[#FAFAFA] px-3 py-2">
-                <div className="mb-2 flex flex-wrap gap-2 text-xs text-[#595959]">
-                  <StatusPill tone={categoryMatch.catalog_ready ? "success" : "warning"}>
-                    {categoryMatch.catalog_ready ? "类目库可用" : "类目库未就绪"}
-                  </StatusPill>
-                  <StatusPill tone={categoryMatch.ai_used ? "success" : "muted"}>
-                    {categoryMatch.ai_used ? "已使用 AI" : "规则匹配"}
-                  </StatusPill>
-                  <span className="inline-flex min-h-6 items-center">候选 {categoryMatch.total_candidates}</span>
-                </div>
-                {categoryMatch.normalized_keywords?.length ? (
-                  <div className="line-clamp-2 text-xs leading-5 text-[#595959]">
-                    关键词：{categoryMatch.normalized_keywords.join(" / ")}
-                  </div>
-                ) : null}
-              </div>
-            ) : null}
-            {busyAction === "match" ? <LoadingLine text="正在匹配类目" /> : null}
-            {categoryMatch?.message ? (
-              <div className="mb-3 text-xs leading-5 text-[#595959]">{categoryMatch.message}</div>
-            ) : null}
-            {categoryMatch?.suggestions.length ? (
-              <div className="divide-y divide-[#EBEBEB]">
-                {categoryMatch.suggestions.map((suggestion) => (
-                  <CategorySuggestionRow
-                    key={suggestion.category_id}
-                    suggestion={suggestion}
-                    active={suggestion.category_id === categoryId}
-                    onApply={() => void applyCategory(suggestion)}
-                  />
-                ))}
-              </div>
-            ) : (
-              <EmptyLine text="输入商品描述后点击智能匹配类目。" />
-            )}
-          </Panel>
-
           <Panel title="类目要求" icon={ClipboardCheck}>
             {busyAction === "requirements" ? <LoadingLine text="正在读取类目要求" /> : null}
             {requirements ? (
-              <div className="space-y-3 text-sm">
-                <KeyValue label="类目 ID" value={String(requirements.category_id)} />
-                <KeyValue label="中文路径" value={requirements.path_zh || "--"} />
-                <KeyValue label="英文路径" value={requirements.path_en || "--"} />
-                <KeyValue label="最少图片数" value={String(requirements.min_required_images)} />
-                <KeyValue
-                  label="属性模板"
-                  value={requirements.attributes_ready ? "已同步" : "待同步"}
-                />
-                {!requirements.attributes_ready && requirements.attribute_message ? (
-                  <InlineError message={requirements.attribute_message} />
-                ) : null}
-                <TokenList label="合规证书" values={requirements.compliance_certificates ?? []} />
-                <TokenList label="图片要求" values={requirements.image_requirement_texts ?? []} />
-                <TokenList
-                  label="必填属性"
-                  values={requiredAttributeSpecs.map((attribute) => attribute.label)}
-                />
-                <TokenList
-                  label="选填属性"
-                  values={optionalAttributeSpecs.map((attribute) => attribute.label)}
-                />
-              </div>
+              <CategoryRequirementMatrix
+                requirements={requirements}
+                imageCount={imageCount}
+                requiredAttributes={requiredAttributeSpecs}
+                optionalAttributes={optionalAttributeSpecs}
+              />
             ) : (
-              <EmptyLine text="套用类目后展示图片、证书和属性要求。" />
+              <EmptyLine text="请先套用 Takealot 末级类目。" />
             )}
           </Panel>
 
@@ -1884,7 +2004,7 @@ function Field({
 }) {
   return (
     <label className="grid min-w-0 gap-1.5">
-      <span className="text-xs font-medium text-[#595959]">
+      <span className="flex min-h-6 items-center text-xs font-medium leading-5 text-[#595959]">
         {label}
         {required ? <span className="ml-1 text-[#D9363E]">*</span> : null}
       </span>
@@ -1930,6 +2050,78 @@ function Panel({
   );
 }
 
+function SelectedCategorySummary({
+  requirements,
+  suggestion,
+  imageCount,
+  requiredAttributes,
+  optionalAttributes,
+}: {
+  requirements: CategoryRequirements | null;
+  suggestion: CategoryMatchSuggestion | null;
+  imageCount: number;
+  requiredAttributes: AttributeSpec[];
+  optionalAttributes: AttributeSpec[];
+}) {
+  const categoryId = requirements?.category_id ?? suggestion?.category_id;
+  if (!categoryId) return null;
+
+  const pathZh = requirements?.path_zh || suggestion?.path_zh || requirements?.lowest_category_raw || "";
+  const pathEn = requirements?.path_en || suggestion?.path_en || suggestion?.lowest_category_raw || "";
+  const minImages = requirements?.min_required_images ?? suggestion?.min_required_images ?? 0;
+  const missingImages = Math.max(0, minImages - imageCount);
+  const requiredCount = requiredAttributes.length || (suggestion?.required_attributes ?? []).length;
+  const optionalCount = optionalAttributes.length || (suggestion?.optional_attributes ?? []).length;
+  const attributesReady = requirements?.attributes_ready ?? suggestion?.attributes_ready ?? false;
+
+  return (
+    <div className="mt-4 rounded-[6px] border border-[#EBEBEB] bg-[#FAFAFA] p-3">
+      <div className="mb-3 flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+        <div className="min-w-0">
+          <div className="text-sm font-semibold text-[#000000]">已套用类目要求</div>
+          <div className="mt-1 text-xs leading-5 text-[#595959]">
+            类目匹配成功后，下面的图片限制、必填项和选填项会跟随当前类目刷新。
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <StatusPill tone="success">类目 ID {categoryId}</StatusPill>
+          <StatusPill tone={attributesReady ? "success" : "warning"}>
+            {attributesReady ? "属性模板已同步" : "属性模板待同步"}
+          </StatusPill>
+        </div>
+      </div>
+
+      <div className="grid gap-2 lg:grid-cols-2">
+        <SummaryCell label="中文类目">{pathZh || "--"}</SummaryCell>
+        <SummaryCell label="英文类目">{pathEn || "--"}</SummaryCell>
+        <SummaryCell label="图片限制">
+          <div className="flex flex-wrap items-center gap-2">
+            <span>至少 {minImages || "--"} 张图</span>
+            <StatusPill tone={missingImages ? "warning" : "success"}>
+              {missingImages ? `还差 ${missingImages} 张` : "已满足"}
+            </StatusPill>
+          </div>
+        </SummaryCell>
+        <SummaryCell label="属性字段">
+          <div className="flex flex-wrap gap-2">
+            <StatusPill tone={requiredCount ? "danger" : "muted"}>{requiredCount} 个必填项</StatusPill>
+            <StatusPill tone="muted">{optionalCount} 个选填项</StatusPill>
+          </div>
+        </SummaryCell>
+      </div>
+    </div>
+  );
+}
+
+function SummaryCell({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="grid gap-1 rounded-[6px] border border-[#EBEBEB] bg-[#FFFFFF] px-3 py-2">
+      <div className="text-xs font-medium text-[#595959]">{label}</div>
+      <div className="min-h-6 break-words text-sm leading-6 text-[#000000]">{children}</div>
+    </div>
+  );
+}
+
 function CategorySuggestionRow({
   suggestion,
   active,
@@ -1944,8 +2136,8 @@ function CategorySuggestionRow({
   return (
     <div
       className={[
-        "py-3 first:pt-0 last:pb-0",
-        active ? "rounded-[6px] bg-[#FAFAFA] px-2" : "",
+        "rounded-[6px] border p-3",
+        active ? "border-[#000000] bg-[#FAFAFA]" : "border-[#EBEBEB] bg-[#FFFFFF]",
       ].join(" ")}
     >
       <div className="mb-2 flex items-start justify-between gap-3">
@@ -1990,6 +2182,10 @@ function CategorySuggestionRow({
       <div className="flex flex-wrap gap-2 text-xs text-[#595959]">
         <StatusPill>类目 ID：{suggestion.category_id}</StatusPill>
         <StatusPill tone="muted">最少图片数：{suggestion.min_required_images}</StatusPill>
+        <StatusPill tone={(suggestion.required_attributes ?? []).length ? "danger" : "muted"}>
+          必填项：{(suggestion.required_attributes ?? []).length}
+        </StatusPill>
+        <StatusPill tone="muted">选填项：{(suggestion.optional_attributes ?? []).length}</StatusPill>
         <StatusPill tone={suggestion.attributes_ready ? "success" : "warning"}>
           {suggestion.attributes_ready ? "属性模板已同步" : "属性模板待同步"}
         </StatusPill>
@@ -2008,81 +2204,213 @@ function CategorySuggestionRow({
   );
 }
 
+function CategoryAttributeEditor({
+  requirements,
+  requiredAttributes,
+  optionalAttributes,
+  dynamicAttributes,
+  optionalOpen,
+  onToggleOptional,
+  onChange,
+}: {
+  requirements: CategoryRequirements | null;
+  requiredAttributes: AttributeSpec[];
+  optionalAttributes: AttributeSpec[];
+  dynamicAttributes: DynamicAttributeDraft[];
+  optionalOpen: boolean;
+  onToggleOptional: () => void;
+  onChange: (key: string, value: string) => void;
+}) {
+  return (
+    <div className="rounded-[6px] border border-[#EBEBEB] bg-[#FFFFFF]">
+      <div className="flex flex-col gap-2 border-b border-[#EBEBEB] bg-[#FAFAFA] px-3 py-3 md:flex-row md:items-start md:justify-between">
+        <div className="min-w-0">
+          <div className="text-sm font-semibold text-[#000000]">类目专属必填项</div>
+          <div className="mt-1 line-clamp-1 text-xs text-[#595959]">
+            官方类目：{requirements?.path_en || requirements?.lowest_category_raw || "--"}
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <StatusPill tone={requiredAttributes.length ? "danger" : "muted"}>
+            {requiredAttributes.length} 个必填项
+          </StatusPill>
+          <StatusPill tone="muted">{optionalAttributes.length} 个选填项</StatusPill>
+        </div>
+      </div>
+
+      <div className="p-3">
+        {requiredAttributes.length ? (
+          <AttributeGrid
+            title="必填项"
+            attributes={requiredAttributes}
+            dynamicAttributes={dynamicAttributes}
+            onChange={onChange}
+            tone="required"
+          />
+        ) : (
+          <EmptyLine text="当前类目没有同步到必填属性。" />
+        )}
+
+        {optionalAttributes.length ? (
+          <div className="mt-4 border-t border-[#EBEBEB] pt-3">
+            <button
+              type="button"
+              onClick={onToggleOptional}
+              className="flex w-full items-center justify-between gap-3 rounded-[6px] px-1 py-2 text-left text-sm font-medium text-[#000000] hover:bg-[#FAFAFA]"
+            >
+              <span>选填项（{optionalAttributes.length} 个，点击展开）</span>
+              <ChevronDown
+                className={[
+                  "h-4 w-4 text-[#595959] transition-transform",
+                  optionalOpen ? "rotate-180" : "",
+                ].join(" ")}
+              />
+            </button>
+            {optionalOpen ? (
+              <div className="mt-2">
+                <AttributeGrid
+                  title="选填项"
+                  attributes={optionalAttributes}
+                  dynamicAttributes={dynamicAttributes}
+                  onChange={onChange}
+                  tone="optional"
+                />
+              </div>
+            ) : (
+              <div className="mt-2 flex flex-wrap gap-2">
+                {optionalAttributes.slice(0, 12).map((attribute) => (
+                  <StatusPill key={attribute.key} tone="muted">
+                    {attribute.label}
+                  </StatusPill>
+                ))}
+                {optionalAttributes.length > 12 ? (
+                  <StatusPill tone="muted">+{optionalAttributes.length - 12}</StatusPill>
+                ) : null}
+              </div>
+            )}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 function AttributeGrid({
   title,
   attributes,
   dynamicAttributes,
   onChange,
+  tone = "default",
 }: {
   title: string;
   attributes: AttributeSpec[];
   dynamicAttributes: DynamicAttributeDraft[];
   onChange: (key: string, value: string) => void;
+  tone?: "default" | "required" | "optional";
 }) {
   if (attributes.length === 0) return null;
+  const labelClass = tone === "required" ? "text-[#D9363E]" : tone === "optional" ? "text-[#595959]" : "text-[#000000]";
+  const headerClass = tone === "required" ? "bg-[#FEF2F2]" : "bg-[#FAFAFA]";
   return (
     <section>
-      <div className="mb-2 text-xs font-medium text-[#595959]">{title}</div>
-      <div className="grid gap-3 md:grid-cols-2">
+      <div className={`mb-2 flex items-center justify-between rounded-[6px] px-3 py-2 text-xs font-medium ${headerClass} ${labelClass}`}>
+        <span>{title}</span>
+        <span>{attributes.length} 项</span>
+      </div>
+      <div className="overflow-hidden rounded-[6px] border border-[#EBEBEB]">
         {attributes.map((attribute) => {
           const value = dynamicAttributes.find((item) => item.key === attribute.key)?.value;
           const inputValue = attributeInputValue(value);
           return (
-            <Field key={attribute.key} label={attribute.label} required={attribute.required}>
-              {attribute.options.length > 0 ? (
-                <select
-                  value={inputValue}
-                  onChange={(event) => onChange(attribute.key, event.target.value)}
-                  className={inputClassName}
-                >
-                  <option value="">请选择</option>
-                  {attribute.options.map((option) => (
-                    <option key={`${attribute.key}-${option.value}`} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              ) : isSwitchAttribute(attribute) ? (
-                <div className="inline-flex h-10 w-fit overflow-hidden rounded-[6px] border border-[#EBEBEB] bg-[#FFFFFF] text-sm">
-                  {["Yes", "No"].map((option) => (
-                    <button
-                      key={option}
-                      type="button"
-                      onClick={() => onChange(attribute.key, option)}
-                      className={[
-                        "min-w-16 px-3 font-medium",
-                        inputValue === option
-                          ? "bg-[#000000] text-[#FFFFFF]"
-                          : "text-[#595959] hover:bg-[#FAFAFA]",
-                      ].join(" ")}
-                    >
-                      {option === "Yes" ? "是" : "否"}
-                    </button>
-                  ))}
+            <div
+              key={attribute.key}
+              className="grid gap-2 border-b border-[#EBEBEB] px-3 py-3 last:border-b-0 md:grid-cols-[190px_minmax(0,1fr)] md:items-center"
+            >
+              <div className="min-w-0">
+                <div className="flex items-start gap-1 text-sm font-medium leading-5 text-[#000000]">
+                  <span className="break-words">{attribute.label}</span>
+                  {attribute.required ? <span className="text-[#D9363E]">*</span> : null}
                 </div>
-              ) : isTextareaAttribute(attribute) ? (
-                <textarea
-                  value={inputValue}
-                  onChange={(event) => onChange(attribute.key, event.target.value)}
-                  className={textareaClassName}
-                  placeholder={attribute.placeholder || attribute.key}
-                />
-              ) : (
-                <input
-                  type={isNumberAttribute(attribute) ? "number" : "text"}
-                  min={isNumberAttribute(attribute) ? "0" : undefined}
-                  step={isNumberAttribute(attribute) ? attributeStep(attribute) : undefined}
-                  value={inputValue}
-                  onChange={(event) => onChange(attribute.key, event.target.value)}
-                  className={inputClassName}
-                  placeholder={attribute.placeholder || attribute.key}
-                />
-              )}
-            </Field>
+                {attribute.key !== attribute.label ? (
+                  <div className="mt-1 break-all text-xs leading-5 text-[#8C8C8C]">{attribute.key}</div>
+                ) : null}
+              </div>
+              <AttributeControl attribute={attribute} inputValue={inputValue} onChange={onChange} />
+            </div>
           );
         })}
       </div>
     </section>
+  );
+}
+
+function AttributeControl({
+  attribute,
+  inputValue,
+  onChange,
+}: {
+  attribute: AttributeSpec;
+  inputValue: string;
+  onChange: (key: string, value: string) => void;
+}) {
+  if (attribute.options.length > 0) {
+    return (
+      <select
+        value={inputValue}
+        onChange={(event) => onChange(attribute.key, event.target.value)}
+        className={inputClassName}
+      >
+        <option value="">请选择</option>
+        {attribute.options.map((option) => (
+          <option key={`${attribute.key}-${option.value}`} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    );
+  }
+
+  if (isSwitchAttribute(attribute)) {
+    return (
+      <div className="inline-flex h-10 w-fit overflow-hidden rounded-[6px] border border-[#EBEBEB] bg-[#FFFFFF] text-sm">
+        {["Yes", "No"].map((option) => (
+          <button
+            key={option}
+            type="button"
+            onClick={() => onChange(attribute.key, option)}
+            className={[
+              "min-w-16 px-3 font-medium",
+              inputValue === option ? "bg-[#000000] text-[#FFFFFF]" : "text-[#595959] hover:bg-[#FAFAFA]",
+            ].join(" ")}
+          >
+            {option === "Yes" ? "是" : "否"}
+          </button>
+        ))}
+      </div>
+    );
+  }
+
+  if (isTextareaAttribute(attribute)) {
+    return (
+      <textarea
+        value={inputValue}
+        onChange={(event) => onChange(attribute.key, event.target.value)}
+        className={textareaClassName}
+        placeholder={attribute.placeholder || attribute.key}
+      />
+    );
+  }
+
+  return (
+    <input
+      type={isNumberAttribute(attribute) ? "number" : "text"}
+      min={isNumberAttribute(attribute) ? "0" : undefined}
+      step={isNumberAttribute(attribute) ? attributeStep(attribute) : undefined}
+      value={inputValue}
+      onChange={(event) => onChange(attribute.key, event.target.value)}
+      className={inputClassName}
+      placeholder={attribute.placeholder || attribute.key}
+    />
   );
 }
 
@@ -2215,6 +2543,94 @@ function TokenList({ label, values }: { label: string; values: string[] }) {
       ) : (
         <span className="text-sm text-[#595959]">--</span>
       )}
+    </div>
+  );
+}
+
+function CategoryRequirementMatrix({
+  requirements,
+  imageCount,
+  requiredAttributes,
+  optionalAttributes,
+}: {
+  requirements: CategoryRequirements;
+  imageCount: number;
+  requiredAttributes: AttributeSpec[];
+  optionalAttributes: AttributeSpec[];
+}) {
+  const certificateValues =
+    requirements.compliance_certificates?.length ? requirements.compliance_certificates : ["无额外证书要求"];
+  const missingImages = Math.max(0, requirements.min_required_images - imageCount);
+
+  return (
+    <div className="space-y-3 text-sm">
+      <div className="overflow-hidden rounded-[6px] border border-[#EBEBEB]">
+        <RequirementRow label="末级类目">
+          {requirements.lowest_category_raw || `${requirements.lowest_category_name} (${requirements.category_id})`}
+        </RequirementRow>
+        <RequirementRow label="类目路径">{requirements.path_en || "--"}</RequirementRow>
+        <RequirementRow label="中文路径">{requirements.path_zh || "--"}</RequirementRow>
+        <RequirementRow label="最少图片数">
+          <div className="flex flex-wrap items-center gap-2">
+            <span>{requirements.min_required_images}</span>
+            <StatusPill tone={missingImages ? "warning" : "success"}>
+              {missingImages ? `还差 ${missingImages} 张` : "已满足"}
+            </StatusPill>
+          </div>
+        </RequirementRow>
+        <RequirementRow label="合规证书">
+          <TagWrap values={certificateValues} tone="warning" />
+        </RequirementRow>
+        <RequirementRow label="必填项">
+          <TagWrap values={requiredAttributes.map((attribute) => attribute.label)} tone="danger" emptyText="无必填项" />
+        </RequirementRow>
+        <RequirementRow label="选填项">
+          <TagWrap values={optionalAttributes.map((attribute) => attribute.label)} tone="muted" emptyText="无选填项" />
+        </RequirementRow>
+      </div>
+      <TokenList label="图片要求" values={requirements.image_requirement_texts ?? []} />
+      <div className="flex flex-wrap gap-2">
+        <StatusPill tone={requirements.attributes_ready ? "success" : "warning"}>
+          {requirements.attributes_ready ? "属性模板已同步" : "属性模板待同步"}
+        </StatusPill>
+        <StatusPill tone="muted">类目 ID {requirements.category_id}</StatusPill>
+      </div>
+      {!requirements.attributes_ready && requirements.attribute_message ? (
+        <InlineError message={requirements.attribute_message} />
+      ) : null}
+    </div>
+  );
+}
+
+function RequirementRow({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="grid grid-cols-[112px_minmax(0,1fr)] border-b border-[#EBEBEB] last:border-b-0">
+      <div className="bg-[#F5F7FA] px-3 py-3 text-sm font-semibold leading-5 text-[#595959]">
+        {label}
+      </div>
+      <div className="min-w-0 px-3 py-3 text-sm leading-6 text-[#000000]">{children}</div>
+    </div>
+  );
+}
+
+function TagWrap({
+  values,
+  tone,
+  emptyText = "--",
+}: {
+  values: string[];
+  tone: "warning" | "danger" | "muted";
+  emptyText?: string;
+}) {
+  const cleanValues = values.map((value) => value.trim()).filter(Boolean);
+  if (!cleanValues.length) return <span className="text-[#595959]">{emptyText}</span>;
+  return (
+    <div className="flex flex-wrap gap-2">
+      {cleanValues.map((value) => (
+        <StatusPill key={value} tone={tone}>
+          {value}
+        </StatusPill>
+      ))}
     </div>
   );
 }
@@ -2713,6 +3129,72 @@ function selectedSuggestionMinImages(match: CategoryMatchResponse | null, catego
   return match.suggestions.find((suggestion) => suggestion.category_id === categoryId)?.min_required_images ?? 0;
 }
 
+function shouldRefreshGeneratedSku(currentSku: string, lastAutoSku: string) {
+  const normalized = currentSku.trim();
+  return (
+    !normalized ||
+    Boolean(lastAutoSku && normalized === lastAutoSku) ||
+    /^[A-Z0-9]+(?:-[A-Z0-9]+)*-\d{8}-\d{4}$/.test(normalized)
+  );
+}
+
+function buildGeneratedSku(
+  form: ListingForm,
+  category: {
+    category_id: number;
+    path_en?: string | null;
+    path_zh?: string | null;
+    lowest_category_name?: string | null;
+    lowest_category_raw?: string | null;
+    main_category_name?: string | null;
+  },
+) {
+  const productPrefix = toSkuPrefix([form.title, form.productDescription].join(" "));
+  const categoryPrefix = toSkuPrefix(
+    [
+      category.lowest_category_name,
+      category.lowest_category_raw,
+      lastCategoryPathSegment(category.path_en),
+      category.main_category_name,
+      category.path_zh,
+    ].join(" "),
+  );
+  const prefix = productPrefix || categoryPrefix || `CAT${category.category_id}` || "XH";
+  const datePart = formatSkuDate(new Date());
+  const randomPart = String(Math.floor(1000 + Math.random() * 9000));
+  const suffix = `${datePart}-${randomPart}`;
+  const maxPrefixLength = Math.max(2, takealotSkuMaxLength - suffix.length - 1);
+  const clippedPrefix = prefix.slice(0, maxPrefixLength).replace(/-+$/g, "") || "XH";
+  return `${clippedPrefix}-${suffix}`.slice(0, takealotSkuMaxLength);
+}
+
+function toSkuPrefix(value: string) {
+  const tokens = value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase()
+    .match(/[A-Z0-9]+/g);
+  if (!tokens) return "";
+  const ignored = new Set(["AND", "THE", "FOR", "WITH", "HOME", "FAMILY", "PERSONAL", "LIFESTYLE"]);
+  return tokens
+    .filter((token) => token.length > 1 && !ignored.has(token))
+    .slice(0, 4)
+    .join("-");
+}
+
+function lastCategoryPathSegment(path: string | null | undefined) {
+  if (!path) return "";
+  const parts = path.split(/>|->/).map((part) => part.trim()).filter(Boolean);
+  return parts[parts.length - 1] ?? path;
+}
+
+function formatSkuDate(date: Date) {
+  const year = String(date.getFullYear());
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}${month}${day}`;
+}
+
 function categoryItemDisplayPath(item: {
   category_id: number;
   path_en?: string | null;
@@ -2735,6 +3217,17 @@ function confidenceTone(confidence: number): "success" | "warning" | "muted" {
 function formatPercent(value: number) {
   const percent = value > 1 ? value : value * 100;
   return `${Math.round(percent)}%`;
+}
+
+function formatElapsedMs(value: number) {
+  if (!Number.isFinite(value)) return "--";
+  if (value < 1000) return `${Math.max(1, Math.round(value))}ms`;
+  return `${(value / 1000).toFixed(1)}s`;
+}
+
+function submissionCreateFailed(response: SubmissionCreateResponse) {
+  const statusValue = `${response.status || ""} ${response.stage || ""}`.toLowerCase();
+  return Boolean(response.error_code || statusValue.includes("failed") || statusValue.includes("error"));
 }
 
 function statusTone(status: string | null | undefined): "success" | "warning" | "danger" | "muted" {

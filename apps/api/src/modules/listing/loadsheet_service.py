@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import io
 import json
 import os
 import re
@@ -11,7 +12,7 @@ from urllib.parse import quote, urlparse
 from uuid import uuid4
 
 import httpx
-from openpyxl import Workbook
+from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
@@ -21,6 +22,7 @@ from .schemas import ListingLoadsheetPreviewRequest
 
 
 LOADSHEET_CONTENT_TYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+LOADSHEET_MACRO_CONTENT_TYPE = "application/vnd.ms-excel.sheet.macroEnabled.12"
 LOADSHEET_SUBMIT_RETRY_STATUS_CODES = {408, 409, 425, 429, 500, 502, 503, 504}
 TAKEALOT_APPROVED_REVIEW_STATUSES = {
     "approved",
@@ -77,6 +79,8 @@ SECRET_QUERY_RE = re.compile(
 LONG_SECRET_RE = re.compile(
     r"(?<![A-Za-z0-9._~+/=-])(?=[A-Za-z0-9._~+/=-]{40,})(?=[A-Za-z0-9._~+/=-]*[A-Za-z])(?=[A-Za-z0-9._~+/=-]*\d)[A-Za-z0-9._~+/=-]{40,}(?![A-Za-z0-9._~+/=-])"
 )
+LOADSHEET_TEMPLATE_CACHE: dict[str, list[dict[str, Any]]] = {}
+LOADSHEET_TEMPLATE_EXCEL_CACHE: dict[str, bytes] = {}
 
 
 class ListingLoadsheetSubmitError(RuntimeError):
@@ -130,7 +134,13 @@ class ListingLoadsheetService:
             if public_base_url is not None
             else os.getenv("XH_LISTING_LOADSHEET_PUBLIC_BASE_URL", "")
         ).strip()
-        self.submit_base_url = os.getenv("XH_TAKEALOT_LOADSHEET_BASE_URL", settings.takealot_catalog_base_url).rstrip("/")
+        configured_submit_base_url = (
+            os.getenv("XH_TAKEALOT_LOADSHEET_BASE_URL")
+            or os.getenv("XH_TAKEALOT_SELLER_API_BASE_URL")
+            or os.getenv("TAKEALOT_SELLER_API_BASE_URL")
+            or settings.takealot_seller_api_base_url
+        )
+        self.submit_base_url = self._normalize_loadsheet_base_url(configured_submit_base_url)
         self.submit_timeout_seconds = max(5.0, float(os.getenv("XH_TAKEALOT_LOADSHEET_TIMEOUT_SECONDS", "90")))
 
     def build_preview(
@@ -142,6 +152,7 @@ class ListingLoadsheetService:
         assets: list[dict[str, Any]],
         brand: dict[str, Any] | None,
         brand_catalog_ready: bool,
+        api_key: str | None = None,
     ) -> dict[str, Any]:
         validation = self.validate_payload(
             request=request,
@@ -155,7 +166,9 @@ class ListingLoadsheetService:
             request=request,
             category=category,
             validation=validation,
+            api_key=api_key,
         )
+        validation["valid"] = not any(issue["level"] == "error" for issue in validation.get("issues") or [])
         return {
             "valid": validation["valid"],
             "issues": validation["issues"],
@@ -293,7 +306,28 @@ class ListingLoadsheetService:
         request: ListingLoadsheetPreviewRequest,
         category: dict[str, Any],
         validation: dict[str, Any],
+        api_key: str | None = None,
     ) -> dict[str, Any]:
+        if api_key and api_key.strip():
+            try:
+                # Production submissions must use Takealot's official macro
+                # template. The small fallback workbook below is only a local
+                # diagnostic artifact; it is not accepted by the Seller API.
+                return self._write_official_template_workbook(
+                    request=request,
+                    category=category,
+                    validation=validation,
+                    api_key=api_key,
+                )
+            except ListingLoadsheetSubmitError as exc:
+                validation.setdefault("issues", []).append(
+                    self._issue(
+                        "error",
+                        "loadsheet_template",
+                        f"Could not generate the official Takealot loadsheet template: {exc.message}",
+                    )
+                )
+
         workbook = Workbook()
         product_sheet = workbook.active
         product_sheet.title = "Loadsheet"
@@ -376,6 +410,157 @@ class ListingLoadsheetService:
             "checksum_sha256": hashlib.sha256(data).hexdigest(),
         }
 
+    def _write_official_template_workbook(
+        self,
+        *,
+        request: ListingLoadsheetPreviewRequest,
+        category: dict[str, Any],
+        validation: dict[str, Any],
+        api_key: str,
+    ) -> dict[str, Any]:
+        template = self._resolve_loadsheet_template(api_key=api_key, category=category)
+        try:
+            template_id = int(str(template.get("template_id") or "").strip())
+        except (TypeError, ValueError) as exc:
+            raise ListingLoadsheetSubmitError("Takealot loadsheet template id is missing or invalid.") from exc
+
+        template_bytes = self._download_template_excel(api_key=api_key, template_id=template_id)
+        try:
+            workbook = load_workbook(io.BytesIO(template_bytes), keep_vba=True)
+        except Exception as exc:
+            raise ListingLoadsheetSubmitError("Takealot loadsheet template could not be opened.") from exc
+        if "Loadsheet" not in workbook.sheetnames:
+            workbook.close()
+            raise ListingLoadsheetSubmitError("Takealot loadsheet template does not contain a Loadsheet tab.")
+
+        sheet = workbook["Loadsheet"]
+        column_map = self._build_loadsheet_column_map(sheet)
+        data_row = self._first_empty_loadsheet_data_row(sheet, column_map)
+        generated_fields = validation["generated_fields"]
+        dynamic_attributes = self._dynamic_attribute_rows_to_dict(generated_fields.get("dynamic_attributes") or [])
+        written_fields: list[str] = []
+
+        def write_any(fields: list[str], value: Any) -> None:
+            for field in fields:
+                if self._set_loadsheet_cell(sheet, data_row, column_map, field, value):
+                    written_fields.append(field)
+                    return
+
+        # These field names mirror the official Seller API macro templates.
+        # Missing columns are skipped so different department templates can use
+        # slightly different labels without corrupting the generated file.
+        write_any(["Variant.ProductVariant"], "Product")
+        write_any(["SKU"], generated_fields.get("sku"))
+        write_any(["TopCategory"], self._main_category_value(category))
+        write_any(["Category"], category.get("lowest_category_raw") or category.get("lowest_category_name"))
+        write_any(["ProductID.Value", "ProductID"], generated_fields.get("barcode"))
+        write_any(["title"], str(generated_fields.get("title") or "")[:75])
+        write_any(["subtitle"], str(generated_fields.get("subtitle") or "")[:60])
+        write_any(["description"], self._plain_product_description(generated_fields.get("description")))
+        write_any(["Attribute.whats_in_the_box", "What's in the Box"], generated_fields.get("whats_in_the_box"))
+        write_any(["Brand"], generated_fields.get("brand_name"))
+        write_any(
+            ["Attribute.model_number", "Variant.ProductCode"],
+            dynamic_attributes.get("model_number") or generated_fields.get("sku"),
+        )
+        write_any(["color.main", "colour.main", "Attribute.colour_main"], dynamic_attributes.get("colour_main"))
+        write_any(["color.name", "colour.name", "Attribute.colour_name"], dynamic_attributes.get("colour_name"))
+        write_any(
+            ["Attribute.country_of_origin.[0]", "Attribute.country_of_origin"],
+            dynamic_attributes.get("country_of_origin"),
+        )
+
+        for index, image_url in enumerate(generated_fields.get("image_urls") or [], start=1):
+            write_any([f"Images.image_url_{index}", f"Image.{index}", f"images.[{index - 1}]"], image_url)
+
+        selling_price = self._number(generated_fields.get("selling_price"))
+        rrp = self._number(generated_fields.get("rrp"))
+        if selling_price is not None and selling_price > 0:
+            write_any(["SuggestedPrice.Amount", "SellingPrice.Amount", "Selling Price"], int(selling_price))
+            write_any(["SuggestedPrice.Currency", "SellingPrice.Currency"], "ZAR")
+        if rrp is not None and rrp >= 0:
+            write_any(["RRP.Amount", "RecommendedRetailPrice.Amount", "RRP"], int(rrp))
+
+        write_any(["Quantity", "Stock", "StockQuantity"], generated_fields.get("stock_quantity"))
+        write_any(["MinimumLeadtimeDays", "LeadtimeDays", "Leadtime"], generated_fields.get("minimum_leadtime_days"))
+        write_any(["Seller Warehouse ID", "Warehouse ID", "seller_warehouse_id"], generated_fields.get("seller_warehouse_id"))
+
+        length_cm = self._number(generated_fields.get("length_cm"))
+        width_cm = self._number(generated_fields.get("width_cm"))
+        height_cm = self._number(generated_fields.get("height_cm"))
+        weight_g = self._number(generated_fields.get("weight_g"))
+        write_any(
+            [
+                "Attribute.merchant_packaged_dimensions.length",
+                "Attribute.merchant_packaged_dimensions.length.value",
+                "Attribute.merchant_packaged_length.value",
+            ],
+            length_cm,
+        )
+        write_any(
+            [
+                "Attribute.merchant_packaged_dimensions.width",
+                "Attribute.merchant_packaged_dimensions.width.value",
+                "Attribute.merchant_packaged_width.value",
+            ],
+            width_cm,
+        )
+        write_any(
+            [
+                "Attribute.merchant_packaged_dimensions.height",
+                "Attribute.merchant_packaged_dimensions.height.value",
+                "Attribute.merchant_packaged_height.value",
+            ],
+            height_cm,
+        )
+        write_any(["Attribute.merchant_packaged_weight.value", "Attribute.merchant_packaged_weight"], weight_g)
+        write_any(["Attribute.merchant_packaged_weight.unit"], "g")
+        for dimension_name in ("length", "width", "height"):
+            write_any(
+                [
+                    f"Attribute.merchant_packaged_dimensions.{dimension_name}.unit",
+                    f"Attribute.merchant_packaged_{dimension_name}.unit",
+                    f"Attribute.package_dimensions.{dimension_name}.unit",
+                ],
+                "cm",
+            )
+
+        for key, value in dynamic_attributes.items():
+            normalized_value = self._normalize_attribute_value(value)
+            write_any(self._dynamic_attribute_field_candidates(key), normalized_value)
+
+        now = datetime.now(UTC)
+        date_path = now.strftime("%Y/%m/%d")
+        target_dir = self.storage_root / date_path
+        target_dir.mkdir(parents=True, exist_ok=True)
+        safe_sku = re.sub(r"[^A-Za-z0-9_.-]+", "-", request.sku.strip())[:48].strip("-") or "listing"
+        target_path = target_dir / f"takealot-loadsheet-{safe_sku}-{uuid4().hex[:12]}.xlsm"
+        workbook.save(target_path)
+        workbook.close()
+
+        data = target_path.read_bytes()
+        relative_path = self._relative_path(target_path)
+        public_url = f"{self.public_base_url.rstrip('/')}/{relative_path}" if self.public_base_url else None
+        validation.setdefault("warnings", []).append(
+            "Official Takealot template-backed loadsheet generated; only matching template columns were written."
+        )
+        generated_fields["loadsheet_template_id"] = str(template_id)
+        generated_fields["loadsheet_template_name"] = str(template.get("name") or template.get("template_name") or "")
+        return {
+            "asset_id": None,
+            "storage_path": str(target_path),
+            "public_url": public_url,
+            "content_type": LOADSHEET_MACRO_CONTENT_TYPE,
+            "size_bytes": len(data),
+            "checksum_sha256": hashlib.sha256(data).hexdigest(),
+            "raw_payload": {
+                "generated_by": "takealot_official_loadsheet_template",
+                "loadsheet_template_id": str(template_id),
+                "loadsheet_template_name": generated_fields["loadsheet_template_name"],
+                "written_fields": self._dedupe(written_fields),
+            },
+        }
+
     def asset_payload_for_generated_loadsheet(self, loadsheet_asset: dict[str, Any]) -> dict[str, Any]:
         storage_path = loadsheet_asset.get("storage_path")
         file_name = Path(str(storage_path)).name if storage_path else None
@@ -397,8 +582,17 @@ class ListingLoadsheetService:
             "raw_payload": {
                 "generated_by": "listing_loadsheet_preview",
                 "public_base_url_configured": bool(self.public_base_url),
+                **(loadsheet_asset.get("raw_payload") if isinstance(loadsheet_asset.get("raw_payload"), dict) else {}),
             },
         }
+
+    @staticmethod
+    def is_official_template_asset(loadsheet_asset: dict[str, Any] | None) -> bool:
+        if not loadsheet_asset:
+            return False
+        content_type = str(loadsheet_asset.get("content_type") or "").strip().lower()
+        storage_path = str(loadsheet_asset.get("storage_path") or loadsheet_asset.get("file_name") or "").strip().lower()
+        return content_type == LOADSHEET_MACRO_CONTENT_TYPE.lower() or storage_path.endswith(".xlsm")
 
     def submit_loadsheet_to_takealot(
         self,
@@ -412,6 +606,10 @@ class ListingLoadsheetService:
         storage_path = Path(str(loadsheet_asset.get("storage_path") or ""))
         if not storage_path.exists() or not storage_path.is_file():
             raise ListingLoadsheetSubmitError("Generated loadsheet file is missing")
+        if not self.is_official_template_asset(loadsheet_asset):
+            # The preview workbook is useful for operators, but the external
+            # POST boundary only accepts Takealot's official macro template.
+            raise ListingLoadsheetSubmitError("Generated loadsheet is not an official Takealot template workbook.")
         file_name = submission_name or storage_path.name
         data = storage_path.read_bytes()
         try:
@@ -981,6 +1179,205 @@ class ListingLoadsheetService:
             "Referer": "https://seller.takealot.com/",
             "User-Agent": "Xiaohei-ERP/1.0",
         }
+
+    @staticmethod
+    def _normalize_loadsheet_base_url(base_url: str | None) -> str:
+        raw_url = str(base_url or "").strip().rstrip("/") or "https://seller-api.takealot.com/v2"
+        parsed = urlparse(raw_url)
+        host = (parsed.netloc or "").lower()
+        path = (parsed.path or "").rstrip("/")
+        if "marketplace-api.takealot.com" in host:
+            return "https://seller-api.takealot.com/v2"
+        if "seller-api.takealot.com" in host and path in {"", "/v1"}:
+            # Loadsheet template/submission endpoints live on Seller API v2.
+            # The older catalog base stays separate for catalogue MPV reads.
+            return f"{parsed.scheme or 'https'}://{parsed.netloc}/v2"
+        return raw_url
+
+    def _resolve_loadsheet_template(self, *, api_key: str, category: dict[str, Any]) -> dict[str, Any]:
+        configured_template_id = str(category.get("loadsheet_template_id") or "").strip()
+        if configured_template_id:
+            return {
+                "template_id": configured_template_id,
+                "name": category.get("loadsheet_template_name") or category.get("department") or "",
+            }
+
+        templates = self._get_loadsheet_templates(api_key=api_key)
+        target = self._template_key(category.get("department") or category.get("loadsheet_template_name") or "")
+        aliases = {
+            "gardenpoolpatio": "gardenpoolpatio",
+            "gardenpoolandpatio": "gardenpoolpatio",
+        }
+        aliased_target = aliases.get(target, target)
+        for template in templates:
+            template_name = self._template_key(template.get("name") or template.get("template_name") or "")
+            if template_name == target or aliases.get(template_name, template_name) == aliased_target:
+                return template
+        raise ListingLoadsheetSubmitError(
+            f"Takealot did not return a loadsheet template for department {category.get('department') or 'unknown'}."
+        )
+
+    def _get_loadsheet_templates(self, *, api_key: str) -> list[dict[str, Any]]:
+        cache_key = f"{self.submit_base_url}:templates"
+        cached = LOADSHEET_TEMPLATE_CACHE.get(cache_key)
+        if cached is not None:
+            return [dict(item) for item in cached]
+
+        payload = self._takealot_get_json("/loadsheets/templates", api_key=api_key)
+        templates: list[dict[str, Any]] = []
+        for group in payload.get("template_groups", []) or []:
+            group_name = str(group.get("group_name") or group.get("name") or "")
+            for item in group.get("templates", []) or group.get("loadsheets", []) or []:
+                if isinstance(item, dict):
+                    templates.append(
+                        {
+                            "template_id": item.get("template_id"),
+                            "name": str(item.get("name") or ""),
+                            "description": str(item.get("description") or ""),
+                            "group": group_name,
+                        }
+                    )
+        for group in payload.get("loadsheets", []) or []:
+            group_name = str(group.get("name") or "")
+            for item in group.get("loadsheets", []) or []:
+                if isinstance(item, dict):
+                    templates.append(
+                        {
+                            "template_id": item.get("template_id"),
+                            "name": str(item.get("name") or ""),
+                            "description": str(item.get("description") or ""),
+                            "group": group_name,
+                        }
+                    )
+        LOADSHEET_TEMPLATE_CACHE[cache_key] = templates
+        return [dict(item) for item in templates]
+
+    def _download_template_excel(self, *, api_key: str, template_id: int) -> bytes:
+        cache_key = f"{self.submit_base_url}:template:{template_id}"
+        cached = LOADSHEET_TEMPLATE_EXCEL_CACHE.get(cache_key)
+        if cached:
+            return cached
+        accept = f"{LOADSHEET_MACRO_CONTENT_TYPE},{LOADSHEET_CONTENT_TYPE},*/*"
+        try:
+            with httpx.Client(timeout=self.submit_timeout_seconds) as client:
+                response = client.get(
+                    f"{self.submit_base_url}/loadsheets/templates/{template_id}",
+                    headers={**self._seller_loadsheet_headers(api_key), "Accept": accept},
+                )
+        except httpx.HTTPError as exc:
+            safe_message = self.sanitize_text(str(exc), secrets=[api_key])
+            raise ListingLoadsheetSubmitError(f"Takealot loadsheet template download failed: {safe_message}") from exc
+        if response.status_code >= 400:
+            payload = self.sanitize_official_response(self._response_payload(response), secrets=[api_key])
+            raise ListingLoadsheetSubmitError(
+                self._extract_error_message(payload, fallback=f"Takealot loadsheet template download failed: HTTP {response.status_code}"),
+                status_code=response.status_code,
+                official_response=payload,
+            )
+        LOADSHEET_TEMPLATE_EXCEL_CACHE[cache_key] = response.content
+        return response.content
+
+    def _takealot_get_json(self, path: str, *, api_key: str, params: dict[str, Any] | None = None) -> dict[str, Any]:
+        try:
+            with httpx.Client(timeout=self.submit_timeout_seconds) as client:
+                response = client.get(
+                    f"{self.submit_base_url}{path}",
+                    params=params,
+                    headers=self._seller_loadsheet_headers(api_key),
+                )
+        except httpx.HTTPError as exc:
+            safe_message = self.sanitize_text(str(exc), secrets=[api_key])
+            raise ListingLoadsheetSubmitError(f"Takealot loadsheet request failed: {safe_message}") from exc
+        payload = self.sanitize_official_response(self._response_payload(response), secrets=[api_key])
+        if response.status_code >= 400:
+            raise ListingLoadsheetSubmitError(
+                self._extract_error_message(payload, fallback=f"Takealot loadsheet request failed: HTTP {response.status_code}"),
+                status_code=response.status_code,
+                official_response=payload,
+            )
+        return payload
+
+    @staticmethod
+    def _template_key(value: Any) -> str:
+        return re.sub(r"[^a-z0-9]+", "", str(value or "").lower())
+
+    @staticmethod
+    def _build_loadsheet_column_map(sheet: Any) -> dict[str, int]:
+        column_map: dict[str, int] = {}
+        for row_number in (1, 4):
+            for cell in sheet[row_number]:
+                if cell.value:
+                    column_map.setdefault(str(cell.value).strip(), cell.column)
+        return column_map
+
+    @staticmethod
+    def _first_empty_loadsheet_data_row(sheet: Any, column_map: dict[str, int]) -> int:
+        sku_column = column_map.get("SKU", 2)
+        for row_number in range(7, 500):
+            if not sheet.cell(row=row_number, column=sku_column).value:
+                return row_number
+        return max(7, sheet.max_row + 1)
+
+    @staticmethod
+    def _set_loadsheet_cell(sheet: Any, row_number: int, column_map: dict[str, int], field: str, value: Any) -> bool:
+        if value is None or value == "":
+            return False
+        column = column_map.get(field)
+        if not column:
+            return False
+        sheet.cell(row=row_number, column=column, value=value)
+        return True
+
+    @staticmethod
+    def _main_category_value(category: dict[str, Any]) -> str:
+        name = str(category.get("main_category_name") or "").strip()
+        category_id = int(category.get("main_category_id") or 0)
+        return f"{name} ({category_id})" if name and category_id else name
+
+    @staticmethod
+    def _plain_product_description(value: Any) -> str:
+        description = str(value or "")
+        description = re.sub(r"</p\s*>", "\n", description, flags=re.IGNORECASE)
+        description = re.sub(r"<br\s*/?>", "\n", description, flags=re.IGNORECASE)
+        description = re.sub(r"<p(?:\s+[^>]*)?>", "", description, flags=re.IGNORECASE)
+        description = re.sub(r"<[^>]+>", "", description)
+        lines = [re.sub(r"\s+", " ", line).strip() for line in description.splitlines()]
+        return "\n".join(line for line in lines if line)
+
+    @staticmethod
+    def _dynamic_attribute_rows_to_dict(rows: Any) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        if isinstance(rows, dict):
+            return {str(key): value for key, value in rows.items()}
+        if not isinstance(rows, list):
+            return result
+        for item in rows:
+            if not isinstance(item, dict):
+                continue
+            key = str(item.get("submit_key") or item.get("key") or "").strip()
+            if key:
+                result[key] = item.get("value")
+        return result
+
+    @staticmethod
+    def _normalize_attribute_value(value: Any) -> Any:
+        if isinstance(value, bool):
+            return "Yes" if value else "No"
+        normalized = str(value or "").strip()
+        warranty_type_values = {
+            "lifetime": "Lifetime (1)",
+            "limited": "Limited (2)",
+            "full": "Full (5)",
+        }
+        return warranty_type_values.get(normalized.lower(), value)
+
+    @staticmethod
+    def _dynamic_attribute_field_candidates(key: str) -> list[str]:
+        clean_key = str(key or "").strip()
+        candidates = [clean_key]
+        if clean_key and not clean_key.startswith("Attribute."):
+            candidates.append(f"Attribute.{clean_key}")
+        return [candidate for candidate in candidates if candidate]
 
     @classmethod
     def _collect_status_values(cls, payload: Any) -> list[str]:
