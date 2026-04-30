@@ -1,0 +1,16 @@
+INFO:     Will watch for changes in these directories: ['D:\\Ð¡ºÚerp']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [16136] using StatReload
+INFO:     Started server process [14300]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'apps\api\src\modules\store\adapters\takealot.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [14300]
+INFO:     Started server process [29380]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.

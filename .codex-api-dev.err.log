@@ -1,0 +1,5 @@
+INFO:     Started server process [30848]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)

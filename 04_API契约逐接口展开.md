@@ -293,6 +293,7 @@
 - 错误数据通过 adjustment 修正
 - 批量重算必须任务化且可恢复
 - 快照必须版本化并携带 `input_hash`
+- `P1` 阶段 `Finance` 采用“读侧优先 + 白名单重算 + 非默认全面 adjustment”边界，不视为默认完整开放域
 
 ### 8.4 关键错误码
 
@@ -344,6 +345,17 @@
 |---|---|---|---|---|---:|---|---|---|
 | `POST /api/selection/products/{id}/mark` | 标注候选商品 | `super_admin`、`tenant_admin`、`operator` | `selection` | 商品存在 | 否 | 是 | 否 | 商品对象 |
 | `POST /api/selection/export` | 导出选品报告 | `super_admin`、`tenant_admin`、`operator` | `selection` | 筛选条件合法 | 是 | 是 | 是 | `task_id` |
+| `POST /api/extension/auth` | 扩展鉴权 | 已登录用户 | `extension` | 登录态有效 | 否 | 是 | 否 | token |
+| `POST /api/extension/profit-preview` | 利润试算与商品事实补全 | 已登录用户 | `extension` | `PLID` 合法、具备数据访问权限 | 否 | 是 | 否 | 预览结果 |
+| `POST /api/extension/protected-floor` | 保存保护价并同步 AutoBid | `operator`、`tenant_admin`、`super_admin` | `extension`、`bidding` | 店铺已绑定、`PLID` 合法、保护价大于 0 | 否 | 是 | 是 | 保护价对象与同步状态 |
+| `POST /api/extension/list-now` | 快速创建任务 | `operator`、`tenant_admin`、`super_admin` | `extension` | 来源合法、店铺已绑定 | 是 | 是 | 是 | `task_id` 或 `job_id` |
+
+### 10.3 首发限制
+
+- `profit-preview` 首发以读侧为主：允许补全商品事实、返回利润试算，但不直接写回平台；成本、运费、费率只参与本次计算，不持久化
+- `protected-floor` 是扩展 `V1` 唯一默认开放的持久化写动作；其目标是把保护价同步到 `AutoBid`，而不是保存整套经营参数
+- `list-now` 首发只创建内部任务壳，不承诺立即复杂写回 Takealot
+- 扩展必须只调用 ERP，不允许浏览器侧直接高频请求 Takealot 正式接口
 
 ---
 
@@ -397,7 +409,24 @@
 
 ---
 
-## 13. 首发联调优先顺序
+## 13. Dashboard / Notification / Admin Read Side
+
+| 接口 | 说明 | 角色 | 返回 |
+|---|---|---|---|
+| `GET /api/dashboard/stats` | Dashboard 顶部 KPI 汇总 | 已登录且有域权限用户 | 店铺健康、待处理订单、竞价风险、任务风险摘要 |
+| `GET /api/dashboard/activity` | 最近活动流 | 已登录且有域权限用户 | 最近任务、高危动作、异常摘要 |
+| `GET /api/dashboard/alerts` | 风险提醒列表 | `super_admin`、`tenant_admin` | 风险等级、对象、建议动作 |
+| `GET /api/notifications` | 站内通知列表 | 已登录用户 | 未读状态、通知类型、跳转目标 |
+
+约束：
+
+- Dashboard 读接口优先走汇总表、缓存或预聚合结果，不允许直接扫热业务明细表
+- 通知与活动流只提供读能力，不在首发阶段承诺复杂回写工作流
+- 风险提醒必须可追溯到对应 `task_id`、`request_id` 或业务对象 ID
+
+---
+
+## 14. 首发联调优先顺序
 
 1. `GET /api/auth/me`
 2. `POST /admin/api/users/{id}/feature-flags`
@@ -410,10 +439,11 @@
 
 ---
 
-## 14. 检查点
+## 15. 检查点
 
 本文件首版完成后，下一检查点必须确认：
 
 - 每个 `P0` 写接口是否都已绑定权限、状态前置、幂等、审计、错误码
 - `P1` 接口是否已经标注清楚“只读 / 受限可用”边界
 - `P2` 是否只保留任务壳与状态壳，未错误承诺完整闭环
+- Dashboard / Notification 读接口是否已明确缓存、聚合与权限边界

@@ -1,0 +1,40 @@
+INFO:     127.0.0.1:62027 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62055 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62117 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52938 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52938 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52938 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52938 - "GET /api/v1/dashboard/context HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52943 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52945 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52944 - "GET /api/v1/dashboard/context HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52938 - "GET /api/v1/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52938 - "GET /api/v1/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52938 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52943 - "GET /api/listing/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52945 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52938 - "GET /api/v1/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52944 - "GET /api/v1/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52954 - "GET /api/listing/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52938 - "GET /admin/api/tenant/usage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52943 - "GET /admin/api/tenant/usage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52938 - "GET /api/v1/bidding/rules?store_id=7eed3456-d515-4c5a-9d90-0f5de7845304 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52938 - "GET /api/v1/bidding/rules?store_id=7eed3456-d515-4c5a-9d90-0f5de7845304 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52970 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52970 - "GET /api/v1/dashboard/context HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52979 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52970 - "GET /api/v1/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52979 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52981 - "GET /api/v1/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52982 - "GET /api/listing/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52984 - "GET /admin/api/tenant/usage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52970 - "GET /api/v1/bidding/rules?store_id=7eed3456-d515-4c5a-9d90-0f5de7845304 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53144 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53142 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53143 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53141 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53141 - "GET /api/v1/stores/7eed3456-d515-4c5a-9d90-0f5de7845304 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:53155 - "GET /api/v1/stores/7eed3456-d515-4c5a-9d90-0f5de7845304 HTTP/1.1" 500 Internal Server Error
+INFO:     127.0.0.1:53642 - "GET /api/v1/stores/7eed3456-d515-4c5a-9d90-0f5de7845304 HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:53766 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53766 - "GET /api/v1/stores/7eed3456-d515-4c5a-9d90-0f5de7845304 HTTP/1.1" 500 Internal Server Error

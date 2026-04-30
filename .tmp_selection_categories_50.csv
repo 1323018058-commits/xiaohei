@@ -1,0 +1,17 @@
+name,category_ref,department_slug,main_category,category_level1,category_level2,category_level3,count,depth
+Animals,animals-29733,books,Books,Books,Children's Books,Animals,43853,3
+Activities,activities-29730,books,Books,Books,Children's Books,Activities,32315,3
+Adventure,adventure-29731,books,Books,Books,Children's Books,Adventure,2514,3
+Law,law-30896,books,Books,Books,Non-Fiction,Law,181854,3
+Education & Teaching,education-and-teaching-30394,books,Books,Books,Non-Fiction,Education & Teaching,125662,3
+Laser Cutters & Engravers,laser-cutters-engravers-33830,office-stationery,Office & Stationery,Office,Laser Cutters & Engravers,,52,2
+Gift Tags & Labels,gift-tags-and-labels-26647,office-stationery,Office & Stationery,Stationery,Gifting,Gift Tags & Labels,1475,3
+Gift Bags & Boxes,gift-bags-and-boxes-26645,office-stationery,Office & Stationery,Stationery,Gifting,Gift Bags & Boxes,1369,3
+Cards,cards-26650,office-stationery,Office & Stationery,Stationery,Gifting,Cards,1290,3
+Ribbons & Bows,ribbons-and-bows-26648,office-stationery,Office & Stationery,Stationery,Gifting,Ribbons & Bows,423,3
+Gift Wrap,gift-wrap-26646,office-stationery,Office & Stationery,Stationery,Gifting,Gift Wrap,309,3
+Tissue Paper,tissue-paper-26649,office-stationery,Office & Stationery,Stationery,Gifting,Tissue Paper,238,3
+Signage,signage-26598,office-stationery,Office & Stationery,Stationery,Office Supplies,Signage,4367,3
+Label Makers & Supplies,label-makers-and-supplies-28092,office-stationery,Office & Stationery,Stationery,Office Supplies,Label Makers & Supplies,2119,3
+"Diaries, Calendars & Planners",diaries-calendars-and-planners-26587,office-stationery,Office & Stationery,Stationery,Office Supplies,"Diaries, Calendars & Planners",686,3
+Cleaning,cleaning-26597,office-stationery,Office & Stationery,Stationery,Office Supplies,Cleaning,153,3

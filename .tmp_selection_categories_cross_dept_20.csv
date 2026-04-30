@@ -1,0 +1,21 @@
+name,category_ref,department_slug,main_category,category_level1,category_level2,category_level3,count,depth
+Law,law-30896,books,Books,Books,Non-Fiction,Law,181854,3
+Education & Teaching,education-and-teaching-30394,books,Books,Books,Non-Fiction,Education & Teaching,125662,3
+General - Fiction,general-fiction-29778,books,Books,Books,Fiction,General - Fiction,368068,3
+Literary,literary-29787,books,Books,Books,Fiction,Literary,213361,3
+Romance,romance-29789,books,Books,Books,Fiction,Romance,210857,3
+Kettles,kettles-25790,home-kitchen,Home & Kitchen,Small Kitchen Appliances,Kettles,,902,2
+Toasters,toasters-25791,home-kitchen,Home & Kitchen,Small Kitchen Appliances,Toasters,,367,2
+Replacement Parts,replacement-parts-33920,home-kitchen,Home & Kitchen,Small Kitchen Appliances,Replacement Parts,,198,2
+Replacement Parts,replacement-parts-33919,home-kitchen,Home & Kitchen,Small Household Appliances,Replacement Parts,,681,2
+Sewing Machines,sewing-machines-25787,home-kitchen,Home & Kitchen,Small Household Appliances,Sewing Machines,,336,2
+"Hoodies, Sweatshirts & Fleece",hoodies-sweatshirts-and-fleece-32779,fashion,Fashion,Men,Clothing,"Hoodies, Sweatshirts & Fleece",7001,3
+"Blazers, Jackets & Coats",blazers-jackets-and-coats-32777,fashion,Fashion,Men,Clothing,"Blazers, Jackets & Coats",400,3
+Tracksuit Sets,tracksuit-sets-32775,fashion,Fashion,Men,Clothing,Tracksuit Sets,99,3
+Dungarees,dungarees-33709,fashion,Fashion,Men,Clothing,Dungarees,4,3
+Activewear,activewear-32754,fashion,Fashion,Men,Clothing,Activewear,3,3
+Laser Cutters & Engravers,laser-cutters-engravers-33830,office-stationery,Office & Stationery,Office,Laser Cutters & Engravers,,52,2
+Toner,toner-26339,office-stationery,Office & Stationery,Office,Office Consumables,Toner,4641,3
+Ink Cartridges,ink-cartridges-26330,office-stationery,Office & Stationery,Office,Office Consumables,Ink Cartridges,2148,3
+Label Tape,label-tape-26331,office-stationery,Office & Stationery,Office,Office Consumables,Label Tape,810,3
+Ink Bottles,ink-bottles-26329,office-stationery,Office & Stationery,Office,Office Consumables,Ink Bottles,465,3

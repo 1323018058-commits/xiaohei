@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>?? IA ??</title>
+  <style>
+    :root {
+      --bg:#f4f6f8;--panel:rgba(255,255,255,.94);--line:rgba(15,23,42,.08);--ink:#0f172a;--muted:#64748b;--blue:#1d4ed8;--blue-soft:rgba(29,78,216,.08);--green:#0f9f6e;--red:#d14343;--shadow:0 24px 60px rgba(15,23,42,.08);--radius:26px;
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif;background:radial-gradient(circle at top left, rgba(59,130,246,.10), transparent 24%),linear-gradient(180deg,#fafbfc 0%,var(--bg) 100%);color:var(--ink)}
+    .page{width:1600px;min-height:1000px;margin:0 auto;padding:32px;display:grid;grid-template-columns:220px 1fr;gap:26px}
+    .sidebar{background:var(--panel);border:1px solid var(--line);border-radius:30px;box-shadow:var(--shadow);padding:24px 16px;display:grid;align-content:start;gap:18px}
+    .brand{display:grid;gap:8px;padding:6px 10px 18px;border-bottom:1px solid var(--line)} .brand h1{margin:0;font-size:22px;letter-spacing:-.02em}.brand p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
+    .nav-group{display:grid;gap:8px}.nav-title{padding:0 10px;color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.nav-item{border:1px solid transparent;border-radius:16px;padding:13px 14px;font-size:14px;font-weight:700;color:#334155;background:transparent}.nav-item.active{background:var(--blue-soft);color:var(--blue);border-color:rgba(29,78,216,.14)}.nav-item.admin{border-style:dashed;color:#475569}
+    .main{display:grid;gap:22px;align-content:start}.hero{background:var(--panel);border:1px solid var(--line);border-radius:32px;box-shadow:var(--shadow);padding:28px 30px;display:grid;grid-template-columns:1.4fr .9fr;gap:18px;align-items:center}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;margin-bottom:10px}.hero h2{margin:0 0 10px;font-size:34px;letter-spacing:-.04em;line-height:1.05}.hero p{margin:0;color:var(--muted);line-height:1.7;font-size:14px;max-width:760px}
+    .chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}.chip{padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:12px;font-weight:700;color:#334155}.chip.primary{background:#111827;border-color:#111827;color:#fff}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;display:grid;gap:16px;min-height:270px}.panel.large{min-height:330px}.panel h3{margin:0;font-size:22px;letter-spacing:-.03em}.panel .sub{color:var(--muted);font-size:13px;line-height:1.6;margin-top:4px}
+    .mini-tabs{display:inline-flex;gap:8px;background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:6px;width:fit-content}.mini-tab{padding:8px 12px;border-radius:10px;font-size:12px;font-weight:700;color:var(--muted);background:transparent}.mini-tab.active{background:#fff;color:var(--ink);box-shadow:0 8px 20px rgba(15,23,42,.08)}
+    .kpi-row,.row{display:grid;gap:12px}.kpi-row{grid-template-columns:repeat(4,minmax(0,1fr))}.kpi{border:1px solid var(--line);background:#fbfdff;border-radius:18px;padding:14px;display:grid;gap:7px}.kpi .label{color:var(--muted);font-size:12px}.kpi .value{font-size:22px;font-weight:800}
+    .store-layout{display:grid;grid-template-columns:240px 1fr;gap:14px;min-height:215px}.store-list,.detail,.table-shell{border:1px solid var(--line);border-radius:18px;background:#fff}.store-list{padding:10px;display:grid;gap:10px}.store-card{border:1px solid rgba(29,78,216,.14);background:rgba(29,78,216,.05);color:var(--blue);border-radius:14px;padding:12px;font-size:13px;font-weight:700}.store-card.secondary{background:#fff;border-color:var(--line);color:#334155}.detail{padding:16px;display:grid;gap:12px}.detail-top{display:flex;justify-content:space-between;align-items:center}
+    .badge{display:inline-flex;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:800;width:fit-content}.badge.green{background:rgba(15,159,110,.12);color:var(--green)}.badge.red{background:rgba(209,67,67,.12);color:var(--red)}.badge.blue{background:rgba(29,78,216,.10);color:var(--blue)}
+    .list{display:grid;gap:8px}.list-item{display:grid;grid-template-columns:40px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:#fff}.thumb{width:40px;height:40px;border-radius:12px;background:linear-gradient(180deg,#eef2ff,#dbeafe);border:1px solid rgba(59,130,246,.12)}.line-1{font-size:13px;font-weight:700}.line-2{font-size:12px;color:var(--muted);margin-top:4px}.table-shell{padding:12px;display:grid;gap:8px}.table-head,.table-row{display:grid;grid-template-columns:1.8fr .8fr .8fr .8fr .7fr;gap:10px;align-items:center;font-size:12px}.table-head{color:var(--muted);font-weight:700;padding:4px 8px}.table-row{border:1px solid var(--line);border-radius:12px;background:#fff;padding:12px 8px}.helper,.footnote{font-size:12px;color:var(--muted);line-height:1.65}.footnote{text-align:center;margin-top:-6px}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>?? ERP ? ?? IA</h1>
+        <p>?????????????????????<br/>???????????</p>
+      </div>
+      <div class="nav-group">
+        <div class="nav-title">???</div>
+        <div class="nav-item active">???</div>
+        <div class="nav-item">????</div>
+        <div class="nav-item">????</div>
+        <div class="nav-item">????</div>
+        <div class="nav-item">????</div>
+        <div class="nav-item">????</div>
+      </div>
+      <div class="nav-group">
+        <div class="nav-title">?????</div>
+        <div class="nav-item admin">????</div>
+        <div class="nav-item admin">????</div>
+      </div>
+    </aside>
+    <main class="main">
+      <section class="hero">
+        <div>
+          <div class="eyebrow">???? ? ??????</div>
+          <h2>???????????<br/>????? ? ?? ? ?? ? ??????</h2>
+          <p>?????????????????????????????????????????????????????????????????</p>
+        </div>
+        <div class="chips">
+          <div class="chip primary">?? V1</div>
+          <div class="chip">?? 6 ?????</div>
+          <div class="chip">??? 2 ???</div>
+          <div class="chip">?????????</div>
+          <div class="chip">?????????</div>
+        </div>
+      </section>
+      <section class="grid">
+        <div class="panel">
+          <div><h3>???</h3><div class="sub">??????????????????????</div></div>
+          <div class="kpi-row">
+            <div class="kpi"><div class="label">????</div><div class="value">20</div></div>
+            <div class="kpi"><div class="label">?????</div><div class="value">R 33,506</div></div>
+            <div class="kpi"><div class="label">???</div><div class="value">12</div></div>
+            <div class="kpi"><div class="label">??</div><div class="value">2</div></div>
+          </div>
+          <div class="list">
+            <div class="list-item"><div class="thumb"></div><div><div class="line-1">?????</div><div class="line-2">2 ????? ? 5 ??????</div></div><span class="badge red">??</span></div>
+            <div class="list-item"><div class="thumb"></div><div><div class="line-1">????</div><div class="line-2">???? 8 ? ? ??????</div></div><span class="badge green">??</span></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div><h3>????</h3><div class="sub">??????????????????????????????????</div></div>
+          <div class="store-layout">
+            <div class="store-list">
+              <div class="store-card">King store<br/><span class="line-2">???? ? ??</span></div>
+              <div class="store-card secondary">Pilot store</div>
+              <div class="store-card secondary">Backup store</div>
+            </div>
+            <div class="detail">
+              <div class="detail-top"><strong>????</strong><span class="badge green">??</span></div>
+              <div class="mini-tabs"><div class="mini-tab active">??</div><div class="mini-tab">SKU ??</div><div class="mini-tab">????</div></div>
+              <div class="list-item"><div class="thumb"></div><div><div class="line-1">????</div><div class="line-2">?? / ???? / ????</div></div><span class="chip">????</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="panel large">
+          <div><h3>????</h3><div class="sub">?????? / ???? / ?????????????????</div></div>
+          <div class="mini-tabs"><div class="mini-tab active">????</div><div class="mini-tab">????</div><div class="mini-tab">????</div></div>
+          <div class="table-shell">
+            <div class="table-head"><span>??</span><span>PLID</span><span>???</span><span>??</span><span>??</span></div>
+            <div class="table-row"><span>??? + ??</span><span>101...</span><span>R 3,000</span><span class="badge green">???</span><span>????</span></div>
+            <div class="table-row"><span>??? + ??</span><span>102...</span><span>R 2,350</span><span class="badge red">??</span><span>??</span></div>
+          </div>
+          <div class="helper">????????????? ? ???? ? ???? ? ??????????????</div>
+        </div>
+        <div class="panel large">
+          <div><h3>???? + ????</h3><div class="sub">??????????????????????????????</div></div>
+          <div class="row">
+            <div class="table-shell">
+              <div class="table-head"><span>????</span><span>??</span><span>??</span><span>??</span><span>??</span></div>
+              <div class="table-row"><span>??</span><span>R 1,856</span><span>R 1,671</span><span class="badge blue">???</span><span>??</span></div>
+              <div class="table-row"><span>??</span><span>R 3,495</span><span>R 3,000</span><span class="badge green">???</span><span>??</span></div>
+            </div>
+            <div class="table-shell">
+              <div class="table-head"><span>????</span><span>??</span><span>??</span><span>??</span><span>??</span></div>
+              <div class="table-row"><span>??</span><span>04/25</span><span>R 1,748</span><span class="badge blue">???</span><span>??</span></div>
+              <div class="table-row"><span>??</span><span>04/25</span><span>R 997</span><span class="badge green">???</span><span>??</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="footnote">??????????????????????????????????????????????</div>
+    </main>
+  </div>
+</body>
+</html>

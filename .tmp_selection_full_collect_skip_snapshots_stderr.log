@@ -1,0 +1,2 @@
+db_checkout_slow source=new elapsed_ms=2178.02
+db_checkout_slow source=pool elapsed_ms=1086.42

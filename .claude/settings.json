@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '{\"systemMessage\":\"ERP 项目会话开始：请先阅读 00_项目上下文.md、01_任务看板.md、02_决策日志.md，再开始新一轮工作。\"}'",
+            "shell": "bash"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '{\"systemMessage\":\"新一轮任务已提交：若这轮会改动项目方向、优先级、冻结决策或实施拆解，请在阶段性结束时同步更新 00_项目上下文.md、01_任务看板.md、02_决策日志.md；可直接参考 09_检查点模板.md。\"}'",
+            "shell": "bash"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "manual|auto",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '{\"systemMessage\":\"准备压缩上下文：请保留本轮关键结论、当前进度、最新冻结决策、最高优先级和阻塞项，并同步回 00_项目上下文.md、01_任务看板.md、02_决策日志.md；如需要，可先按 09_检查点模板.md 整理。\"}'",
+            "shell": "bash"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '{\"systemMessage\":\"本轮工作结束前请检查：是否已更新 00_项目上下文.md、01_任务看板.md、02_决策日志.md；是否记录当前阻塞与下一步最高优先级；若会话较长，建议存档后开新会话。\"}'",
+            "shell": "bash"
+          }
+        ]
+      }
+    ]
+  },
+  "autoMemoryEnabled": true
+}

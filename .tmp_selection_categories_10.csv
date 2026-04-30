@@ -1,0 +1,11 @@
+name,category_ref,department_slug,main_category,category_level1,category_level2,category_level3,count,depth
+Engineering & Technology,engineering-and-technology-29662,books,Books,Academic,Higher Education,Engineering & Technology,215252,3
+Social Sciences,social-sciences-29721,books,Books,Academic,Higher Education,Social Sciences,190542,3
+Language & Literary Studies,language-and-literary-studies-29695,books,Books,Academic,Higher Education,Language & Literary Studies,175255,3
+Education,education-29661,books,Books,Academic,Higher Education,Education,79120,3
+Study Aids,study-aids-29722,books,Books,Academic,Higher Education,Study Aids,42816,3
+Economic Sciences,economic-sciences-29660,books,Books,Academic,Higher Education,Economic Sciences,29873,3
+Accounting Sciences,accounting-sciences-29658,books,Books,Academic,Higher Education,Accounting Sciences,29070,3
+Law & Criminology,law-and-criminology-29696,books,Books,Academic,Higher Education,Law & Criminology,28235,3
+Information & Library Science,information-and-library-science-29694,books,Books,Academic,Higher Education,Information & Library Science,13538,3
+"Art, Architecture & Music",art-architecture-and-music-29659,books,Books,Academic,Higher Education,"Art, Architecture & Music",662,3

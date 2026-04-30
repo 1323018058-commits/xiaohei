@@ -1,0 +1,28 @@
+Traceback (most recent call last):
+  File "D:\小黑erp\packages\db\scripts\takealot_selection_backfill_dimensions.py", line 624, in <module>
+    main()
+  File "D:\小黑erp\packages\db\scripts\takealot_selection_backfill_dimensions.py", line 619, in main
+    result = asyncio.run(run(args))
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python312\Lib\asyncio\base_events.py", line 686, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "D:\小黑erp\packages\db\scripts\takealot_selection_backfill_dimensions.py", line 524, in run
+    cycle_result = await process_targets(args, targets, bearer)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\小黑erp\packages\db\scripts\takealot_selection_backfill_dimensions.py", line 477, in process_targets
+    persisted = persist_results(batch_results, dry_run=args.dry_run)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\小黑erp\packages\db\scripts\takealot_selection_backfill_dimensions.py", line 313, in persist_results
+    cursor.execute(
+  File "C:\Program Files\Python312\Lib\site-packages\psycopg\cursor.py", line 117, in execute
+    raise ex.with_traceback(None)
+psycopg.errors.OutOfMemory: 内存用尽
+DETAIL:  在内存上下文"PortalContext"中请求大小为131072时失败.
+CONTEXT:  unnamed portal parameter $1 = '...'
