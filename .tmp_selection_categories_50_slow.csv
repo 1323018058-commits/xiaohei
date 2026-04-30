@@ -1,0 +1,51 @@
+name,category_ref,department_slug,main_category,category_level1,category_level2,category_level3,count,depth
+Law,law-30896,books,Books,Books,Non-Fiction,Law,181854,3
+Education & Teaching,education-and-teaching-30394,books,Books,Books,Non-Fiction,Education & Teaching,125662,3
+General - Fiction,general-fiction-29778,books,Books,Books,Fiction,General - Fiction,368068,3
+Literary,literary-29787,books,Books,Books,Fiction,Literary,213361,3
+Romance,romance-29789,books,Books,Books,Fiction,Romance,210857,3
+Fantasy,fantasy-29776,books,Books,Books,Fiction,Fantasy,115654,3
+Crime & Detection,crime-and-detection-29773,books,Books,Books,Fiction,Crime & Detection,105019,3
+Classics,classics-29770,books,Books,Books,Fiction,Classics,88074,3
+Science Fiction,science-fiction-29791,books,Books,Books,Fiction,Science Fiction,79397,3
+Action & Adventure,action-and-adventure-29768,books,Books,Books,Fiction,Action & Adventure,70280,3
+Thrillers & Suspense,thrillers-and-suspense-29793,books,Books,Books,Fiction,Thrillers & Suspense,67778,3
+Historical,historical-29780,books,Books,Books,Fiction,Historical,60626,3
+Ghost & Horror,ghost-and-horror-29779,books,Books,Books,Fiction,Ghost & Horror,50156,3
+Young Adult,young-adult-29797,books,Books,Books,Fiction,Young Adult,48804,3
+Short Stories,short-stories-29792,books,Books,Books,Fiction,Short Stories,34987,3
+Christian Books,christian-books-29769,books,Books,Books,Fiction,Christian Books,28041,3
+Collections & Anthologies,collections-and-anthologies-29771,books,Books,Books,Fiction,Collections & Anthologies,26215,3
+Comics & Graphic Novels,comics-and-graphic-novels-29772,books,Books,Books,Fiction,Comics & Graphic Novels,25471,3
+Fairy Tales & Folklore,fairy-tales-and-folklore-29775,books,Books,Books,Fiction,Fairy Tales & Folklore,20034,3
+Humour & Satire,humour-and-satire-29781,books,Books,Books,Fiction,Humour & Satire,19635,3
+Women's Fiction,women-s-fiction-29796,books,Books,Books,Fiction,Women's Fiction,15689,3
+"Gay, Lesbian, Bisexual & Transgender",gay-lesbian-bisexual-and-transgender-29777,books,Books,Books,Fiction,"Gay, Lesbian, Bisexual & Transgender",10923,3
+Religion,religion-29788,books,Books,Books,Fiction,Religion,9565,3
+Westerns,westerns-29795,books,Books,Books,Fiction,Westerns,9425,3
+War & Military,war-and-military-29794,books,Books,Books,Fiction,War & Military,6180,3
+Sagas,sagas-29790,books,Books,Books,Fiction,Sagas,5381,3
+Erotica,erotica-29774,books,Books,Books,Fiction,Erotica,2169,3
+Animals,animals-29733,books,Books,Books,Children's Books,Animals,43853,3
+Activities,activities-29730,books,Books,Books,Children's Books,Activities,32315,3
+Adventure,adventure-29731,books,Books,Books,Children's Books,Adventure,2514,3
+Additional Resources,additional-resources-29724,books,Books,Academic,School & Education,Additional Resources,53839,3
+Study Guides,study-guides-29727,books,Books,Academic,School & Education,Study Guides,2080,3
+School Dictionaries & Reference Books,school-dictionaries-and-reference-books-29726,books,Books,Academic,School & Education,School Dictionaries & Reference Books,1464,3
+CAPS Approved,caps-approved-29725,books,Books,Academic,School & Education,CAPS Approved,1022,3
+Engineering & Technology,engineering-and-technology-29662,books,Books,Academic,Higher Education,Engineering & Technology,215252,3
+Social Sciences,social-sciences-29721,books,Books,Academic,Higher Education,Social Sciences,190541,3
+Language & Literary Studies,language-and-literary-studies-29695,books,Books,Academic,Higher Education,Language & Literary Studies,175255,3
+Education,education-29661,books,Books,Academic,Higher Education,Education,79120,3
+Study Aids,study-aids-29722,books,Books,Academic,Higher Education,Study Aids,42816,3
+Economic Sciences,economic-sciences-29660,books,Books,Academic,Higher Education,Economic Sciences,29873,3
+Accounting Sciences,accounting-sciences-29658,books,Books,Academic,Higher Education,Accounting Sciences,29070,3
+Law & Criminology,law-and-criminology-29696,books,Books,Academic,Higher Education,Law & Criminology,28235,3
+Information & Library Science,information-and-library-science-29694,books,Books,Academic,Higher Education,Information & Library Science,13538,3
+"Art, Architecture & Music",art-architecture-and-music-29659,books,Books,Academic,Higher Education,"Art, Architecture & Music",662,3
+Management Sciences,management-sciences-29697,books,Books,Academic,Higher Education,Management Sciences,253,3
+Literary Collections,literary-collections-30875,books,Books,Books,Non-Fiction,Language & Literature > Literary Collections,1129824,4
+Literary Criticism,literary-criticism-30876,books,Books,Books,Non-Fiction,Language & Literature > Literary Criticism,112660,4
+"Mind, Body & Spirit",mind-body-and-spirit-30983,books,Books,Books,Non-Fiction,"Religion & Spirituality > Mind, Body & Spirit",146422,4
+Bibles,bibles-30982,books,Books,Books,Non-Fiction,Religion & Spirituality > Bibles,11747,4
+Political Sciences,political-sciences-31199,books,Books,Books,Non-Fiction,Social & Politics > Political Sciences,174095,4

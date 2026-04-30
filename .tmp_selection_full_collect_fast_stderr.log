@@ -1,0 +1,40 @@
+db_checkout_slow source=new elapsed_ms=2156.05
+db_checkout_slow source=pool elapsed_ms=1086.84
+Traceback (most recent call last):
+  File "D:\小黑erp\packages\db\scripts\takealot_selection_full_collect.py", line 231, in <module>
+    main()
+  File "D:\小黑erp\packages\db\scripts\takealot_selection_full_collect.py", line 184, in main
+    stage_payload = crawl_stage(args, stage_index)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\小黑erp\packages\db\scripts\takealot_selection_full_collect.py", line 139, in crawl_stage
+    raise RuntimeError(json.dumps(payload, ensure_ascii=False, indent=2))
+RuntimeError: {
+  "stage": 2,
+  "returncode": 1,
+  "elapsed_seconds": 975.734,
+  "summary": null,
+  "stdout_tail": [],
+  "stderr_tail": [
+    "  File \"D:\\小黑erp\\packages\\db\\scripts\\takealot_selection_crawl.py\", line 359, in load_resumable_buckets",
+    "    connection.commit()",
+    "  File \"C:\\Program Files\\Python312\\Lib\\site-packages\\psycopg\\connection.py\", line 305, in commit",
+    "    self.wait(self._commit_gen())",
+    "  File \"C:\\Program Files\\Python312\\Lib\\site-packages\\psycopg\\connection.py\", line 484, in wait",
+    "    return waiting.wait(gen, self.pgconn.socket, interval=interval)",
+    "           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+    "  File \"C:\\Program Files\\Python312\\Lib\\site-packages\\psycopg\\waiting.py\", line 281, in wait_select",
+    "    s = gen.send(ready)",
+    "        ^^^^^^^^^^^^^^^",
+    "  File \"C:\\Program Files\\Python312\\Lib\\site-packages\\psycopg\\_connection_base.py\", line 585, in _commit_gen",
+    "    yield from self._exec_command(b\"COMMIT\")",
+    "  File \"C:\\Program Files\\Python312\\Lib\\site-packages\\psycopg\\_connection_base.py\", line 480, in _exec_command",
+    "    result: PGresult = (yield from generators.execute(self.pgconn))[-1]",
+    "                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+    "  File \"psycopg_binary/_psycopg/generators.pyx\", line 128, in execute",
+    "  File \"psycopg_binary/_psycopg/generators.pyx\", line 192, in fetch_many",
+    "  File \"psycopg_binary/_psycopg/generators.pyx\", line 183, in psycopg_binary._psycopg.fetch_many",
+    "  File \"psycopg_binary/_psycopg/generators.pyx\", line 247, in fetch",
+    "psycopg.OperationalError: consuming input failed: SSL connection has been closed unexpectedly"
+  ],
+  "finished_at": "2026-04-27T15:37:48.321395+00:00"
+}

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>小黑 ERP 扩展面板预览</title>
+    <link rel="stylesheet" href="apps/extension/styles/panel.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 24px;
+        width: 390px;
+        background: #f4f4f4;
+      }
+    </style>
+  </head>
+  <body>
+    <section id="xh-erp-panel" data-placement="inline" data-loading="false" data-view="connected">
+      <div class="xh-panel-header">
+        <div>
+          <div class="xh-kicker">Xiaohei ERP</div>
+          <div class="xh-title">上架试算</div>
+        </div>
+        <div class="xh-header-actions">
+          <button class="xh-refresh" type="button" title="刷新">↻</button>
+          <button class="xh-ghost" type="button">退出</button>
+        </div>
+      </div>
+
+      <div class="xh-dimensions">0.82 kg · 42x31x9 cm</div>
+      <div class="xh-fee-row">
+        <div>
+          <span>类目</span>
+          <strong title="Pets > Equipment & Accessories">Pets &gt; Equipment &amp; Accessories</strong>
+        </div>
+        <div>
+          <span>佣金</span>
+          <strong title="Pet Supplies > Accessories">14%</strong>
+        </div>
+      </div>
+
+      <div class="xh-block">
+        <div class="xh-grid">
+          <div class="xh-field">
+            <label class="xh-field-label">空运单价 (CNY/kg)</label>
+            <input class="xh-input" value="100" />
+          </div>
+          <div class="xh-field">
+            <label class="xh-field-label">采购价 (CNY)</label>
+            <input class="xh-input" value="42" />
+          </div>
+          <div class="xh-field">
+            <label class="xh-field-label">销售价 (ZAR)</label>
+            <input class="xh-input" value="469" />
+          </div>
+          <div class="xh-field">
+            <label class="xh-field-label">重量 (kg)</label>
+            <input class="xh-input" value="0.82" />
+          </div>
+          <div class="xh-field">
+            <label class="xh-field-label">长 (cm)</label>
+            <input class="xh-input" value="42" />
+          </div>
+          <div class="xh-field">
+            <label class="xh-field-label">宽 (cm)</label>
+            <input class="xh-input" value="31" />
+          </div>
+          <div class="xh-field">
+            <label class="xh-field-label">高 (cm)</label>
+            <input class="xh-input" value="9" />
+          </div>
+          <div class="xh-field xh-readonly-fee">
+            <label class="xh-field-label">尾程配送费</label>
+            <div class="xh-readonly-box">
+              <strong>R 33.00 + VAT R 4.95</strong>
+              <span>中费标准件 · &lt;=7kg</span>
+            </div>
+          </div>
+        </div>
+        <button class="xh-secondary xh-full" type="button">重新试算</button>
+      </div>
+
+      <div class="xh-block">
+        <div class="xh-subtitle">结果</div>
+        <div class="xh-result-grid">
+          <div class="xh-stat"><span>计费重</span><strong>1.95 kg</strong></div>
+          <div class="xh-stat"><span>利润</span><strong>R 83.20</strong></div>
+          <div class="xh-stat"><span>佣金费用</span><strong>R 75.50</strong></div>
+          <div class="xh-stat"><span>利润率</span><strong>22.80%</strong></div>
+          <div class="xh-stat"><span>10% 利润售价</span><strong>R 386.00</strong></div>
+          <div class="xh-stat"><span>30% 利润售价</span><strong>R 496.00</strong></div>
+          <div class="xh-stat"><span>建议保护价</span><strong>R 386.00</strong></div>
+        </div>
+        <div class="xh-hint" data-field="global-hint" data-mode="success">
+          样式预览：真实商品信息由扩展在 Takealot 页面调用 ERP 接口返回。
+        </div>
+      </div>
+
+      <div class="xh-block xh-block-compact">
+        <button class="xh-primary xh-full" type="button">一键上架</button>
+      </div>
+    </section>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"/d/小黑erp\" init)",
+      "Bash(git -C \"/d/小黑erp\" add \"00_项目上下文.md\" \"01_任务看板.md\" \"02_决策日志.md\" \"04_API契约逐接口展开.md\" \"05_Schema_Blueprint.md\" \"06_页面级线框稿.md\" \"07_压测计划.md\" \"08_上线_Runbook.md\" \".gitignore\")",
+      "Bash(git -C /d/小黑erp commit -m ' *)",
+      "Bash(git -C \"/d/小黑erp\" status --short)",
+      "Bash(git -C \"/d/小黑erp\" log --oneline --decorate -n 1)",
+      "Bash(git config *)",
+      "Bash(git -C \"/d/小黑erp\" add \"01_任务看板.md\" \"03_前端风格与交互规范.md\" \"PRD_v2.1_战时全量版_2026-04-21.md\" \"PRD_v2_系统重构核心产品需求文档_2026-04-20.md\" \"附录A_权限矩阵.md\" \"附录B_状态机总表.md\" \"附录C_错误码表.md\" \"附录D_外部接口重试策略.md\" \"附录E_上线门槛与回滚条件.md\" \"附录F_API写接口统一规则.md\" \"附录G_任务系统字段与状态全集.md\" \"附录H_财务快照和流水重算规则.md\" \"附录I_审计字段与高危动作清单.md\")",
+      "Bash(git -C \"/d/小黑erp\" log --oneline --decorate -n 2)",
+      "Bash(git -C \"/d/小黑erp\" log --oneline --decorate -n 3)",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "Bash(tasklist)",
+      "Bash(findstr /I \"bash.exe sh.exe git.exe mintty.exe\")",
+      "Bash(wmic process *)",
+      "Bash(taskkill /PID 11408 /PID 14104 /PID 7224 /PID 13716 /PID 23212 /PID 20700 /PID 27444 /T /F)",
+      "Bash(findstr /I \"bash.exe sh.exe git.exe\")",
+      "Bash(rg --files -g 'AGENTS.md' -g 'CLAUDE.md' -g 'README*')"
+    ]
+  }
+}

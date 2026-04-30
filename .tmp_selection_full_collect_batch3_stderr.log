@@ -1,0 +1,11 @@
+db_checkout_slow source=new elapsed_ms=2020.20
+db_checkout_slow source=pool elapsed_ms=997.48
+db_checkout_slow source=pool elapsed_ms=2721.14
+db_checkout_slow source=pool elapsed_ms=1703.66
+db_checkout_slow source=pool elapsed_ms=1324.54
+db_checkout_slow source=pool elapsed_ms=1000.87
+db_checkout_slow source=pool elapsed_ms=997.48
+db_checkout_slow source=pool elapsed_ms=994.99
+db_checkout_slow source=pool elapsed_ms=995.05
+db_checkout_slow source=pool elapsed_ms=996.54
+db_checkout_slow source=pool elapsed_ms=996.37

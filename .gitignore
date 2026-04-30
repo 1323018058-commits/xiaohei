@@ -4,3 +4,17 @@ Thumbs.db
 *.bak
 .idea/
 .vscode/
+.env
+.env.local
+.env.*.local
+.codex-next-dev*.log
+node_modules/
+.next/
+.next-build/
+dist/
+.venv/
+__pycache__/
+.pytest_cache/
+*.egg-info/
+reports/
+tools/cloudflared.exe

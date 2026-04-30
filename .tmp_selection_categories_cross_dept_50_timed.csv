@@ -1,0 +1,51 @@
+name,category_ref,department_slug,main_category,category_level1,category_level2,category_level3,count,depth
+Law,law-30896,books,Books,Books,Non-Fiction,Law,181854,3
+Education & Teaching,education-and-teaching-30394,books,Books,Books,Non-Fiction,Education & Teaching,125662,3
+Kettles,kettles-25790,home-kitchen,Home & Kitchen,Small Kitchen Appliances,Kettles,,902,2
+Toasters,toasters-25791,home-kitchen,Home & Kitchen,Small Kitchen Appliances,Toasters,,367,2
+Replacement Parts,replacement-parts-33920,home-kitchen,Home & Kitchen,Small Kitchen Appliances,Replacement Parts,,198,2
+"Hoodies, Sweatshirts & Fleece",hoodies-sweatshirts-and-fleece-32779,fashion,Fashion,Men,Clothing,"Hoodies, Sweatshirts & Fleece",7001,3
+"Blazers, Jackets & Coats",blazers-jackets-and-coats-32777,fashion,Fashion,Men,Clothing,"Blazers, Jackets & Coats",400,3
+Tracksuit Sets,tracksuit-sets-32775,fashion,Fashion,Men,Clothing,Tracksuit Sets,99,3
+Laser Cutters & Engravers,laser-cutters-engravers-33830,office-stationery,Office & Stationery,Office,Laser Cutters & Engravers,,52,2
+Toner,toner-26339,office-stationery,Office & Stationery,Office,Office Consumables,Toner,4641,3
+Ink Cartridges,ink-cartridges-26330,office-stationery,Office & Stationery,Office,Office Consumables,Ink Cartridges,2148,3
+Label Tape,label-tape-26331,office-stationery,Office & Stationery,Office,Office Consumables,Label Tape,810,3
+Ink Bottles,ink-bottles-26329,office-stationery,Office & Stationery,Office,Office Consumables,Ink Bottles,465,3
+DIY Tools & Machinery,diy-tools-and-machinery-25818,pool-garden,"Garden, Pool & Patio",DIY Tools & Machinery,,,2,1
+Ladders & Step Tools,ladders-and-step-stools-25830,pool-garden,"Garden, Pool & Patio",Home Improvement,Ladders & Step Tools,,448,2
+Workbenches & Stands,workbenches-and-stands-29003,pool-garden,"Garden, Pool & Patio",Home Improvement,Workbenches & Stands,,165,2
+Trolleys & Trucks,trolleys-and-trucks-33393,pool-garden,"Garden, Pool & Patio",Home Improvement,Trolleys & Trucks,,164,2
+General Purpose Batteries,general-purpose-batteries-29174,pool-garden,"Garden, Pool & Patio",Home Improvement,General Purpose Batteries,,25,2
+Gamer Chairs,gamer-chairs-33651,computers,Computers & Tablets,Gamer Chairs,,,11,1
+Gamer Desks,gamer-desks-33672,computers,Computers & Tablets,Gamer Desks,,,7,1
+Cases & Covers,cases-and-covers-26402,computers,Computers & Tablets,Accessories,Cases & Covers,,3357,2
+Mouse Pads,mouse-pads-26404,computers,Computers & Tablets,Accessories,Mouse Pads,,2792,2
+Cable Adapters,cable-adapters-26395,computers,Computers & Tablets,Accessories,Cable Adapters,,2721,2
+All Terrain Off-Road Go-Karts,all-terrain-off-road-go-karts-33927,automotive,Automotive,All Terrain Off-Road Go-Karts,,,1,1
+Batteries & Accessories,batteries-and-accessories-25857,automotive,Automotive,Maintenance & Service,Batteries & Accessories,,3112,2
+Lightbulbs & LED,lightbulbs-and-led-25858,automotive,Automotive,Maintenance & Service,Lightbulbs & LED,,971,2
+Adhesives & Sealants,adhesives-and-sealants-25856,automotive,Automotive,Maintenance & Service,Adhesives & Sealants,,392,2
+Car Electronic Accessories,car-electronic-accessories-27576,automotive,Automotive,Car Audio & Electronics,Car Electronic Accessories,,3068,2
+Fancy Dress,fancy-dress-25479,toys,Toys,Fancy Dress,,,1384,1
+Kids Watches,kids-watches-29358,toys,Toys,Kids Watches,,,104,1
+Merchandise,merchandise-33648,toys,Toys,Merchandise,,,59,1
+Craft Kits,craft-kits-25475,toys,Toys,Arts & Crafts,Craft Kits,,1645,2
+Stickers,stickers-25478,toys,Toys,Arts & Crafts,Stickers,,1567,2
+Smart Watches,smart-watches-27389,cellular-gps,Cellphones & Wearables,Wearables,Smart Watches,,5109,2
+Sports & GPS Watches,sports-and-gps-watches-27390,cellular-gps,Cellphones & Wearables,Wearables,Sports & GPS Watches,,82,2
+Eyewear,eyewear-29289,cellular-gps,Cellphones & Wearables,Wearables,Eyewear,,74,2
+Digital Rings,digital-rings-33839,cellular-gps,Cellphones & Wearables,Wearables,Digital Rings,,46,2
+Security Tracker Devices,security-tracker-devices-27391,cellular-gps,Cellphones & Wearables,Wearables,Security Tracker Devices,,38,2
+Beauty Equipment,beauty-equipment-33359,beauty,Beauty,Beauty Equipment,,,241,1
+Beauty Equipment Accessories,beauty-equipment-accessories-33898,beauty,Beauty,Beauty Equipment Accessories,,,7,1
+Eau de Parfum,eau-de-parfum-24983,beauty,Beauty,Fragrances,Eau de Parfum,,5817,2
+Eau de Toilette,eau-de-toilette-24984,beauty,Beauty,Fragrances,Eau de Toilette,,728,2
+Sets,sets-24985,beauty,Beauty,Fragrances,Sets,,630,2
+Thermometers & Humidity,thermometers-and-humidity-29216,diy-tools-machinery,DIY Tools & Machinery,Thermometers & Humidity,,,1,1
+Sockets & Socket Sets,sockets-and-socket-sets-27432,diy-tools-machinery,DIY Tools & Machinery,Hand Tools,Sockets & Socket Sets,,7947,2
+Spanners & Wrenches,spanners-and-wrenches-27433,diy-tools-machinery,DIY Tools & Machinery,Hand Tools,Spanners & Wrenches,,5306,2
+Screwdrivers,screwdrivers-27430,diy-tools-machinery,DIY Tools & Machinery,Hand Tools,Screwdrivers,,2510,2
+Pliers,pliers-27426,diy-tools-machinery,DIY Tools & Machinery,Hand Tools,Pliers,,2433,2
+Spiritual Wellness,spiritual-wellness-33655,health,Health,Health Care,Spiritual Wellness,,655,2
+Pillboxes,pillboxes-33483,health,Health,Health Care,Pillboxes,,332,2

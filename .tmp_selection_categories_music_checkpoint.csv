@@ -1,0 +1,221 @@
+name,category_ref,department_slug,main_category,category_level1,category_level2,category_level3,count,depth
+Guitar Parts,guitar-parts-31794,music,Music,Accessories,Guitar Parts,,1299,2
+Accessory Kits,accessory-kits-33807,music,Music,Accessories,Accessory Kits,,1173,2
+Microphone Accessories,microphone-accessories-33815,music,Music,Accessories,Microphone Accessories,,693,2
+Woodwind Accessories,woodwind-accessories-29350,music,Music,Accessories,Woodwind Accessories,,432,2
+Strings,strings-27037,music,Music,Accessories,Strings,,404,2
+Stands,stands-27043,music,Music,Accessories,Stands,,389,2
+Instrument Pick-ups,instrument-pick-ups-33820,music,Music,Accessories,Instrument Pick-ups,,375,2
+Cables,cables-27036,music,Music,Accessories,Cables,,293,2
+Stands & Hangers,stands-hangers-27045,music,Music,Accessories,Stands & Hangers,,255,2
+Bags & Cases,bags-and-cases-27044,music,Music,Accessories,Bags & Cases,,202,2
+Sticks,sticks-27039,music,Music,Accessories,Sticks,,177,2
+Violin Accessories,violin-accessories-33821,music,Music,Accessories,Violin Accessories,,173,2
+Plectrums,plectrums-31676,music,Music,Accessories,Plectrums,,170,2
+Straps,straps-27038,music,Music,Accessories,Straps,,146,2
+Drum Heads,drum-heads-31687,music,Music,Accessories,Drum Heads,,114,2
+Tuners,tuners-27041,music,Music,Accessories,Tuners,,102,2
+Pedals,pedals-27042,music,Music,Accessories,Pedals,,73,2
+Guitar Capos,guitar-capos-31675,music,Music,Accessories,Guitar Capos,,64,2
+Turntable Cartridges & Needles,turntable-cartridges-and-needles-27046,music,Music,Accessories,Turntable Cartridges & Needles,,60,2
+Repair Tool Kits,repair-tool-kits-33806,music,Music,Accessories,Repair Tool Kits,,30,2
+"Chairs, Stools & Benches",chairs-stools-benches-33720,music,Music,Accessories,"Chairs, Stools & Benches",,28,2
+Guitar Locks & Pins,guitar-locks-pins-33809,music,Music,Accessories,Guitar Locks & Pins,,23,2
+Power Supply Adapters,power-supply-adapters-33823,music,Music,Accessories,Power Supply Adapters,,20,2
+Metronomes,metronomes-33724,music,Music,Accessories,Metronomes,,10,2
+Practice Pads,practice-pads-27040,music,Music,Accessories,Practice Pads,,7,2
+Other Music,other-music-29641,music,Music,Music,Other Music,,320,2
+Harmonicas,harmonicas-27015,music,Music,Instruments,Harmonicas,,236,2
+Keyboards,keyboards-27014,music,Music,Instruments,Keyboards,,142,2
+Pianos,pianos-29292,music,Music,Instruments,Pianos,,113,2
+Classical,classical-27018,music,Music,Instruments,Classical,,87,2
+Melodicas,melodicas-27016,music,Music,Instruments,Melodicas,,14,2
+Bass,bass-27013,music,Music,Instruments,Bass,,10,2
+Accordions,accordions-27017,music,Music,Instruments,Accordions,,7,2
+Arrangers,arrangers-28757,music,Music,Instruments,Arrangers,,2,2
+Microphones,microphones-27032,music,Music,Sound & Stage,Microphones,,755,2
+Violins,violins-27875,music,Music,Instruments,Violins,,82,2
+Effect & Sustain Pedals,effect-sustain-pedals-28765,music,Music,Sound & Stage,Effect & Sustain Pedals,,292,2
+Lighting,lighting-27034,music,Music,Sound & Stage,Lighting,,260,2
+Effect Machines & Accessories,effect-machines-accessories-27031,music,Music,Sound & Stage,Effect Machines & Accessories,,248,2
+Subwoofers,subwoofers-27030,music,Music,Sound & Stage,Subwoofers,,132,2
+Effect Processors,effect-processors-28764,music,Music,Sound & Stage,Effect Processors,,101,2
+Staging,staging-28767,music,Music,Sound & Stage,Staging,,90,2
+Sound Mixers,sound-mixers-28768,music,Music,Sound & Stage,Sound Mixers,,75,2
+PA Systems,pa-systems-27029,music,Music,Sound & Stage,PA Systems,,41,2
+Equalizers,equalizers-27033,music,Music,Sound & Stage,Equalizers,,34,2
+DI Boxes,di-boxes-33735,music,Music,Sound & Stage,DI Boxes,,22,2
+Sound Cards,sound-cards-28760,music,Music,DJ & Production,Sound Cards,,214,2
+Audio Interfaces,audio-interfaces-28761,music,Music,DJ & Production,Audio Interfaces,,159,2
+Turntables,turntables-27026,music,Music,DJ & Production,Turntables,,138,2
+Headphones,headphones-27027,music,Music,DJ & Production,Headphones,,78,2
+Midi Controllers,midi-controllers-27025,music,Music,DJ & Production,Midi Controllers,,71,2
+DJ Mixers,dj-mixers-27022,music,Music,DJ & Production,DJ Mixers,,60,2
+In-Ear Monitors,in-ear-monitors-28763,music,Music,DJ & Production,In-Ear Monitors,,59,2
+Synthesizers,synthesizers-27024,music,Music,DJ & Production,Synthesizers,,47,2
+Audio Recorders,audio-recorders-28762,music,Music,DJ & Production,Audio Recorders,,15,2
+Multimedia Players,multimedia-players-27021,music,Music,DJ & Production,Multimedia Players,,7,2
+Workstations,workstations-28759,music,Music,DJ & Production,Workstations,,1,2
+Posters,posters-25176,music,Music,Merchandise,Posters,,311,2
+Clothing,clothing-25168,music,Music,Merchandise,Clothing,,261,2
+Lighting,lighting-25173,music,Music,Merchandise,Lighting,,52,2
+Electronic Accessories,electronic-accessories-25170,music,Music,Merchandise,Electronic Accessories,,40,2
+Luggage,luggage-25174,music,Music,Merchandise,Luggage,,10,2
+Toys,toys-25178,music,Music,Merchandise,Toys,,6,2
+Stationery,stationery-25177,music,Music,Merchandise,Stationery,,4,2
+Furniture,furniture-32993,music,Music,Merchandise,Furniture,,2,2
+Other Pop,other-pop-29532,music,Music,Music,Pop,Other Pop,1085,3
+Compilations,compilations-29538,music,Music,Music,Pop,Compilations,51,3
+Indie/Alternative,indie-alternative-29534,music,Music,Music,Pop,Indie/Alternative,32,3
+Pop Rock,pop-rock-29537,music,Music,Music,Pop,Pop Rock,19,3
+Afro-Pop,afro-pop-29536,music,Music,Music,Pop,Afro-Pop,7,3
+J-Pop & K-Pop,j-pop-and-k-pop-29535,music,Music,Music,Pop,J-Pop & K-Pop,3,3
+60's,60-s-29533,music,Music,Music,Pop,60's,2,3
+Other Rock,other-rock-29469,music,Music,Music,Rock,Other Rock,182,3
+Indie Rock,indie-rock-29477,music,Music,Music,Rock,Indie Rock,160,3
+Pop Rock,pop-rock-29479,music,Music,Music,Rock,Pop Rock,98,3
+Punk Rock,punk-rock-29478,music,Music,Music,Rock,Punk Rock,62,3
+Alternative Rock,alternative-rock-29472,music,Music,Music,Rock,Alternative Rock,61,3
+Classic Rock,classic-rock-29474,music,Music,Music,Rock,Classic Rock,58,3
+Progressive Rock,progressive-rock-29471,music,Music,Music,Rock,Progressive Rock,31,3
+Hard Rock,hard-rock-29470,music,Music,Music,Rock,Hard Rock,27,3
+Rock & Roll,rock-and-roll-29476,music,Music,Music,Rock,Rock & Roll,27,3
+Compilations,compilations-29480,music,Music,Music,Rock,Compilations,24,3
+Blues Rock,blues-rock-29473,music,Music,Music,Rock,Blues Rock,16,3
+Oldies & Retro,oldies-and-retro-29642,music,Music,Music,Rock,Oldies & Retro,2,3
+Local Rock,local-rock-29475,music,Music,Music,Rock,Local Rock,1,3
+Other Classical,other-classical-29546,music,Music,Music,Classical,Other Classical,319,3
+Instrumental,instrumental-29554,music,Music,Music,Classical,Instrumental,124,3
+Orchestral,orchestral-29555,music,Music,Music,Classical,Orchestral,94,3
+Chamber,chamber-29548,music,Music,Music,Classical,Chamber,87,3
+Vocal,vocal-29556,music,Music,Music,Classical,Vocal,58,3
+Choral,choral-29549,music,Music,Music,Classical,Choral,42,3
+Concerto,concerto-29551,music,Music,Music,Classical,Concerto,29,3
+Opera/Stage Works,opera-stage-works-29553,music,Music,Music,Classical,Opera/Stage Works,19,3
+Compilations,compilations-29550,music,Music,Music,Classical,Compilations,14,3
+Contemporary,contemporary-29552,music,Music,Music,Classical,Contemporary,5,3
+20th Century,20th-century-29547,music,Music,Music,Classical,20th Century,2,3
+Other Jazz,other-jazz-29482,music,Music,Music,Jazz,Other Jazz,325,3
+Vocal Jazz,vocal-jazz-29486,music,Music,Music,Jazz,Vocal Jazz,63,3
+Soul Jazz & Boogaloo,soul-jazz-and-boogaloo-29490,music,Music,Music,Jazz,Soul Jazz & Boogaloo,53,3
+Bebop,bebop-29489,music,Music,Music,Jazz,Bebop,44,3
+Smooth Jazz,smooth-jazz-29492,music,Music,Music,Jazz,Smooth Jazz,38,3
+Fusion,fusion-29491,music,Music,Music,Jazz,Fusion,25,3
+Swing Jazz,swing-jazz-29487,music,Music,Music,Jazz,Swing Jazz,23,3
+Contemporary Jazz,contemporary-jazz-29494,music,Music,Music,Jazz,Contemporary Jazz,17,3
+Afro-jazz,afro-jazz-29484,music,Music,Music,Jazz,Afro-jazz,12,3
+Avant-Garde Jazz,avant-garde-jazz-29485,music,Music,Music,Jazz,Avant-Garde Jazz,9,3
+Latin Jazz,latin-jazz-29493,music,Music,Music,Jazz,Latin Jazz,8,3
+Blues Jazz,blues-jazz-29495,music,Music,Music,Jazz,Blues Jazz,6,3
+Compilations,compilations-29496,music,Music,Music,Jazz,Compilations,5,3
+Modern Post-Bebop,modern-post-bebop-29488,music,Music,Music,Jazz,Modern Post-Bebop,3,3
+Acid Jazz,acid-jazz-29483,music,Music,Music,Jazz,Acid Jazz,2,3
+Soul,soul-29529,music,Music,Music,R&B & Soul,Soul,47,3
+Other R&B & Soul,other-r-and-b-and-soul-29520,music,Music,Music,R&B & Soul,Other R&B & Soul,45,3
+Female Vocals,female-vocals-29523,music,Music,Music,R&B & Soul,Female Vocals,23,3
+Funk,funk-29527,music,Music,Music,R&B & Soul,Funk,19,3
+Modern R&B,modern-r-and-b-29526,music,Music,Music,R&B & Soul,Modern R&B,17,3
+Neo Soul,neo-soul-29530,music,Music,Music,R&B & Soul,Neo Soul,17,3
+Male Vocals,male-vocals-29524,music,Music,Music,R&B & Soul,Male Vocals,12,3
+Compilations,compilations-29521,music,Music,Music,R&B & Soul,Compilations,7,3
+Motown,motown-29525,music,Music,Music,R&B & Soul,Motown,6,3
+Afro-Soul,afro-soul-29528,music,Music,Music,R&B & Soul,Afro-Soul,5,3
+Disco,disco-29522,music,Music,Music,R&B & Soul,Disco,4,3
+Other Dance & Electronic,other-dance-and-electronic-29567,music,Music,Music,Dance & Electronic,Other Dance & Electronic,39,3
+House,house-29576,music,Music,Music,Dance & Electronic,House,39,3
+Compilations,compilations-29569,music,Music,Music,Dance & Electronic,Compilations,22,3
+Electronica,electronica-29575,music,Music,Music,Dance & Electronic,Electronica,22,3
+Dance,dance-29572,music,Music,Music,Dance & Electronic,Dance,19,3
+Leftfield,leftfield-29581,music,Music,Music,Dance & Electronic,Leftfield,15,3
+Disco,disco-29573,music,Music,Music,Dance & Electronic,Disco,13,3
+Techno,techno-29577,music,Music,Music,Dance & Electronic,Techno,8,3
+Downtempo,downtempo-29570,music,Music,Music,Dance & Electronic,Downtempo,6,3
+Ambient,ambient-29568,music,Music,Music,Dance & Electronic,Ambient,5,3
+Breakbeat,breakbeat-29580,music,Music,Music,Dance & Electronic,Breakbeat,3,3
+Electro,electro-29574,music,Music,Music,Dance & Electronic,Electro,2,3
+Drum 'n' Bass,drum-n-bass-29571,music,Music,Music,Dance & Electronic,Drum 'n' Bass,1,3
+Hip-Hop,hip-hop-29513,music,Music,Music,Rap & Hip-Hop,Hip-Hop,55,3
+Rap,rap-29511,music,Music,Music,Rap & Hip-Hop,Rap,37,3
+Other Rap & Hip-Hop,other-rap-and-hip-hop-29508,music,Music,Music,Rap & Hip-Hop,Other Rap & Hip-Hop,17,3
+East Coast Rap,east-coast-rap-29509,music,Music,Music,Rap & Hip-Hop,East Coast Rap,10,3
+West Coast Rap,west-coast-rap-29510,music,Music,Music,Rap & Hip-Hop,West Coast Rap,7,3
+Gangsta Rap,gangsta-rap-29512,music,Music,Music,Rap & Hip-Hop,Gangsta Rap,7,3
+Underground Rap,underground-rap-29515,music,Music,Music,Rap & Hip-Hop,Underground Rap,4,3
+Compilations,compilations-29514,music,Music,Music,Rap & Hip-Hop,Compilations,3,3
+African Hip Hop,african-hip-hop-29515,music,Music,Music,Rap & Hip-Hop,African Hip Hop,3,3
+Jazz Hip Hop,jazz-hip-hop-29516,music,Music,Music,Rap & Hip-Hop,Jazz Hip Hop,1,3
+Other Easy Listening,other-easy-listening-29610,music,Music,Music,Easy Listening,Other Easy Listening,66,3
+Male Vocals,male-vocals-29620,music,Music,Music,Easy Listening,Male Vocals,19,3
+Christmas,christmas-29612,music,Music,Music,Easy Listening,Christmas,14,3
+Female Vocals,female-vocals-29619,music,Music,Music,Easy Listening,Female Vocals,13,3
+Pop Instrumental,pop-instrumental-29618,music,Music,Music,Easy Listening,Pop Instrumental,8,3
+Compilations,compilations-29613,music,Music,Music,Easy Listening,Compilations,3,3
+Brass Band,brass-band-29611,music,Music,Music,Easy Listening,Brass Band,1,3
+Country,country-29586,music,Music,Music,Country & Traditional,Country,41,3
+Other Country & Traditional,other-country-and-traditional-29583,music,Music,Music,Country & Traditional,Other Country & Traditional,35,3
+All Afrikaans,all-afrikaans-29585,music,Music,Music,Country & Traditional,All Afrikaans,11,3
+Country - Rock,country-rock-29588,music,Music,Music,Country & Traditional,Country - Rock,11,3
+Alternative,alternative-29584,music,Music,Music,Country & Traditional,Alternative,7,3
+All Country & Traditional,all-country-and-traditional-29589,music,Music,Music,Country & Traditional,All Country & Traditional,2,3
+Bluegrass,bluegrass-29587,music,Music,Music,Country & Traditional,Bluegrass,1,3
+Other Soundtracks,other-soundtracks-29622,music,Music,Music,Soundtracks,Other Soundtracks,46,3
+Original Soundtracks,original-soundtracks-29623,music,Music,Music,Soundtracks,Original Soundtracks,22,3
+Compilations,compilations-29631,music,Music,Music,Soundtracks,Compilations,8,3
+Original Scores,original-scores-29628,music,Music,Music,Soundtracks,Original Scores,7,3
+Film Compilations,film-compilations-29625,music,Music,Music,Soundtracks,Film Compilations,4,3
+Cast Recordings,cast-recordings-29624,music,Music,Music,Soundtracks,Cast Recordings,3,3
+Musicals,musicals-29626,music,Music,Music,Soundtracks,Musicals,3,3
+Television Soundtracks,television-soundtracks-29627,music,Music,Music,Soundtracks,Television Soundtracks,2,3
+Disney,disney-29630,music,Music,Music,Soundtracks,Disney,1,3
+Other Folk,other-folk-29633,music,Music,Music,Folk,Other Folk,52,3
+Folk - Rock,folk-rock-29637,music,Music,Music,Folk,Folk - Rock,9,3
+Contemporary,contemporary-29635,music,Music,Music,Folk,Contemporary,4,3
+Irish Folk,irish-folk-29638,music,Music,Music,Folk,Irish Folk,4,3
+U.S Folk,u-s-folk-29639,music,Music,Music,Folk,U.S Folk,3,3
+Scottish Folk,scottish-folk-29640,music,Music,Music,Folk,Scottish Folk,3,3
+Compilations,compilations-29634,music,Music,Music,Folk,Compilations,2,3
+English Folk,english-folk-29636,music,Music,Music,Folk,English Folk,2,3
+Heavy Metal,heavy-metal-29562,music,Music,Music,Metal,Heavy Metal,40,3
+Other Metal,other-metal-29558,music,Music,Music,Metal,Other Metal,23,3
+Thrash,thrash-29565,music,Music,Music,Metal,Thrash,5,3
+Metalcore,metalcore-29564,music,Music,Music,Metal,Metalcore,4,3
+Doom,doom-29561,music,Music,Music,Metal,Doom,2,3
+Black Metal,black-metal-29559,music,Music,Music,Metal,Black Metal,1,3
+Death Metal,death-metal-29560,music,Music,Music,Metal,Death Metal,1,3
+Progressive,progressive-29563,music,Music,Music,Metal,Progressive,1,3
+Other Reggae,other-reggae-29540,music,Music,Music,Reggae,Other Reggae,41,3
+Dub,dub-29543,music,Music,Music,Reggae,Dub,3,3
+Compilations,compilations-29541,music,Music,Music,Reggae,Compilations,1,3
+Ska,ska-29544,music,Music,Music,Reggae,Ska,1,3
+Other Blues,other-blues-29595,music,Music,Music,Blues,Other Blues,30,3
+Blues - Rock,blues-rock-29596,music,Music,Music,Blues,Blues - Rock,4,3
+Modern Blues,modern-blues-29601,music,Music,Music,Blues,Modern Blues,3,3
+Country Blues,country-blues-29598,music,Music,Music,Blues,Country Blues,2,3
+Electric Blues,electric-blues-29599,music,Music,Music,Blues,Electric Blues,2,3
+Soul Blues,soul-blues-29602,music,Music,Music,Blues,Soul Blues,2,3
+Compilations,compilations-29597,music,Music,Music,Blues,Compilations,1,3
+Jazz Blues,jazz-blues-29600,music,Music,Music,Blues,Jazz Blues,1,3
+Other Christian & Gospel,other-christian-and-gospel-29498,music,Music,Music,Christian & Gospel,Other Christian & Gospel,16,3
+Traditional Gospel,traditional-gospel-29506,music,Music,Music,Christian & Gospel,Traditional Gospel,2,3
+Gospel Blues,gospel-blues-29504,music,Music,Music,Christian & Gospel,Gospel Blues,1,3
+Other Children's Music,other-children-s-music-29604,music,Music,Music,Children's Music,Other Children's Music,13,3
+Lullabies,lullabies-29606,music,Music,Music,Children's Music,Lullabies,1,3
+Compilations,compilations-29607,music,Music,Music,Children's Music,Compilations,1,3
+Hand Percussion,hand-percussion-27871,music,Music,Instruments,Drums & Percussion,Hand Percussion,273,3
+"Drum Sets, Timbales & Roto Toms",drum-sets-timbales-and-roto-toms-27867,music,Music,Instruments,Drums & Percussion,"Drum Sets, Timbales & Roto Toms",168,3
+Hand Drums,hand-drums-27870,music,Music,Instruments,Drums & Percussion,Hand Drums,117,3
+Cymbals,cymbals-27866,music,Music,Instruments,Drums & Percussion,Cymbals,99,3
+Traditional Instruments,traditional-instruments-31823,music,Music,Instruments,Drums & Percussion,Traditional Instruments,75,3
+Hardware,hardware-27872,music,Music,Instruments,Drums & Percussion,Hardware,46,3
+Electronic Drums,electronic-drums-27868,music,Music,Instruments,Drums & Percussion,Electronic Drums,21,3
+Practice Pads,practice-pads-27873,music,Music,Instruments,Drums & Percussion,Practice Pads,19,3
+Concert & Mallet Percussions,concert-and-mallet-percussions-27771,music,Music,Instruments,Drums & Percussion,Concert & Mallet Percussions,15,3
+Gongs,gongs-27869,music,Music,Instruments,Drums & Percussion,Gongs,2,3
+Acoustic Guitars,acoustic-guitars-28479,music,Music,Instruments,Guitars,Acoustic Guitars,23,3
+Electric Guitars,electric-guitars-27874,music,Music,Instruments,Guitars,Electric Guitars,12,3
+Guitar Amps,guitar-amps-28769,music,Music,Sound & Stage,Amplifiers,Guitar Amps,104,3
+Powered Amps,powered-amps-28770,music,Music,Sound & Stage,Amplifiers,Powered Amps,53,3
+Cables & Jacks,cables-jacks-33666,music,Music,DJ & Production,Studio Equipment & Monitors,Cables & Jacks,293,3
+Acoustic Panels,acoustic-panels-33664,music,Music,DJ & Production,Studio Equipment & Monitors,Acoustic Panels,140,3
+Mic Windshields & Pop Filters,mic-windshields-pop-filters-33665,music,Music,DJ & Production,Studio Equipment & Monitors,Mic Windshields & Pop Filters,111,3
+Monitors & Stands,monitors-stands-33663,music,Music,DJ & Production,Studio Equipment & Monitors,Monitors & Stands,26,3

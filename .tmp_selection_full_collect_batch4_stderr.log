@@ -1,0 +1,7 @@
+db_checkout_slow source=new elapsed_ms=1712.64
+db_checkout_slow source=pool elapsed_ms=849.67
+db_checkout_slow source=pool elapsed_ms=849.90
+db_checkout_slow source=pool elapsed_ms=844.94
+db_checkout_slow source=pool elapsed_ms=845.47
+db_checkout_slow source=pool elapsed_ms=846.78
+db_checkout_slow source=pool elapsed_ms=868.29

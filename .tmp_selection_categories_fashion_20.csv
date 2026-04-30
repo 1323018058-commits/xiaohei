@@ -1,0 +1,21 @@
+name,category_ref,department_slug,main_category,category_level1,category_level2,category_level3,count,depth
+Eyewear,eyewear-32897,fashion,Fashion,Women,Accessories,Eyewear,997,3
+Scarves,scarves-32928,fashion,Fashion,Women,Accessories,Scarves,683,3
+Belts,belts-32896,fashion,Fashion,Women,Accessories,Belts,412,3
+Socks,socks-32929,fashion,Fashion,Women,Accessories,Socks,341,3
+Gloves & Mittens,gloves-and-mittens-32903,fashion,Fashion,Women,Accessories,Gloves & Mittens,168,3
+Eyewear Accessories,eyewear-accessories-32898,fashion,Fashion,Women,Accessories,Eyewear Accessories,157,3
+Belt Accessories,belt-accessories-33719,fashion,Fashion,Women,Accessories,Belt Accessories,68,3
+Hosiery,hosiery-32908,fashion,Fashion,Women,Accessories,Hosiery,40,3
+Ties,ties-32930,fashion,Fashion,Women,Accessories,Ties,9,3
+"Hoodies, Sweatshirts & Fleece",hoodies-sweatshirts-and-fleece-32779,fashion,Fashion,Men,Clothing,"Hoodies, Sweatshirts & Fleece",7001,3
+"Blazers, Jackets & Coats",blazers-jackets-and-coats-32777,fashion,Fashion,Men,Clothing,"Blazers, Jackets & Coats",399,3
+Tracksuit Sets,tracksuit-sets-32775,fashion,Fashion,Men,Clothing,Tracksuit Sets,99,3
+Dungarees,dungarees-33709,fashion,Fashion,Men,Clothing,Dungarees,4,3
+Activewear,activewear-32754,fashion,Fashion,Men,Clothing,Activewear,3,3
+Sandals & Flip Flops,sandals-and-flip-flops-32875,fashion,Fashion,Women,Footwear,Sandals & Flip Flops,1357,3
+Heels,heels-32871,fashion,Fashion,Women,Footwear,Heels,1022,3
+Sneakers & Canvas,sneakers-and-canvas-32879,fashion,Fashion,Women,Footwear,Sneakers & Canvas,942,3
+Boots,boots-32869,fashion,Fashion,Women,Footwear,Boots,864,3
+Loafers & Slip-Ons,loafers-and-slip-ons-32872,fashion,Fashion,Women,Footwear,Loafers & Slip-Ons,495,3
+Slippers,slippers-32878,fashion,Fashion,Women,Footwear,Slippers,443,3

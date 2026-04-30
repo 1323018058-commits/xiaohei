@@ -1,0 +1,11 @@
+name,category_ref,department_slug,main_category,category_level1,category_level2,category_level3,count,depth
+Men,men-32752,fashion,Fashion,Men,,,73072,1
+Women,women-32784,fashion,Fashion,Women,,,69929,1
+Kids,kids-32585,fashion,Fashion,Kids,,,13777,1
+Individual Sports,individual-sports-24383,sport,Sport,Individual Sports,,,12967,1
+Fitness,fitness-24866,sport,Sport,Fitness,,,9480,1
+Watersports,watersports-32285,sport,Sport,Watersports,,,8208,1
+Action Sports,action-sports-24814,sport,Sport,Action Sports,,,5178,1
+Sport Clothing,sport-clothing-24608,sport,Sport,Sport Clothing,,,4814,1
+Team Sports,team-sports-24695,sport,Sport,Team Sports,,,3783,1
+Injury Prevention & Recovery,injury-prevention-and-recovery-28742,sport,Sport,Injury Prevention & Recovery,,,2212,1

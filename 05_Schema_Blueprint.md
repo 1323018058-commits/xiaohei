@@ -2,694 +2,333 @@
 
 ## 1. 目标
 
-本文件把主 PRD 与附录 A/B/F/G/H/I 中的对象边界，落实为数据库层蓝图，供后端 Schema 设计、迁移计划、索引设计与上线前核对使用。
+本文件用于把 `PRD v2.1` 中的对象、状态机、权限、任务与财务规则落到 PostgreSQL 主库的表结构蓝图上。
 
-目标：
+本 Blueprint 关注：
 
-- 保证 `P0` 业务域有完整的最小可用数据骨架
-- 保证任务、审计、幂等、版本、财务、回滚相关字段前置
-- 区分 `P0 / P1 / P2` 的落库优先级，避免首发过度设计
+- 主键与命名规范
+- 域模型拆分
+- 关键字段
+- 唯一约束
+- 索引策略
+- 分区与归档
+- 审计、任务、外部连接器基础设施
 
----
+## 2. 全局设计规范
 
-## 2. 设计原则
+### 2.1 主键与时间
 
-- PostgreSQL 为主库
-- 所有核心表默认包含 `created_at`、`updated_at`
-- 需要并发保护的表必须包含 `version`
-- 所有高危写路径必须可追踪到 `request_id`、`actor_user_id`
-- 外部原始数据优先入 inbox / raw 表，再做标准化写入
-- 钱包流水、审计日志只追加，不覆盖、不物理删除
+- 主键统一使用 `uuid`
+- 所有时间字段统一使用 `timestamptz`
+- 所有业务表必须包含：
+  - `created_at`
+  - `updated_at`
 
----
+### 2.2 命名规范
 
-## 3. 分层
+- 表名：小写复数下划线
+- 主键：`<entity>_id` 或统一 `id`
+- 外键：`<ref_entity>_id`
+- 状态字段：`status`
+- 阶段字段：`stage`
+- 前端元信息：`ui_meta jsonb`
 
-### 3.1 控制面
+### 2.3 通用基础字段
 
-- `users`
-- `user_sessions`
-- `subscriptions`
-- `feature_flag_grants`
+建议大多数业务表包含：
+
+- `tenant_id`
+- `store_id`（若与店铺相关）
+- `status`
+- `stage`
+- `ui_meta`
+- `version`（乐观锁）
+- `created_at`
+- `updated_at`
+
+### 2.4 统一数据类型建议
+
+| 字段类型 | 建议 |
+|---|---|
+| 主键 | `uuid` |
+| 金额 | `numeric(18,4)` |
+| 数量 | `integer` 或 `numeric(18,4)` |
+| 比例 | `numeric(8,4)` |
+| JSON 扩展 | `jsonb` |
+| 状态 | `varchar(64)` |
+| 货币 | `varchar(8)` |
+
+## 3. 核心跨域表
+
+### 3.1 租户与用户
+
+| 表 | 作用 | 主键 / 唯一约束 | 关键字段 | 关键索引 |
+|---|---|---|---|---|
+| `tenants` | 租户主表 | `id` / `slug` 唯一 | `name` `status` `plan` | `status` |
+| `users` | 用户主表 | `id` / `username` 唯一 | `tenant_id` `role` `status` `expires_at` | `(tenant_id,status)` `(tenant_id,role)` |
+| `user_passwords` | 密码与安全信息 | `id` / `user_id` 唯一 | `password_hash` `password_version` | `user_id` |
+| `auth_sessions` | 会话 | `id` / `session_token` 唯一 | `user_id` `status` `expires_at` | `(user_id,status)` `expires_at` |
+| `user_feature_flags` | 用户功能开关 | `id` / `(user_id,feature_key)` 唯一 | `enabled` `source` | `(user_id,feature_key)` |
+| `user_devices` | 设备与风险识别 | `id` | `user_id` `device_fingerprint` `last_seen_at` | `(user_id,last_seen_at)` |
+| `activation_codes` | 激活码 | `id` / `code` 唯一 | `expires_at` `used_at` | `expires_at` |
+| `user_subscriptions` | 订阅信息 | `id` / `(tenant_id,plan_version)` | `status` `grace_until` | `(tenant_id,status)` |
+
+### 3.2 平台管理与审计
+
+| 表 | 作用 | 主键 / 唯一约束 | 关键字段 | 关键索引 |
+|---|---|---|---|---|
+| `audit_logs` | 审计日志 | `id` | `request_id` `actor_user_id` `action` `risk_level` | `(tenant_id,created_at desc)` `(action,created_at desc)` |
+| `licenses` | license / 套餐 | `id` / `license_key` 唯一 | `tenant_id` `plan` `expires_at` | `(tenant_id,expires_at)` |
+| `system_settings` | 系统级总控开关与运行参数 | `id` / `setting_key` 唯一 | `value_type` `value_json` `version` | `setting_key` |
+| `system_health_snapshots` | 系统健康快照 | `id` | `component` `status` `captured_at` | `(component,captured_at desc)` |
+
+## 4. Store 域
+
+| 表 | 作用 | 主键 / 唯一约束 | 关键字段 | 关键索引 |
+|---|---|---|---|---|
+| `stores` | 店铺主表 | `id` / `(tenant_id,name)` | `status` `api_key_status` `last_synced_at` | `(tenant_id,status)` |
+| `store_credentials` | 店铺凭证 | `id` / `store_id` 唯一 | `api_key_encrypted` `masked_api_key` `credential_status` | `store_id` |
+| `store_feature_policies` | 店铺级策略 | `id` / `store_id` 唯一 | `bidding_enabled` `listing_enabled` | `store_id` |
+| `takealot_webhook_configs` | Webhook 配置 | `id` / `store_id` 唯一 | `webhook_url` `secret_ref` | `store_id` |
+| `takealot_webhook_deliveries` | webhook 投递记录 | `id` | `store_id` `event_type` `delivery_status` | `(store_id,created_at desc)` |
+
+## 5. Product / Selection / Extension 域
+
+| 表 | 作用 | 主键 / 唯一约束 | 关键字段 | 关键索引 |
+|---|---|---|---|---|
+| `library_products` | 共享商品事实库 | `id` / `(platform,external_product_id)` | `title` `brand` `category` `price_min` `price_max` `fact_status` `last_refreshed_at` | `(platform,external_product_id)` `(platform,category)` `gin(search_vector)` |
+| `product_media` | 图片与媒体 | `id` | `product_id` `media_type` `sort_order` | `(product_id,sort_order)` |
+| `product_annotations` | 商品标注 | `id` | `product_id` `actor_user_id` `annotation_type` | `(product_id,created_at desc)` |
+| `auto_selection_batches` | 自动选品批次 | `id` | `tenant_id` `status` `task_id` | `(tenant_id,created_at desc)` |
+| `auto_selection_products` | 候选商品池 | `id` / `(batch_id,product_id)` | `profit_estimate` `risk_score` | `(batch_id,risk_score)` |
+| `tenant_product_guardrails` | 租户保护价护栏 | `id` / `(tenant_id,store_id,product_id)` | `protected_floor_price` `autobid_sync_status` `linked_bidding_rule_id` | `(tenant_id,store_id,updated_at desc)` |
+| `selection_memory` | 选品与扩展记忆层 | `id` | `tenant_id` `scope_type` `key` `value jsonb` | `(tenant_id,scope_type,key)` |
+| `extension_auth_tokens` | 扩展鉴权令牌 | `id` / `token_hash` 唯一 | `tenant_id` `user_id` `store_id` `expires_at` `last_seen_at` | `(user_id,expires_at)` `(tenant_id,expires_at)` |
+
+### 5.1 上下文与记忆管理
+
+- `library_products` 保存共享商品事实，不再按 `store_id` 重复抓取同一 `PLID`
+- 原始 payload 与标准化字段必须并存，至少保留：
+  - 原始平台响应
+  - 标准化重量、长宽高、价格区间
+  - 来源、刷新时间、置信度、最近校验时间
+- `tenant_product_guardrails` 只保存保护价护栏，不得扩展成成本、运费、费率的大杂烩配置表
+- `selection_memory` 负责保存公式版本、人工备注、最近查询、手动覆盖与上下文摘要；成本、运费、费率不属于后端持久化记忆
+- 浏览器扩展的任何利润试算、推荐售价、保护低价，都必须由后端基于“共享事实 + 保护价护栏 + 记忆层”统一计算
+- 当商品已映射到真实 `listing/sku` 时，保护价应优先同步到 `bidding_rules` 或 `sku_floor_prices`；当映射尚未建立时，先在 `tenant_product_guardrails` 暂存，待上架后再 hydrate 到 `AutoBid`
+
+## 6. Listing / Dropship 域
+
+| 表 | 作用 | 主键 / 唯一约束 | 关键字段 | 关键索引 |
+|---|---|---|---|---|
+| `listing_jobs` | 链接铺货任务 | `id` | `store_id` `status` `stage` `source_url` `attempt_count` | `(store_id,status)` `(store_id,created_at desc)` |
+| `dropship_jobs` | 关键词采买任务 | `id` | `store_id` `status` `stage` `keyword` `attempt_count` | `(store_id,status)` `(keyword)` |
+| `listing_job_attempts` | 铺货尝试版本 | `id` | `job_id` `attempt_no` `status` `input_payload` `output_payload` | `(job_id,attempt_no desc)` |
+| `listing_ai_rewrites` | AI 改写版本 | `id` | `job_id` `attempt_id` `model_name` `rewrite_payload` | `(job_id,created_at desc)` |
+| `listing_reviews` | 审核状态 | `id` | `job_id` `submission_id` `review_status` `review_reason` | `(job_id,created_at desc)` |
+| `loadsheet_artifacts` | loadsheet 产物 | `id` | `job_id` `artifact_type` `file_ref` | `(job_id,artifact_type)` |
+
+## 7. Bidding 域
+
+| 表 | 作用 | 主键 / 唯一约束 | 关键字段 | 关键索引 |
+|---|---|---|---|---|
+| `bid_products` | 竞价商品 | `id` / `(store_id,offer_id)` | `status` `floor_price_zar` `current_price_zar` `buybox_price_zar` | `(store_id,status)` `(store_id,offer_id)` |
+| `sku_floor_prices` | SKU 底价库 | `id` / `(tenant_id,sku)` | `floor_price_zar` `source` | `(tenant_id,sku)` |
+| `bid_log` | 调价日志 | `id` | `store_id` `offer_id` `action` `before_price` `after_price` | `(store_id,created_at desc)` `(offer_id,created_at desc)` |
+| `bid_engine_state` | 运行态摘要 | `id` / `store_id` 唯一 | `engine_status` `last_run_at` | `store_id` |
+| `autobid_store_policy` | 店铺竞价策略 | `id` / `store_id` 唯一 | `enabled` `ceiling_multiplier` | `store_id` |
+| `autobid_store_run` | 每轮运行记录 | `id` | `store_id` `status` `started_at` `finished_at` | `(store_id,started_at desc)` |
+| `autobid_scan_result` | 扫描结果 | `id` | `run_id` `offer_id` `buybox_price` | `(run_id,offer_id)` |
+| `autobid_decision_result` | 决策结果 | `id` | `run_id` `offer_id` `decision` `guardrail_reason` | `(run_id,offer_id)` |
+| `autobid_execution_task` | 执行任务映射 | `id` | `run_id` `task_id` `status` | `(run_id,task_id)` |
+
+## 8. Fulfillment 域
+
+| 表 | 作用 | 主键 / 唯一约束 | 关键字段 | 关键索引 |
+|---|---|---|---|---|
+| `fulfillment_orders` | 订单主表 | `id` / `(store_id,external_order_id)` | `platform_status` `fulfillment_status` | `(store_id,platform_status)` |
+| `fulfillment_order_items` | 订单项 | `id` | `order_id` `sku` `qty` `warehouse_code` `status` | `(order_id)` `(warehouse_code,status)` |
+| `fulfillment_pos` | PO 主表 | `id` / `(tenant_id,po_no)` | `status` `warehouse_code` `version` | `(tenant_id,status)` |
+| `fulfillment_po_items` | PO 明细 | `id` | `po_id` `sku` `qty` `tracking_no` | `(po_id)` |
+| `fulfillment_order_item_po_relations` | 订单项与 PO 绑定 | `id` / `(order_item_id,po_item_id)` | `binding_status` | `(order_item_id)` `(po_item_id)` |
+| `fulfillment_purchase_shipments` | 物流 / 发货 | `id` | `po_id` `shipment_status` `carrier` `tracking_no` | `(po_id,status)` |
+| `fulfillment_exceptions` | 履约异常 | `id` | `target_type` `target_id` `reason_code` `status` | `(target_type,target_id)` |
+
+## 9. Warehouse / CNExpress 域
+
+| 表 | 作用 | 主键 / 唯一约束 | 关键字段 | 关键索引 |
+|---|---|---|---|---|
+| `warehouse_operations` | 仓库动作日志 | `id` | `target_type` `target_id` `operation_type` `status` | `(target_type,target_id,created_at desc)` |
+| `warehouse_outbound_batches` | 出库批次 | `id` | `status` `warehouse_code` `shipped_at` | `(warehouse_code,status)` |
+| `warehouse_label_records` | 标签记录 | `id` | `shipment_id` `label_ref` `status` | `(shipment_id)` |
+| `warehouse_scans` | 扫描记录 | `id` | `shipment_id` `scan_code` `scan_type` | `(shipment_id,scan_type)` |
+| `cnexpress_orders` | 嘉鸿订单镜像 | `id` / `(tenant_id,external_order_id)` | `status` `route_code` | `(tenant_id,status)` |
+| `cnexpress_wallet_transactions` | 嘉鸿钱包镜像 | `id` | `tenant_id` `amount` `currency` | `(tenant_id,created_at desc)` |
+
+## 10. Finance 域
+
+| 表 | 作用 | 主键 / 唯一约束 | 关键字段 | 关键索引 |
+|---|---|---|---|---|
+| `finance_wallet_accounts` | 钱包账户 | `id` / `(tenant_id,currency)` | `balance` `available_balance` | `(tenant_id,currency)` |
+| `finance_wallet_ledgers` | 钱包流水 | `id` | `tenant_id` `ledger_type` `amount` `status` `occurred_at` | `(tenant_id,occurred_at desc)` `(tenant_id,ledger_type)` |
+| `finance_profit_snapshots` | 利润快照 | `id` / `(scope_type,scope_id,snapshot_version)` | `status` `profit_amount` `input_hash` | `(tenant_id,created_at desc)` `(scope_type,scope_id,snapshot_version)` |
+| `jiahong_logistics_charges` | 嘉鸿费用 | `id` | `shipment_id` `amount` `currency` | `(shipment_id)` |
+| `finance_adjustments` | 财务调整 | `id` | `ledger_id` `amount_delta` `reason` | `(ledger_id,created_at desc)` |
+| `finance_exchange_rates` | 汇率表 | `id` / `(base_currency,quote_currency,effective_date)` | `rate` | `(base_currency,quote_currency,effective_date desc)` |
+
+## 11. Task / Connector / Infra 域
+
+| 表 | 作用 | 主键 / 唯一约束 | 关键字段 | 关键索引 |
+|---|---|---|---|---|
+| `task_definitions` | 任务模板 | `id` / `task_type` 唯一 | `queue_name` `max_retries` | `task_type` |
+| `task_runs` | 任务实例 | `id` | `task_type` `status` `stage` `tenant_id` `store_id` | `(status,created_at desc)` `(tenant_id,created_at desc)` |
+| `task_events` | 任务事件 | `id` | `task_id` `event_type` `stage` | `(task_id,created_at desc)` |
+| `task_leases` | 租约 | `id` / `task_id` 唯一 | `worker_id` `lease_token` `expires_at` | `(expires_at)` |
+| `task_dead_letters` | 死信 | `id` | `task_id` `reason` `resolved_at` | `(resolved_at)` |
+| `connector_inbox` | 外部原始响应 | `id` / `(provider,external_id,payload_hash)` | `endpoint` `payload` `status` | `(provider,created_at desc)` |
+| `outbox_events` | 内部事件 outbox | `id` / `(event_type,aggregate_type,aggregate_id,version)` | `payload` `published_at` | `(published_at)` |
+| `notifications` | 站内通知 | `id` | `user_id` `type` `read_at` | `(user_id,read_at,created_at desc)` |
+
+## 12. 关键关系
+
+```text
+Tenant 1 ── N Users
+Tenant 1 ── N Stores
+Store 1 ── N LibraryProducts
+Store 1 ── N ListingJobs / BidProducts / Orders
+Order 1 ── N OrderItems
+PO 1 ── N POItems
+OrderItem N ── M POItem
+PO 1 ── N Shipments
+Shipment 1 ── N WarehouseOperations
+Tenant 1 ── N WalletAccounts / Ledgers / ProfitSnapshots
+TaskRun 1 ── N TaskEvents
+Store / Order / Bid / Finance 1 ── N AuditLogs
+```
+
+## 13. 约束与唯一键
+
+### 必须唯一
+
+- `users.username`
+- `licenses.license_key`
+- `(stores.tenant_id, stores.name)`
+- `(bid_products.store_id, bid_products.offer_id)`
+- `(fulfillment_orders.store_id, fulfillment_orders.external_order_id)`
+- `(finance_profit_snapshots.scope_type, scope_id, snapshot_version)`
+
+### 必须业务唯一
+
+- 同一店铺同一时间只允许一个 `store.sync.full` 运行任务
+- 同一 `BidProduct` 在同一 `run_id` 内只允许一条决策记录
+- 同一 `order_item_id` 不得重复绑定同一 `po_item_id`
+
+## 14. 索引策略
+
+### 热表必须索引
+
+- `bid_log`
+- `task_runs`
+- `task_events`
+- `finance_wallet_ledgers`
 - `audit_logs`
-- `idempotency_records`
+- `warehouse_operations`
 
-### 3.2 执行面
+### 全文 / 搜索
+
+- `library_products` 建议建立 `tsvector` 搜索列
+- 大量 JSONB 过滤字段建议用 `gin` 索引，但需谨慎控制
+
+## 15. 分区与归档
+
+建议按月分区的表：
+
+- `bid_log`
+- `task_events`
+- `finance_wallet_ledgers`
+- `audit_logs`
+- `takealot_webhook_deliveries`
+- `connector_inbox`
+
+归档建议：
+
+- 热数据：近 30 ~ 90 天
+- 温数据：3 ~ 12 个月
+- 冷归档：1 年以上
+
+## 16. 软删除与不可变规则
+
+### 软删除
+
+建议使用软删除的表：
 
 - `stores`
-- `store_credentials`
-- `store_sync_inbox`
-- `store_sync_runs`
-- `selection_products`
+- `users`
 - `listing_jobs`
-- `listing_job_attempts`
-- `listing_job_snapshots`
+- `dropship_jobs`
+
+建议字段：
+
+- `deleted_at`
+- `deleted_by`
+
+### 不可变
+
+以下对象不建议直接更新覆盖历史事实：
+
+- `finance_wallet_ledgers`
+- `audit_logs`
+- `task_events`
+- `connector_inbox`
+- `bid_log`
+
+## 17. 迁移顺序建议
+
+1. 租户、用户、会话、功能开关
+2. 店铺、凭证、Webhook
+3. 商品情报与选品
+4. Listing / Dropship
+5. Bid 域
+6. Fulfillment / Warehouse
+7. Finance
+8. Task / Audit / Connector 基础设施
+
+## 18. 首发必须落地的表
+
+### P0
+
+- `users`
+- `auth_sessions`
+- `user_feature_flags`
+- `system_settings`
+- `stores`
+- `store_credentials`
 - `bid_products`
-- `bid_logs`
-- `autobid_store_policies`
+- `sku_floor_prices`
+- `bid_log`
 - `fulfillment_orders`
 - `fulfillment_order_items`
 - `fulfillment_pos`
 - `fulfillment_po_items`
-- `shipments`
-- `warehouse_batches`
-- `finance_wallet_accounts`
+- `fulfillment_order_item_po_relations`
+- `fulfillment_purchase_shipments`
 - `finance_wallet_ledgers`
 - `finance_profit_snapshots`
-- `finance_adjustments`
-
-### 3.3 运行面
-
-- `task_definitions`
 - `task_runs`
 - `task_events`
-- `task_leases`
-- `task_dead_letters`
-- `task_checkpoints`
-- `system_metrics_snapshots`
+- `audit_logs`
 
----
+### P1
 
-## 4. `P0` 必须落地表
+- `library_products`
+- `auto_selection_batches`
+- `auto_selection_products`
+- `warehouse_outbound_batches`
+- `warehouse_label_records`
 
-| 表名 | 作用 | 优先级 |
-|---|---|---|
-| `users` | 用户主表 | `P0` |
-| `user_sessions` | 登录会话 | `P0` |
-| `subscriptions` | 账号订阅与到期 | `P0` |
-| `feature_flag_grants` | 功能开关授权 | `P0` |
-| `audit_logs` | 审计日志 | `P0` |
-| `idempotency_records` | 幂等记录 | `P0` |
-| `stores` | 店铺主表 | `P0` |
-| `store_credentials` | 店铺凭证 | `P0` |
-| `store_sync_inbox` | 外部同步原始数据 | `P0` |
-| `store_sync_runs` | 店铺同步执行记录 | `P0` |
-| `bid_products` | 竞价商品 | `P0` |
-| `bid_logs` | 调价日志 | `P0` |
-| `autobid_store_policies` | 店铺竞价策略 | `P0` |
-| `fulfillment_orders` | 订单主表 | `P0` |
-| `fulfillment_order_items` | 订单项 | `P0` |
-| `fulfillment_pos` | PO 主表 | `P0` |
-| `fulfillment_po_items` | PO 明细 | `P0` |
-| `shipments` | 运单主表 | `P0` |
-| `task_definitions` | 任务模板 | `P0` |
-| `task_runs` | 任务实例 | `P0` |
-| `task_events` | 任务事件 | `P0` |
-| `task_leases` | 任务租约 | `P0` |
+### P2
 
----
-
-## 5. `P1` 受限可用表
-
-| 表名 | 作用 | 优先级 |
-|---|---|---|
-| `selection_products` | 选品池 | `P1` |
-| `warehouse_batches` | 仓库批次 | `P1` |
-| `finance_wallet_accounts` | 钱包账户 | `P1` |
-| `finance_wallet_ledgers` | 财务流水 | `P1` |
-| `finance_profit_snapshots` | 利润快照 | `P1` |
-| `finance_adjustments` | 财务调整 | `P1` |
-| `task_dead_letters` | 死信 | `P1` |
-| `task_checkpoints` | 任务恢复点 | `P1` |
-
----
-
-## 6. `P2` 延后表
-
-| 表名 | 作用 | 优先级 |
-|---|---|---|
-| `listing_jobs` | 铺货任务 | `P2` |
-| `listing_job_attempts` | 铺货提交尝试 | `P2` |
-| `listing_job_snapshots` | AI / loadsheet 快照 | `P2` |
-
----
-
-## 7. 核心表蓝图
-
-### 7.1 `users`
-
-| 字段 | 类型建议 | 说明 |
-|---|---|---|
-| `user_id` | uuid | 主键 |
-| `tenant_id` | uuid | 租户 |
-| `email` | varchar(255) | 唯一登录标识 |
-| `password_hash` | varchar(255) | 密码哈希 |
-| `status` | varchar(32) | `pending / active / locked / expired / disabled` |
-| `role` | varchar(32) | `super_admin / tenant_admin / operator / warehouse` |
-| `expiry_at` | timestamptz | 到期时间 |
-| `force_password_reset` | boolean | 是否强制改密 |
-| `last_login_at` | timestamptz | 最近登录 |
-| `version` | bigint | 乐观锁 |
-| `created_at` | timestamptz | 创建时间 |
-| `updated_at` | timestamptz | 更新时间 |
-
-约束：
-
-- 唯一键：`email`
-- 索引：`tenant_id + status`
-
-### 7.2 `user_sessions`
-
-| 字段 | 类型建议 | 说明 |
-|---|---|---|
-| `session_id` | uuid | 主键 |
-| `user_id` | uuid | 用户 |
-| `status` | varchar(32) | `active / revoked / forced_logout` |
-| `refresh_token_hash` | varchar(255) | 刷新凭证 |
-| `ip` | inet | IP |
-| `user_agent` | text | UA |
-| `expires_at` | timestamptz | 过期时间 |
-| `revoked_at` | timestamptz | 失效时间 |
-| `created_at` | timestamptz | 创建时间 |
-
-索引：
-
-- `user_id + status`
-- `expires_at`
-
-### 7.3 `subscriptions`
-
-| 字段 | 类型建议 | 说明 |
-|---|---|---|
-| `subscription_id` | uuid | 主键 |
-| `tenant_id` | uuid | 租户 |
-| `plan_code` | varchar(64) | 套餐 |
-| `status` | varchar(32) | `trial / paid / grace / expired` |
-| `started_at` | timestamptz | 开始时间 |
-| `expires_at` | timestamptz | 到期时间 |
-| `grace_until` | timestamptz | 宽限期 |
-| `created_at` | timestamptz | 创建时间 |
-| `updated_at` | timestamptz | 更新时间 |
-
-### 7.4 `feature_flag_grants`
-
-| 字段 | 类型建议 | 说明 |
-|---|---|---|
-| `grant_id` | uuid | 主键 |
-| `tenant_id` | uuid | 租户 |
-| `user_id` | uuid | 可为空，表示租户级 |
-| `feature_key` | varchar(64) | `selection / listing / bidding / fulfillment / finance / warehouse / admin / extension` |
-| `enabled` | boolean | 是否启用 |
-| `reason` | text | 变更原因 |
-| `updated_by` | uuid | 操作人 |
-| `version` | bigint | 乐观锁 |
-| `created_at` | timestamptz | 创建时间 |
-| `updated_at` | timestamptz | 更新时间 |
-
-唯一键：
-
-- `tenant_id + user_id + feature_key`
-
-### 7.5 `audit_logs`
-
-关键字段必须与附录 I 对齐：
-
-- `audit_id`
-- `request_id`
-- `tenant_id`
-- `store_id`
-- `actor_type`
-- `actor_user_id`
-- `actor_role`
-- `source`
-- `ip`
-- `user_agent`
-- `action`
-- `action_label`
-- `risk_level`
-- `target_type`
-- `target_id`
-- `before`
-- `after`
-- `diff`
-- `reason`
-- `result`
-- `error_code`
-- `idempotency_key`
-- `task_id`
-- `metadata`
-- `created_at`
-
-索引：
-
-- `tenant_id + created_at desc`
-- `actor_user_id + created_at desc`
-- `target_type + target_id + created_at desc`
-- `request_id`
-
-### 7.6 `idempotency_records`
-
-| 字段 | 类型建议 | 说明 |
-|---|---|---|
-| `idempotency_key` | varchar(255) | 主键或唯一键 |
-| `request_id` | varchar(128) | 请求 ID |
-| `scope` | varchar(128) | 业务作用域 |
-| `target_type` | varchar(64) | 目标对象类型 |
-| `target_id` | varchar(128) | 目标对象 |
-| `response_ref` | jsonb | 已有响应摘要 |
-| `expires_at` | timestamptz | 过期时间 |
-| `created_at` | timestamptz | 创建时间 |
-
----
-
-## 8. Store 与同步
-
-### 8.1 `stores`
-
-关键字段：
-
-- `store_id`
-- `tenant_id`
-- `platform`
-- `store_name`
-- `status`
-- `credential_status`
-- `sync_status`
-- `last_sync_at`
-- `version`
-- `created_at`
-- `updated_at`
-
-索引：
-
-- `tenant_id + status`
-- `tenant_id + platform`
-
-### 8.2 `store_credentials`
-
-关键字段：
-
-- `credential_id`
-- `store_id`
-- `provider`
-- `credential_masked`
-- `credential_ciphertext_ref`
-- `status`
-- `last_validated_at`
-- `version`
-- `created_at`
-- `updated_at`
-
-约束：
-
-- 前端永不读取明文
-
-### 8.3 `store_sync_inbox`
-
-关键字段：
-
-- `inbox_id`
-- `store_id`
-- `sync_run_id`
-- `source_type`
-- `source_ref`
-- `payload_raw`
-- `payload_hash`
-- `status`
-- `quarantined_reason`
-- `created_at`
-
-用途：
-
-- 存储外部原始响应
-- 支持脏数据隔离与回放
-
-### 8.4 `store_sync_runs`
-
-关键字段：
-
-- `sync_run_id`
-- `store_id`
-- `task_id`
-- `status`
-- `stage`
-- `started_at`
-- `finished_at`
-- `result_summary`
-- `created_at`
-
----
-
-## 9. AutoBid
-
-### 9.1 `bid_products`
-
-关键字段：
-
-- `bid_product_id`
-- `tenant_id`
-- `store_id`
-- `external_offer_id`
-- `sku`
-- `status`
-- `floor_price`
-- `ceiling_price`
-- `current_price`
-- `buybox_price`
-- `buybox_updated_at`
-- `guardrail_state`
-- `last_run_at`
-- `version`
-- `created_at`
-- `updated_at`
-
-唯一键：
-
-- `store_id + external_offer_id`
-
-索引：
-
-- `store_id + status`
-- `store_id + sku`
-
-### 9.2 `autobid_store_policies`
-
-关键字段：
-
-- `policy_id`
-- `store_id`
-- `enabled`
-- `floor_strategy`
-- `ceiling_strategy`
-- `batch_size`
-- `cooldown_seconds`
-- `version`
-- `updated_by`
-- `updated_at`
-
-### 9.3 `bid_logs`
-
-关键字段：
-
-- `bid_log_id`
-- `bid_product_id`
-- `task_id`
-- `before_price`
-- `after_price`
-- `buybox_price`
-- `result`
-- `error_code`
-- `created_at`
-
----
-
-## 10. Fulfillment / PO / Shipment
-
-### 10.1 `fulfillment_orders`
-
-关键字段：
-
-- `order_id`
-- `tenant_id`
-- `store_id`
-- `external_order_id`
-- `status`
-- `buyer_name_masked`
-- `destination_warehouse`
-- `ordered_at`
-- `version`
-- `created_at`
-- `updated_at`
-
-### 10.2 `fulfillment_order_items`
-
-关键字段：
-
-- `order_item_id`
-- `order_id`
-- `sku`
-- `product_title`
-- `product_image_url`
-- `quantity`
-- `status`
-- `po_id`
-- `shipment_id`
-- `exception_code`
-- `version`
-- `created_at`
-- `updated_at`
-
-索引：
-
-- `order_id`
-- `po_id`
-- `status + destination_warehouse`
-
-### 10.3 `fulfillment_pos`
-
-关键字段：
-
-- `po_id`
-- `tenant_id`
-- `store_id`
-- `warehouse_code`
-- `status`
-- `stage`
-- `item_count`
-- `tracking_completion_ratio`
-- `created_by`
-- `request_id`
-- `version`
-- `created_at`
-- `updated_at`
-
-唯一约束建议：
-
-- 不做跨仓唯一合单；通过写服务约束同仓
-
-### 10.4 `fulfillment_po_items`
-
-关键字段：
-
-- `po_item_id`
-- `po_id`
-- `order_item_id`
-- `sku`
-- `quantity`
-- `tracking_number`
-- `status`
-- `version`
-- `created_at`
-- `updated_at`
-
-### 10.5 `shipments`
-
-关键字段：
-
-- `shipment_id`
-- `tenant_id`
-- `po_id`
-- `carrier`
-- `tracking_number`
-- `status`
-- `received_at`
-- `shipped_at`
-- `delivered_at`
-- `exception_code`
-- `version`
-- `created_at`
-- `updated_at`
-
----
-
-## 11. Finance
-
-### 11.1 `finance_wallet_accounts`
-
-关键字段：
-
-- `wallet_account_id`
-- `tenant_id`
-- `store_id`
-- `currency`
-- `status`
-- `created_at`
-- `updated_at`
-
-### 11.2 `finance_wallet_ledgers`
-
-字段与附录 H 对齐，至少包含：
-
-- `ledger_id`
-- `wallet_account_id`
-- `tenant_id`
-- `store_id`
-- `order_id`
-- `order_item_id`
-- `po_id`
-- `shipment_id`
-- `source_type`
-- `source_id`
-- `ledger_type`
-- `currency`
-- `amount`
-- `exchange_rate`
-- `base_currency`
-- `base_amount`
-- `occurred_at`
-- `recorded_at`
-- `status`
-- `snapshot_version`
-- `note`
-- `created_by`
-- `created_at`
-
-索引：
-
-- `tenant_id + occurred_at desc`
-- `store_id + occurred_at desc`
-- `order_item_id`
-- `ledger_type + occurred_at`
-
-### 11.3 `finance_profit_snapshots`
-
-字段与附录 H 对齐，至少包含：
-
-- `snapshot_id`
-- `tenant_id`
-- `store_id`
-- `scope_type`
-- `scope_id`
-- `snapshot_version`
-- `status`
-- `base_currency`
-- `sale_income`
-- `purchase_cost`
-- `logistics_cost`
-- `commission_fee`
-- `tax_cost`
-- `warehouse_cost`
-- `other_cost`
-- `profit_amount`
-- `margin_rate`
-- `input_hash`
-- `calculated_at`
-- `frozen_at`
-- `superseded_by`
-- `created_by`
-- `created_at`
-
-唯一键建议：
-
-- `scope_type + scope_id + snapshot_version`
-
-### 11.4 `finance_adjustments`
-
-关键字段：
-
-- `adjustment_id`
-- `ledger_id`
-- `snapshot_id`
-- `reason`
-- `amount_delta`
-- `created_by`
-- `request_id`
-- `created_at`
-
----
-
-## 12. Task System
-
-### 12.1 `task_definitions`
-
-直接采用附录 G 字段全集。
-
-### 12.2 `task_runs`
-
-直接采用附录 G 字段全集，并增加以下索引：
-
-- `tenant_id + created_at desc`
-- `queue_name + status + priority`
-- `task_type + target_type + target_id + status`
-- `request_id`
-- `root_task_id`
-
-### 12.3 `task_events`
-
-索引：
-
-- `task_id + created_at`
-- `event_type + created_at`
-
-### 12.4 `task_leases`
-
-唯一约束建议：
-
-- `task_id + lease_token`
-
-### 12.5 `task_dead_letters`
-
-关键字段：
-
-- `dead_letter_id`
-- `task_id`
-- `task_type`
-- `reason`
-- `last_error_code`
-- `last_error_msg`
-- `moved_at`
-- `resolved_at`
-- `resolved_by`
-
-### 12.6 `task_checkpoints`
-
-关键字段：
-
-- `checkpoint_id`
-- `task_id`
-- `stage`
-- `checkpoint_payload`
-- `created_at`
-
----
-
-## 13. 索引与约束重点
-
-### 13.1 必要唯一键
-
-- `users.email`
-- `feature_flag_grants(tenant_id, user_id, feature_key)`
-- `bid_products(store_id, external_offer_id)`
-- `finance_profit_snapshots(scope_type, scope_id, snapshot_version)`
-
-### 13.2 必要乐观锁
-
-以下表强制带 `version`：
-
-- `users`
-- `feature_flag_grants`
-- `stores`
-- `store_credentials`
-- `autobid_store_policies`
-- `bid_products`
-- `fulfillment_pos`
-- `fulfillment_po_items`
-- `shipments`
-- `finance_profit_snapshots`
-
-### 13.3 软删除策略
-
-- 核心财务、审计、任务、幂等表不使用软删除
-- 用户、店铺如需停用，使用 `status` 表达，不做物理删除
-
----
-
-## 14. 迁移顺序建议
-
-1. 控制面：`users / sessions / subscriptions / feature flags / audit / idempotency`
-2. 运行面：`task_*`
-3. 店铺与同步：`stores / credentials / inbox / sync_runs`
-4. AutoBid：`bid_products / bid_logs / store_policies`
-5. Fulfillment：`orders / order_items / pos / po_items / shipments`
-6. Finance：`wallet_accounts / ledgers / snapshots / adjustments`
-7. `P2`：`listing_jobs` 相关表
-
----
-
-## 15. 上线前 Schema 检查点
-
-- `P0` 表是否全部具备状态字段、审计字段、时间字段
-- 所有高危写路径是否都能落到 `audit_logs`
-- 所有任务化路径是否都能落到 `task_runs + task_events`
-- 财务与审计是否仍保持 append-only
-- 关键列表查询索引是否已覆盖 `tenant_id + status + created_at` 这类高频组合
+- `listing_jobs`
+- `dropship_jobs`
+- `listing_job_attempts`
+- `listing_reviews`

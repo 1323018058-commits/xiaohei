@@ -1,0 +1,21 @@
+name,category_ref,department_slug,main_category,category_level1,category_level2,category_level3,count,depth
+Engineering & Technology,engineering-and-technology-29662,books,Books,Academic,Higher Education,Engineering & Technology,215252,3
+Social Sciences,social-sciences-29721,books,Books,Academic,Higher Education,Social Sciences,190541,3
+Language & Literary Studies,language-and-literary-studies-29695,books,Books,Academic,Higher Education,Language & Literary Studies,175255,3
+Education,education-29661,books,Books,Academic,Higher Education,Education,79120,3
+Study Aids,study-aids-29722,books,Books,Academic,Higher Education,Study Aids,42816,3
+Kettles,kettles-25790,home-kitchen,Home & Kitchen,Small Kitchen Appliances,Kettles,,902,2
+Toasters,toasters-25791,home-kitchen,Home & Kitchen,Small Kitchen Appliances,Toasters,,367,2
+Replacement Parts,replacement-parts-33920,home-kitchen,Home & Kitchen,Small Kitchen Appliances,Replacement Parts,,198,2
+Replacement Parts,replacement-parts-33919,home-kitchen,Home & Kitchen,Small Household Appliances,Replacement Parts,,681,2
+Sewing Machines,sewing-machines-25787,home-kitchen,Home & Kitchen,Small Household Appliances,Sewing Machines,,336,2
+"Hoodies, Sweatshirts & Fleece",hoodies-sweatshirts-and-fleece-32779,fashion,Fashion,Men,Clothing,"Hoodies, Sweatshirts & Fleece",7001,3
+"Blazers, Jackets & Coats",blazers-jackets-and-coats-32777,fashion,Fashion,Men,Clothing,"Blazers, Jackets & Coats",400,3
+Tracksuit Sets,tracksuit-sets-32775,fashion,Fashion,Men,Clothing,Tracksuit Sets,99,3
+Dungarees,dungarees-33709,fashion,Fashion,Men,Clothing,Dungarees,4,3
+Activewear,activewear-32754,fashion,Fashion,Men,Clothing,Activewear,3,3
+Laser Cutters & Engravers,laser-cutters-engravers-33830,office-stationery,Office & Stationery,Office,Laser Cutters & Engravers,,52,2
+Signage,signage-26598,office-stationery,Office & Stationery,Stationery,Office Supplies,Signage,4367,3
+Label Makers & Supplies,label-makers-and-supplies-28092,office-stationery,Office & Stationery,Stationery,Office Supplies,Label Makers & Supplies,2119,3
+"Diaries, Calendars & Planners",diaries-calendars-and-planners-26587,office-stationery,Office & Stationery,Stationery,Office Supplies,"Diaries, Calendars & Planners",686,3
+Cleaning,cleaning-26597,office-stationery,Office & Stationery,Stationery,Office Supplies,Cleaning,153,3

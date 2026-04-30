@@ -1,0 +1,1 @@
+{"dry_run": false, "loop": true, "cycles": 2, "target_count": 10000, "fetched_count": 9680, "variant_count": 16135, "dimension_updates": 9553, "status_counts": {"200": 9655, "500": 7, "error": 2, "401": 16}, "latency_ms_p50": 704.0, "latency_ms_p95": 1482.0, "latency_ms_avg": 845.2, "elapsed_seconds": 5758.766}

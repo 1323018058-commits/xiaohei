@@ -1,0 +1,4 @@
+{"at": "2026-04-27T13:50:59.925693+00:00", "processed": 25, "total": 100, "persisted": 25, "offer_updates": 25, "review_updates": 25, "detail_errors": 0, "review_errors": 0}
+{"at": "2026-04-27T13:51:11.879367+00:00", "processed": 50, "total": 100, "persisted": 25, "offer_updates": 25, "review_updates": 25, "detail_errors": 0, "review_errors": 0}
+{"at": "2026-04-27T13:51:18.286552+00:00", "processed": 75, "total": 100, "persisted": 25, "offer_updates": 25, "review_updates": 25, "detail_errors": 0, "review_errors": 0}
+{"at": "2026-04-27T13:51:29.731216+00:00", "processed": 100, "total": 100, "persisted": 25, "offer_updates": 23, "review_updates": 25, "detail_errors": 2, "review_errors": 0}

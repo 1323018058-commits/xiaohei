@@ -1,0 +1,5 @@
+{"at": "2026-04-28T17:29:38.207234+00:00", "processed": 20, "total": 100, "persisted_variants": 26, "status_counts": {"200": 20}, "variant_count": 26, "dimension_updates": 17, "errors": 0}
+{"at": "2026-04-28T17:29:42.527276+00:00", "processed": 40, "total": 100, "persisted_variants": 30, "status_counts": {"200": 20}, "variant_count": 30, "dimension_updates": 20, "errors": 0}
+{"at": "2026-04-28T17:29:47.374691+00:00", "processed": 60, "total": 100, "persisted_variants": 35, "status_counts": {"200": 20}, "variant_count": 35, "dimension_updates": 20, "errors": 0}
+{"at": "2026-04-28T17:29:51.542932+00:00", "processed": 80, "total": 100, "persisted_variants": 34, "status_counts": {"200": 20}, "variant_count": 34, "dimension_updates": 20, "errors": 0}
+{"at": "2026-04-28T17:29:55.635950+00:00", "processed": 100, "total": 100, "persisted_variants": 37, "status_counts": {"200": 20}, "variant_count": 37, "dimension_updates": 20, "errors": 0}

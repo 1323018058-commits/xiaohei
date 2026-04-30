@@ -1,0 +1,5 @@
+{"at": "2026-04-28T17:24:20.922560+00:00", "processed": 5, "total": 20, "persisted_variants": 0, "status_counts": {"401": 5}, "variant_count": 0, "dimension_updates": 0, "errors": 5}
+{"at": "2026-04-28T17:26:47.732508+00:00", "processed": 5, "total": 20, "persisted_variants": 5, "status_counts": {"200": 5}, "variant_count": 5, "dimension_updates": 4, "errors": 0}
+{"at": "2026-04-28T17:26:51.117481+00:00", "processed": 10, "total": 20, "persisted_variants": 14, "status_counts": {"200": 5}, "variant_count": 14, "dimension_updates": 4, "errors": 0}
+{"at": "2026-04-28T17:26:55.330641+00:00", "processed": 15, "total": 20, "persisted_variants": 16, "status_counts": {"200": 5}, "variant_count": 16, "dimension_updates": 5, "errors": 0}
+{"at": "2026-04-28T17:26:58.495074+00:00", "processed": 20, "total": 20, "persisted_variants": 13, "status_counts": {"200": 5}, "variant_count": 13, "dimension_updates": 5, "errors": 0}
