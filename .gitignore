@@ -18,3 +18,4 @@ __pycache__/
 *.egg-info/
 reports/
 tools/cloudflared.exe
+start.bat

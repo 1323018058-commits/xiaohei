@@ -13,6 +13,7 @@ const primaryItems: DashboardNavItem[] = [
   { href: "/stores", label: "店铺管理", note: "绑定店铺、校验凭证、执行同步", icon: "●" },
   { href: "/selection", label: "选品库", note: "Takealot 全站商品情报筛选", icon: "◇" },
   { href: "/products", label: "商品管理", note: "维护高密商品列表与自定义字段", icon: "◫" },
+  { href: "/listing/new", label: "上架新品", note: "创建新品内容、预校验并提交上架", icon: "PackagePlus" },
   { href: "/bidding", label: "自动竞价", note: "按 SKU 管理保护底价和策略", icon: "↗" },
   { href: "/listing", label: "上架记录", note: "只看最终结果：已上架或失败", icon: "▤" },
   { href: "/orders", label: "订单中心", note: "同步订单并查看关键履约信息", icon: "◆" },

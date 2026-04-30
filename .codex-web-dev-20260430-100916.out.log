@@ -1,0 +1,1119 @@
+
+> dev:web
+> npm --workspace @xiaohei/web run dev
+
+
+> dev
+> next dev
+
+   ▲ Next.js 15.5.15
+   - Local:        http://localhost:3000
+   - Network:      http://169.254.77.177:3000
+
+ ✓ Starting...
+Attention: Next.js now collects completely anonymous telemetry regarding usage.
+This information is used to shape Next.js' roadmap and prioritize features.
+You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+https://nextjs.org/telemetry
+
+ ✓ Ready in 2.4s
+ ○ Compiling / ...
+ ✓ Compiled / in 2.4s (545 modules)
+ GET / 307 in 2747ms
+ ○ Compiling /login ...
+ ✓ Compiled /login in 574ms (559 modules)
+ GET /login 200 in 894ms
+ GET / 307 in 69ms
+ GET /login 200 in 53ms
+ ✓ Compiled /api/[...path] in 214ms (551 modules)
+ POST /api/auth/login 200 in 813ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 2.8s (1611 modules)
+ GET /dashboard 200 in 2988ms
+ GET /dashboard 200 in 360ms
+ GET /api/v1/dashboard/context 200 in 54ms
+ GET /api/auth/me 200 in 61ms
+ GET /api/auth/me 200 in 92ms
+ GET /api/v1/dashboard/context 200 in 94ms
+ GET /api/v1/dashboard/summary 200 in 78ms
+ GET /api/v1/stores 200 in 81ms
+ GET /api/v1/orders 200 in 83ms
+ GET /api/listing/jobs 200 in 84ms
+ GET /api/v1/dashboard/summary 200 in 82ms
+ ○ Compiling /admin/api/[...path] ...
+ ✓ Compiled /admin/api/[...path] in 1171ms (1613 modules)
+ GET /api/v1/orders 200 in 1072ms
+ GET /api/listing/jobs 200 in 1074ms
+ GET /api/v1/stores 200 in 1077ms
+ GET /admin/api/tenant/usage 200 in 1756ms
+ GET /admin/api/tenant/usage 200 in 1558ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 25ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 38ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 29ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 30ms
+ ✓ Compiled /listing in 500ms (1632 modules)
+ GET /listing 200 in 596ms
+ GET /api/listing/jobs 200 in 41ms
+ GET /api/v1/stores 200 in 47ms
+ GET /api/v1/stores 200 in 50ms
+ GET /api/listing/jobs 200 in 52ms
+ ✓ Compiled /bidding in 402ms (1656 modules)
+ GET /bidding 200 in 485ms
+ GET /api/v1/stores 200 in 21ms
+ GET /api/v1/stores 200 in 30ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 14ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/listings?limit=100&offset=0&status_group=buyable&sort_by=createdAt&sort_dir=desc 200 in 31ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/log 200 in 33ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 35ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/status 200 in 38ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ ○ Compiling /selection ...
+ ✓ Compiled /selection in 511ms (1680 modules)
+ GET /selection 200 in 577ms
+ GET /api/v1/selection/filters 200 in 179ms
+ GET /api/v1/selection/products?limit=100&offset=0 200 in 184ms
+ ✓ Compiled /products in 455ms (1704 modules)
+ GET /products 200 in 517ms
+ GET /api/v1/stores 200 in 26ms
+ GET /api/v1/stores 200 in 29ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/listings?limit=100&offset=0&sort_by=createdAt&sort_dir=desc 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 22ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ ○ Compiling /admin ...
+ ✓ Compiled /admin in 531ms (1714 modules)
+ GET /admin 200 in 630ms
+ GET /admin/api/audits 200 in 41ms
+ GET /admin/api/system/health 200 in 50ms
+ GET /admin/api/users 200 in 51ms
+ GET /admin/api/tenants 200 in 52ms
+ GET /admin/api/audits 200 in 53ms
+ GET /admin/api/system/health 200 in 54ms
+ GET /admin/api/users 200 in 26ms
+ GET /admin/api/tenants 200 in 23ms
+ GET /admin/api/users/22222222-2222-2222-2222-222222222222 200 in 25ms
+ GET /admin/api/tenant/usage?tenant_id=11111111-1111-1111-1111-111111111111 200 in 27ms
+ GET /admin/api/users/22222222-2222-2222-2222-222222222222 200 in 18ms
+ GET /admin/api/tenant/usage?tenant_id=11111111-1111-1111-1111-111111111111 200 in 18ms
+ ✓ Compiled /orders in 461ms (1727 modules)
+ GET /orders 200 in 546ms
+ GET /api/v1/stores 200 in 28ms
+ GET /api/v1/stores 200 in 31ms
+ GET /api/v1/orders 200 in 18ms
+ GET /api/v1/orders 200 in 17ms
+ GET /bidding 200 in 26ms
+ GET /api/v1/stores 200 in 21ms
+ GET /api/v1/stores 200 in 23ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 29ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/listings?limit=100&offset=0&status_group=buyable&sort_by=createdAt&sort_dir=desc 200 in 29ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/log 200 in 33ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 34ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/status 200 in 35ms
+ GET /products 200 in 29ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 21ms
+ GET /selection 200 in 37ms
+ GET /api/v1/selection/filters 200 in 25ms
+ GET /api/v1/selection/products?limit=100&offset=0 200 in 26ms
+ GET /listing 200 in 29ms
+ GET /api/listing/jobs 200 in 22ms
+ GET /api/v1/stores 200 in 33ms
+ GET /api/listing/jobs 200 in 34ms
+ GET /api/v1/stores 200 in 35ms
+ GET /bidding 200 in 25ms
+ GET /api/v1/stores 200 in 22ms
+ GET /api/v1/stores 200 in 31ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 27ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/listings?limit=100&offset=0&status_group=buyable&sort_by=createdAt&sort_dir=desc 200 in 29ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/log 200 in 30ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/status 200 in 32ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 34ms
+ GET /products 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET / 307 in 188ms
+ GET /login 200 in 77ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET / 307 in 47ms
+ GET /login 200 in 46ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 30ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 26ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 23ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 24ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 24ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 22ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 24ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 43ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 21ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 22ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 22ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 21ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 39ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 22ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 23ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 21ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 38ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 21ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 21ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 24ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 23ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 21ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 16ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 20ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 21ms
+ GET /dashboard 200 in 37ms
+ GET /api/auth/me 200 in 28ms
+ GET /api/auth/me 200 in 41ms
+ GET /api/v1/dashboard/summary 200 in 84ms
+ GET /api/v1/stores 200 in 123ms
+ GET /api/v1/orders 200 in 132ms
+ GET /api/listing/jobs 200 in 134ms
+ GET /api/v1/dashboard/summary 200 in 68ms
+ GET /admin/api/tenant/usage 200 in 139ms
+ GET /api/v1/stores 200 in 32ms
+ GET /api/v1/orders 200 in 35ms
+ GET /api/listing/jobs 200 in 43ms
+ GET /admin/api/tenant/usage 200 in 44ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 32ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 34ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 21ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 22ms
+ ○ Compiling /stores ...
+ ✓ Compiled /stores in 935ms (1726 modules)
+ GET /stores 200 in 1088ms
+ GET /selection 200 in 34ms
+ GET /api/v1/selection/filters 200 in 34ms
+ GET /api/v1/selection/products?limit=100&offset=0 200 in 40ms
+ GET /stores 200 in 22ms
+ GET /api/auth/me 200 in 18ms
+ GET /api/auth/me 200 in 33ms
+ GET /api/v1/stores 200 in 35ms
+ GET /api/v1/stores 200 in 37ms
+ GET /selection 200 in 16ms
+ GET /api/v1/selection/filters 200 in 16ms
+ GET /api/v1/selection/products?limit=100&offset=0 200 in 24ms
+ GET /products 200 in 32ms
+ GET /api/v1/stores 200 in 20ms
+ GET /api/v1/stores 200 in 29ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 22ms
+ GET /dashboard 200 in 25ms
+ GET /api/auth/me 200 in 20ms
+ GET /api/auth/me 200 in 22ms
+ GET /api/v1/dashboard/summary 200 in 38ms
+ GET /api/v1/stores 200 in 39ms
+ GET /api/v1/orders 200 in 42ms
+ GET /api/listing/jobs 200 in 43ms
+ GET /api/v1/dashboard/summary 200 in 42ms
+ GET /admin/api/tenant/usage 200 in 50ms
+ GET /api/v1/stores 200 in 31ms
+ GET /api/v1/orders 200 in 53ms
+ GET /api/listing/jobs 200 in 55ms
+ GET /admin/api/tenant/usage 200 in 57ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 29ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 38ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 15ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 16ms
+ GET /stores 200 in 25ms
+ GET /api/auth/me 200 in 44ms
+ GET /api/auth/me 200 in 42ms
+ GET /api/v1/stores 200 in 46ms
+ GET /api/v1/stores 200 in 47ms
+ ✓ Compiled in 430ms (789 modules)
+ GET /stores 200 in 40ms
+ GET /stores 200 in 456ms
+ GET /api/v1/dashboard/context 200 in 46ms
+ GET /api/auth/me 200 in 50ms
+ GET /api/v1/stores 200 in 53ms
+ ✓ Compiled in 440ms (789 modules)
+ ✓ Compiled in 269ms (789 modules)
+ GET /stores 200 in 282ms
+ ✓ Compiled in 189ms (789 modules)
+ GET /stores 200 in 194ms
+ GET /stores 200 in 34ms
+ ✓ Compiled in 232ms (789 modules)
+ GET /stores 200 in 94ms
+ GET /stores 200 in 102ms
+ GET /api/v1/dashboard/context 200 in 27ms
+ GET /api/auth/me 200 in 37ms
+ GET /api/v1/stores 200 in 40ms
+ ✓ Compiled in 286ms (789 modules)
+ GET /stores 200 in 109ms
+ ✓ Compiled in 248ms (789 modules)
+ GET /stores 200 in 115ms
+ GET /stores 200 in 89ms
+ GET /api/v1/dashboard/context 200 in 30ms
+ GET /api/auth/me 200 in 36ms
+ GET /api/v1/stores 200 in 38ms
+ GET /dashboard 200 in 27ms
+ GET /api/auth/me 200 in 22ms
+ GET /api/auth/me 200 in 29ms
+ GET /api/v1/dashboard/summary 200 in 23ms
+ GET /api/v1/stores 200 in 50ms
+ GET /api/v1/orders 200 in 63ms
+ GET /api/listing/jobs 200 in 64ms
+ GET /api/v1/dashboard/summary 200 in 66ms
+ GET /admin/api/tenant/usage 200 in 69ms
+ GET /api/v1/stores 200 in 30ms
+ GET /api/v1/orders 200 in 44ms
+ GET /api/listing/jobs 200 in 36ms
+ GET /admin/api/tenant/usage 200 in 41ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 35ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 38ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 19ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 20ms
+ GET /bidding 200 in 41ms
+ GET /api/v1/stores 200 in 22ms
+ GET /api/v1/stores 200 in 31ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 30ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/listings?limit=100&offset=0&status_group=buyable&sort_by=createdAt&sort_dir=desc 200 in 51ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/status 200 in 51ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/log 200 in 54ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 55ms
+ ✓ Compiled /listing in 440ms (957 modules)
+ GET /listing 200 in 616ms
+ GET /api/listing/jobs 200 in 33ms
+ GET /api/v1/stores 200 in 51ms
+ GET /api/listing/jobs 200 in 54ms
+ GET /api/v1/stores 200 in 56ms
+ GET /listing 200 in 49ms
+ ○ Compiling /webhooks ...
+ ✓ Compiled /webhooks in 1323ms (1763 modules)
+ GET /webhooks 200 in 1449ms
+ GET /webhooks 200 in 37ms
+ GET /api/tasks 200 in 42ms
+ GET /api/tasks 200 in 42ms
+ ✓ Compiled in 277ms (796 modules)
+ GET /webhooks 200 in 98ms
+ ✓ Compiled in 250ms (796 modules)
+ GET /webhooks 200 in 71ms
+ ✓ Compiled in 219ms (796 modules)
+ GET /webhooks 200 in 69ms
+ ✓ Compiled in 232ms (796 modules)
+ ✓ Compiled in 228ms (796 modules)
+ GET /webhooks 200 in 239ms
+ ✓ Compiled in 155ms (796 modules)
+ GET /webhooks 200 in 161ms
+ GET /webhooks 200 in 39ms
+ ✓ Compiled in 143ms (796 modules)
+ GET /webhooks 200 in 32ms
+ ✓ Compiled in 233ms (796 modules)
+ GET /webhooks 200 in 110ms
+ GET /webhooks 200 in 242ms
+ GET /api/v1/dashboard/context 200 in 35ms
+ GET /api/tasks 200 in 38ms
+ ✓ Compiled in 880ms (1709 modules)
+ GET /webhooks 200 in 812ms
+ GET /webhooks 200 in 26ms
+ ✓ Compiled in 147ms (796 modules)
+ GET /webhooks 200 in 40ms
+ ✓ Compiled in 254ms (796 modules)
+ GET /webhooks 200 in 89ms
+ ✓ Compiled in 239ms (796 modules)
+ GET /webhooks 200 in 72ms
+ GET /webhooks 200 in 243ms
+ ○ Compiling /api/[...path] ...
+ ✓ Compiled /api/[...path] in 551ms (933 modules)
+ GET /api/tasks 200 in 701ms
+ GET /api/v1/dashboard/context 200 in 708ms
+ GET /webhooks 200 in 290ms
+ GET /api/v1/dashboard/context 200 in 25ms
+ GET /api/tasks 200 in 29ms
+ ✓ Compiled in 248ms (796 modules)
+ GET /webhooks 200 in 104ms
+ ○ Compiling /listing/new ...
+ ✓ Compiled /listing/new in 1154ms (1746 modules)
+ GET /listing/new 307 in 1454ms
+ GET /webhooks 200 in 346ms
+ ○ Compiling /login ...
+ ✓ Compiled /login in 621ms (948 modules)
+ GET /login 200 in 888ms
+ GET /listing/new 307 in 102ms
+ GET /login 200 in 47ms
+ ✓ Compiled /api/[...path] in 228ms (939 modules)
+ POST /api/auth/login 200 in 393ms
+ GET /dashboard 200 in 131ms
+ GET /dashboard 200 in 57ms
+ GET /api/v1/dashboard/context 200 in 25ms
+ GET /api/auth/me 200 in 41ms
+ GET /api/v1/dashboard/context 200 in 44ms
+ GET /api/auth/me 200 in 46ms
+ GET /api/v1/dashboard/summary 200 in 24ms
+ ✓ Compiled /admin/api/[...path] in 226ms (941 modules)
+ GET /api/v1/orders 200 in 527ms
+ GET /api/v1/dashboard/summary 200 in 533ms
+ GET /api/listing/jobs 200 in 537ms
+ GET /api/v1/stores 200 in 546ms
+ GET /api/v1/stores 200 in 535ms
+ GET /admin/api/tenant/usage 200 in 571ms
+ GET /api/v1/orders 200 in 41ms
+ GET /api/listing/jobs 200 in 52ms
+ GET /admin/api/tenant/usage 200 in 54ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 19ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 21ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 17ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 18ms
+ GET /webhooks 200 in 251ms
+ GET /api/v1/dashboard/context 200 in 27ms
+ GET /api/tasks 200 in 32ms
+ GET /stores 200 in 38ms
+ GET /api/auth/me 200 in 28ms
+ GET /api/v1/stores 200 in 42ms
+ GET /api/auth/me 200 in 42ms
+ GET /api/v1/stores 200 in 44ms
+ ✓ Compiled /selection in 501ms (939 modules)
+ GET /selection 200 in 598ms
+ GET /api/v1/selection/filters 200 in 28ms
+ GET /api/v1/selection/products?limit=100&offset=0 200 in 31ms
+ ✓ Compiled /products in 207ms (952 modules)
+ GET /products 200 in 306ms
+ GET /api/v1/stores 200 in 28ms
+ GET /api/v1/stores 200 in 24ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/listings?limit=100&offset=0&sort_by=createdAt&sort_dir=desc 200 in 38ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 39ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 19ms
+ GET /admin 200 in 48ms
+ ✓ Compiled /admin/api/[...path] in 290ms (954 modules)
+ GET /admin/api/system/health 200 in 393ms
+ GET /admin/api/tenants 200 in 397ms
+ GET /admin/api/audits 200 in 404ms
+ GET /admin/api/system/health 200 in 401ms
+ GET /admin/api/users 200 in 403ms
+ GET /admin/api/audits 200 in 405ms
+ GET /admin/api/users 200 in 21ms
+ GET /admin/api/tenants 200 in 28ms
+ GET /admin/api/tenant/usage?tenant_id=11111111-1111-1111-1111-111111111111 200 in 37ms
+ GET /admin/api/users/22222222-2222-2222-2222-222222222222 200 in 34ms
+ GET /admin/api/users/22222222-2222-2222-2222-222222222222 200 in 20ms
+ GET /admin/api/tenant/usage?tenant_id=11111111-1111-1111-1111-111111111111 200 in 25ms
+ ✓ Compiled /orders in 205ms (962 modules)
+ GET /orders 200 in 314ms
+ GET /api/v1/stores 200 in 20ms
+ GET /api/v1/stores 200 in 29ms
+ GET /api/v1/orders 200 in 13ms
+ GET /api/v1/orders 200 in 13ms
+ ✓ Compiled /listing in 241ms (968 modules)
+ GET /listing 200 in 405ms
+ GET /api/listing/jobs 200 in 27ms
+ GET /api/v1/stores 200 in 29ms
+ GET /api/listing/jobs 200 in 31ms
+ GET /api/v1/stores 200 in 32ms
+ ✓ Compiled /bidding in 226ms (981 modules)
+ GET /bidding 200 in 325ms
+ GET /api/v1/stores 200 in 29ms
+ GET /api/v1/stores 200 in 30ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 22ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/listings?limit=100&offset=0&status_group=buyable&sort_by=createdAt&sort_dir=desc 200 in 26ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/log 200 in 28ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/status 200 in 30ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 32ms
+ GET /products 200 in 31ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 21ms
+ GET /selection 200 in 29ms
+ GET /api/v1/selection/filters 200 in 23ms
+ GET /api/v1/selection/products?limit=100&offset=0 200 in 26ms
+ GET /stores 200 in 29ms
+ GET /api/auth/me 200 in 20ms
+ GET /api/auth/me 200 in 32ms
+ GET /api/v1/stores 200 in 34ms
+ GET /api/v1/stores 200 in 35ms
+ GET /dashboard 200 in 30ms
+ GET /api/auth/me 200 in 19ms
+ GET /api/auth/me 200 in 26ms
+ GET /api/v1/dashboard/summary 200 in 20ms
+ GET /api/v1/stores 200 in 45ms
+ GET /api/v1/orders 200 in 47ms
+ GET /api/listing/jobs 200 in 49ms
+ GET /admin/api/tenant/usage 200 in 53ms
+ GET /api/v1/dashboard/summary 200 in 68ms
+ GET /api/v1/stores 200 in 51ms
+ GET /api/v1/orders 200 in 46ms
+ GET /api/listing/jobs 200 in 55ms
+ GET /admin/api/tenant/usage 200 in 58ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 39ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 41ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 21ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 22ms
+ GET /selection 200 in 19ms
+ GET /api/v1/selection/filters 200 in 19ms
+ GET /api/v1/selection/products?limit=100&offset=0 200 in 28ms
+ ✓ Compiled /listing/new in 455ms (992 modules)
+ GET /listing/new 200 in 809ms
+ GET /api/v1/dashboard/context 200 in 29ms
+ GET /api/v1/stores 200 in 41ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 17ms
+ GET /bidding 200 in 29ms
+ GET /api/v1/stores 200 in 18ms
+ GET /api/v1/stores 200 in 26ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 17ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/listings?limit=100&offset=0&status_group=buyable&sort_by=createdAt&sort_dir=desc 200 in 35ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/status 200 in 37ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/log 200 in 40ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 41ms
+ GET /listing 200 in 29ms
+ GET /api/listing/jobs 200 in 20ms
+ GET /api/v1/stores 200 in 38ms
+ GET /api/listing/jobs 200 in 40ms
+ GET /api/v1/stores 200 in 41ms
+ GET /listing/new 200 in 155ms
+ GET /api/v1/dashboard/context 200 in 23ms
+ GET /api/v1/stores 200 in 36ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 12ms
+ GET /bidding 200 in 32ms
+ GET /api/v1/stores 200 in 23ms
+ GET /api/v1/stores 200 in 33ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 18ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/listings?limit=100&offset=0&status_group=buyable&sort_by=createdAt&sort_dir=desc 200 in 36ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/log 200 in 39ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 41ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/status 200 in 43ms
+ GET /listing 200 in 24ms
+ GET /api/listing/jobs 200 in 25ms
+ GET /api/v1/stores 200 in 28ms
+ GET /api/listing/jobs 200 in 30ms
+ GET /api/v1/stores 200 in 32ms
+ GET /listing/new 200 in 188ms
+ GET /api/v1/dashboard/context 200 in 24ms
+ GET /api/v1/stores 200 in 37ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 15ms
+ POST /api/listing/categories/match 404 in 21ms
+ POST /api/listing/categories/match 404 in 17ms
+ GET /stores 200 in 30ms
+ GET /api/auth/me 200 in 29ms
+ GET /api/v1/stores 200 in 43ms
+ GET /api/auth/me 200 in 44ms
+ GET /api/v1/stores 200 in 45ms
+ GET /dashboard 200 in 28ms
+ GET /api/auth/me 200 in 18ms
+ GET /api/auth/me 200 in 25ms
+ GET /api/v1/dashboard/summary 200 in 41ms
+ GET /api/v1/stores 200 in 42ms
+ GET /api/v1/orders 200 in 44ms
+ GET /api/v1/dashboard/summary 200 in 45ms
+ GET /api/listing/jobs 200 in 48ms
+ GET /admin/api/tenant/usage 200 in 55ms
+ GET /api/v1/stores 200 in 16ms
+ GET /api/v1/orders 200 in 29ms
+ GET /api/listing/jobs 200 in 31ms
+ GET /admin/api/tenant/usage 200 in 34ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 21ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 32ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 24ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 32ms
+ GET /selection 200 in 29ms
+ GET /api/v1/selection/filters 200 in 23ms
+ GET /api/v1/selection/products?limit=100&offset=0 200 in 26ms
+ GET /listing 200 in 19ms
+ GET /api/listing/jobs 200 in 32ms
+ GET /api/v1/stores 200 in 47ms
+ GET /api/listing/jobs 200 in 48ms
+ GET /api/v1/stores 200 in 50ms
+ GET /listing/new 200 in 164ms
+ GET /api/v1/dashboard/context 200 in 31ms
+ GET /api/v1/stores 200 in 36ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 10ms
+ GET /listing/new 200 in 180ms
+ GET /api/v1/dashboard/context 200 in 21ms
+ GET /api/v1/stores 200 in 29ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 12ms
+ GET /api/stores 401 in 22ms
+ ✓ Compiled in 357ms (804 modules)
+ ✓ Compiled in 421ms (804 modules)
+ GET /listing/new 200 in 436ms
+ GET /listing/new 200 in 59ms
+ GET /listing/new 200 in 116ms
+ GET /api/v1/dashboard/context 200 in 27ms
+ GET /api/v1/stores 200 in 37ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 11ms
+ POST /api/listing/categories/match 404 in 22ms
+ ✓ Compiled in 966ms (1730 modules)
+ GET /listing/new 200 in 218ms
+ GET /listing/new 500 in 254ms
+ ✓ Compiled in 662ms (1730 modules)
+ GET /listing/new 500 in 932ms
+ ✓ Compiled in 528ms (1730 modules)
+ GET /listing/new 200 in 319ms
+ ○ Compiling /api/[...path] ...
+ ✓ Compiled /api/[...path] in 659ms (934 modules)
+ GET /api/v1/stores 200 in 776ms
+ GET /api/v1/dashboard/context 200 in 780ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 12ms
+ ✓ Compiled in 695ms (1738 modules)
+ GET /listing/new 200 in 496ms
+ GET /listing/new 200 in 809ms
+ GET /api/v1/dashboard/context 200 in 29ms
+ GET /api/v1/stores 200 in 34ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 11ms
+ ✓ Compiled in 571ms (1738 modules)
+ GET /listing/new 200 in 113ms
+ GET /listing/new 200 in 236ms
+ GET /api/v1/dashboard/context 200 in 30ms
+ GET /api/v1/stores 200 in 35ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 12ms
+ ✓ Compiled in 675ms (1738 modules)
+ GET /listing/new 200 in 114ms
+ ✓ Compiled in 655ms (1738 modules)
+ GET /listing/new 200 in 94ms
+ ✓ Compiled in 522ms (1738 modules)
+ GET /listing/new 200 in 151ms
+ GET /listing/new 200 in 223ms
+ GET /api/v1/dashboard/context 200 in 39ms
+ GET /api/v1/stores 200 in 41ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 12ms
+ GET /listing/new 200 in 108ms
+ ○ Compiling /_error ...
+ GET /api/v1/stores 500 in 1423ms
+ GET /api/v1/dashboard/context 500 in 1425ms
+ GET /listing/new 200 in 719ms
+ ✓ Compiled /_error in 1895ms (2070 modules)
+ GET /listing 200 in 284ms
+ GET /api/v1/dashboard/context 200 in 486ms
+ GET /api/listing/jobs 200 in 488ms
+ GET /api/v1/stores 200 in 490ms
+ ○ Compiling /bidding ...
+ ✓ Compiled /bidding in 531ms (1141 modules)
+ GET /bidding 200 in 738ms
+ GET /api/v1/stores 200 in 28ms
+ GET /api/v1/stores 200 in 29ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 28ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/listings?limit=100&offset=0&status_group=buyable&sort_by=createdAt&sort_dir=desc 200 in 28ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/log 200 in 30ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/status 200 in 32ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 33ms
+ GET /listing 200 in 28ms
+ GET /api/listing/jobs 200 in 31ms
+ GET /api/v1/stores 200 in 34ms
+ GET /api/listing/jobs 200 in 34ms
+ GET /api/v1/stores 200 in 36ms
+ GET /listing 200 in 20ms
+ ✓ Compiled in 1011ms (2003 modules)
+ GET /listing 200 in 192ms
+ ✓ Compiled in 551ms (1982 modules)
+ GET /listing 200 in 229ms
+ ✓ Compiled in 1315ms (1982 modules)
+ GET /listing 200 in 158ms
+ GET /listing 200 in 438ms
+ ✓ Compiled /api/[...path] in 270ms (1034 modules)
+ GET /api/listing/jobs 200 in 378ms
+ GET /api/v1/stores 200 in 381ms
+ GET /api/v1/dashboard/context 200 in 385ms
+ GET /listing/new 200 in 89ms
+ GET /api/v1/stores 200 in 19ms
+ GET /api/v1/stores 200 in 20ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 14ms
+ GET /listing/new 200 in 257ms
+ GET /api/v1/dashboard/context 200 in 45ms
+ GET /api/v1/stores 200 in 60ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 24ms
+ ✓ Compiled in 1215ms (1982 modules)
+ GET /listing/new 200 in 620ms
+ GET /listing/new 200 in 1346ms
+ ✓ Compiled /api/[...path] in 185ms (1034 modules)
+ GET /api/v1/stores 200 in 323ms
+ GET /api/v1/dashboard/context 200 in 326ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 12ms
+ ✓ Compiled in 744ms (1990 modules)
+ GET /listing/new 200 in 329ms
+ GET /listing/new 200 in 368ms
+ GET /api/v1/stores 200 in 23ms
+ GET /api/v1/dashboard/context 200 in 30ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 10ms
+ ✓ Compiled in 663ms (1990 modules)
+ GET /listing/new 500 in 740ms
+ ✓ Compiled in 495ms (1990 modules)
+ GET /listing/new 500 in 250ms
+ ✓ Compiled in 469ms (1982 modules)
+ GET /listing/new 500 in 762ms
+ GET /listing/new 500 in 111ms
+ GET /listing 200 in 98ms
+ ✓ Compiled /api/[...path] in 214ms (1034 modules)
+ GET /api/listing/jobs 200 in 360ms
+ GET /api/v1/stores 200 in 361ms
+ GET /api/v1/dashboard/context 200 in 365ms
+ GET /listing/new 200 in 75ms
+ GET /listing 200 in 197ms
+ GET /api/v1/dashboard/context 200 in 31ms
+ GET /api/listing/jobs 200 in 37ms
+ GET /api/v1/stores 200 in 38ms
+ GET /listing/new 200 in 32ms
+ GET /listing/new 500 in 122ms
+ GET /listing 200 in 84ms
+ GET /api/v1/dashboard/context 200 in 32ms
+ GET /api/listing/jobs 200 in 38ms
+ GET /api/v1/stores 200 in 39ms
+ ✓ Compiled in 795ms (1990 modules)
+ GET /listing 200 in 113ms
+ ✓ Compiled in 461ms (1990 modules)
+ GET /listing 200 in 109ms
+ ✓ Compiled in 652ms (1990 modules)
+ GET /listing 200 in 96ms
+ ✓ Compiled in 713ms (1990 modules)
+ GET /listing 200 in 86ms
+ ✓ Compiled in 513ms (1990 modules)
+ GET /listing 200 in 122ms
+ ✓ Compiled in 460ms (1990 modules)
+ GET /listing 200 in 105ms
+ ✓ Compiled in 718ms (1982 modules)
+ GET /listing 200 in 159ms
+ ✓ Compiled in 525ms (1982 modules)
+ GET /listing 200 in 111ms
+ ✓ Compiled in 492ms (1982 modules)
+ GET /listing 200 in 103ms
+ ✓ Compiled in 737ms (1982 modules)
+ GET /listing 200 in 87ms
+ ✓ Compiled in 458ms (1982 modules)
+ GET /listing 200 in 91ms
+ ✓ Compiled in 633ms (1982 modules)
+ GET /listing 200 in 202ms
+ GET /listing/new 200 in 34ms
+ GET /listing 200 in 204ms
+ ○ Compiling /api/[...path] ...
+ ✓ Compiled /api/[...path] in 1116ms (1990 modules)
+ GET /api/listing/jobs 200 in 1254ms
+ GET /api/v1/stores 200 in 1262ms
+ GET /api/v1/dashboard/context 200 in 1265ms
+ GET /listing 200 in 209ms
+ ✓ Compiled in 530ms (1990 modules)
+ GET /listing 200 in 126ms
+ ✓ Compiled in 879ms (1982 modules)
+ GET /listing 200 in 283ms
+ GET /listing/new 200 in 44ms
+ ✓ Compiled /api/[...path] in 247ms (1034 modules)
+ GET /api/v1/stores 200 in 478ms
+ GET /api/v1/stores 200 in 482ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 21ms
+ GET /listing/new 200 in 300ms
+ GET /api/v1/dashboard/context 200 in 28ms
+ GET /api/v1/stores 200 in 31ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 12ms
+ POST /api/listing/categories/match 404 in 25ms
+ ✓ Compiled in 272ms (956 modules)
+ GET /listing/new 200 in 80ms
+ GET /listing/new 200 in 246ms
+ GET /api/v1/dashboard/context 200 in 22ms
+ GET /api/v1/stores 200 in 32ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 11ms
+ ✓ Compiled in 265ms (956 modules)
+ ✓ Compiled in 317ms (956 modules)
+ GET /listing/new 200 in 327ms
+ GET /listing/new 200 in 40ms
+ GET /listing/new 200 in 157ms
+ GET /api/v1/dashboard/context 200 in 585ms
+ GET /api/v1/stores 200 in 586ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 17ms
+ ✓ Compiled in 271ms (956 modules)
+ GET /listing/new 200 in 66ms
+ POST /api/listing/categories/match 404 in 24ms
+ POST /api/listing/categories/match 404 in 22ms
+ GET /listing/new 200 in 135ms
+ GET /api/v1/dashboard/context 200 in 32ms
+ GET /api/v1/stores 200 in 37ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 13ms
+ GET /api/v1/stores 401 in 27ms
+ GET /api/listing/brands/search?q=test&page=1&page_size=1 404 in 22ms
+ GET /api/listing/categories/1/requirements 404 in 15ms
+ GET /api/listing/stores/test-store/submissions?page=1&page_size=1 404 in 13ms
+ GET /api/listing/submissions/test-submission 404 in 13ms
+ ✓ Compiled in 284ms (956 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 943ms (1973 modules)
+ GET /listing/new 404 in 1275ms
+ GET /listing/new 404 in 1333ms
+ GET /listing/new 200 in 301ms
+ ✓ Compiled /api/[...path] in 335ms (1035 modules)
+ GET /api/v1/stores 200 in 543ms
+ GET /api/v1/dashboard/context 200 in 549ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 404 in 14ms
+ GET /api/listing/brands/search?q=test&page=1&page_size=1 401 in 27ms
+ GET /listing/new 307 in 389ms
+ ✓ Compiled /login in 410ms (1040 modules)
+ GET /login 200 in 642ms
+ GET /api/listing/brands/search?q=test&page=1&page_size=1 401 in 26ms
+ GET /listing/new 307 in 77ms
+ GET /api/listing/brands/search?q=test&page=1&page_size=1 401 in 27ms
+ GET /api/listing/brands/search?q=test&page=1&page_size=1 401 in 35ms
+ GET /listing/new 307 in 88ms
+ GET /listing/new 307 in 65ms
+ GET /login 200 in 54ms
+ POST /api/auth/login 200 in 80ms
+ GET /dashboard 200 in 52ms
+ GET /dashboard 200 in 43ms
+ GET /api/v1/dashboard/context 200 in 25ms
+ GET /api/auth/me 200 in 30ms
+ GET /api/auth/me 200 in 33ms
+ GET /api/v1/dashboard/context 200 in 35ms
+ GET /api/v1/dashboard/summary 200 in 67ms
+ GET /api/v1/stores 200 in 101ms
+ GET /api/v1/orders 200 in 104ms
+ GET /api/listing/jobs 200 in 110ms
+ GET /api/v1/dashboard/summary 200 in 136ms
+ ✓ Compiled /admin/api/[...path] in 502ms (1029 modules)
+ GET /api/v1/stores 200 in 754ms
+ GET /api/v1/orders 200 in 685ms
+ GET /api/listing/jobs 200 in 688ms
+ GET /admin/api/tenant/usage 200 in 843ms
+ GET /admin/api/tenant/usage 200 in 698ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 23ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 30ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 22ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 23ms
+ ✓ Compiled /stores in 381ms (1042 modules)
+ GET /stores 200 in 485ms
+ GET /login 200 in 126ms
+ GET /stores 200 in 77ms
+ ✓ Compiled / in 204ms (1032 modules)
+ GET / 307 in 314ms
+ GET /login 200 in 53ms
+ POST /api/auth/login 200 in 23ms
+ GET /dashboard 200 in 56ms
+ GET /dashboard 200 in 52ms
+ GET /api/v1/dashboard/context 200 in 29ms
+ GET /api/auth/me 200 in 30ms
+ GET /api/auth/me 200 in 31ms
+ GET /api/v1/dashboard/context 200 in 33ms
+ GET /api/v1/dashboard/summary 200 in 50ms
+ GET /api/v1/stores 200 in 53ms
+ GET /api/listing/jobs 200 in 55ms
+ GET /api/v1/orders 200 in 57ms
+ GET /api/v1/dashboard/summary 200 in 61ms
+ GET /admin/api/tenant/usage 200 in 66ms
+ GET /api/v1/stores 200 in 19ms
+ GET /api/listing/jobs 200 in 43ms
+ GET /api/v1/orders 200 in 46ms
+ GET /admin/api/tenant/usage 200 in 47ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 32ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 31ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 28ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 31ms
+ GET /stores 200 in 27ms
+ GET /dashboard 200 in 336ms
+ GET /api/v1/dashboard/context 200 in 26ms
+ GET /api/auth/me 200 in 30ms
+ GET /api/v1/dashboard/summary 200 in 42ms
+ GET /admin/api/tenant/usage 200 in 43ms
+ GET /api/v1/stores 200 in 74ms
+ GET /api/listing/jobs 200 in 76ms
+ GET /api/v1/orders 200 in 78ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 19ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 21ms
+ GET /stores 200 in 27ms
+ GET / 307 in 65ms
+ GET /login 200 in 50ms
+ POST /api/auth/login 200 in 29ms
+ GET /dashboard 200 in 36ms
+ GET /dashboard 200 in 38ms
+ GET /api/v1/dashboard/context 200 in 23ms
+ GET /api/auth/me 200 in 31ms
+ GET /api/auth/me 200 in 33ms
+ GET /api/v1/dashboard/context 200 in 35ms
+ GET /api/v1/dashboard/summary 200 in 45ms
+ GET /api/listing/jobs 200 in 47ms
+ GET /api/v1/orders 200 in 49ms
+ GET /api/v1/stores 200 in 52ms
+ GET /admin/api/tenant/usage 200 in 56ms
+ GET /api/v1/dashboard/summary 200 in 63ms
+ GET /api/v1/stores 200 in 26ms
+ GET /api/listing/jobs 200 in 28ms
+ GET /api/v1/orders 200 in 30ms
+ GET /admin/api/tenant/usage 200 in 36ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 30ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 43ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 34ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 36ms
+ ✓ Compiled /selection in 262ms (1044 modules)
+ GET /selection 200 in 369ms
+ GET /dashboard 200 in 223ms
+ GET /api/v1/dashboard/context 200 in 28ms
+ GET /api/auth/me 200 in 31ms
+ GET /api/v1/dashboard/summary 200 in 30ms
+ GET /api/v1/stores 200 in 28ms
+ GET /api/listing/jobs 200 in 46ms
+ GET /api/v1/orders 200 in 50ms
+ GET /admin/api/tenant/usage 200 in 56ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 18ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 20ms
+ GET /stores 200 in 24ms
+ GET /dashboard 200 in 86ms
+ GET /api/v1/dashboard/context 200 in 32ms
+ GET /api/auth/me 200 in 34ms
+ GET /api/v1/dashboard/summary 200 in 39ms
+ GET /api/v1/orders 200 in 41ms
+ GET /api/v1/stores 200 in 43ms
+ GET /api/listing/jobs 200 in 47ms
+ GET /admin/api/tenant/usage 200 in 53ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 16ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 18ms
+ ○ Compiling /products ...
+ ✓ Compiled /products in 672ms (1046 modules)
+ GET /products 200 in 759ms
+ GET /products 200 in 26ms
+ GET /login 200 in 77ms
+ POST /api/auth/login 200 in 27ms
+ GET /dashboard 200 in 41ms
+ GET /dashboard 200 in 40ms
+ GET /api/v1/dashboard/context 200 in 20ms
+ GET /api/auth/me 200 in 26ms
+ GET /api/auth/me 200 in 27ms
+ GET /api/v1/dashboard/context 200 in 29ms
+ GET /api/v1/dashboard/summary 200 in 53ms
+ GET /api/v1/stores 200 in 55ms
+ GET /api/v1/orders 200 in 57ms
+ GET /api/listing/jobs 200 in 59ms
+ GET /api/v1/dashboard/summary 200 in 63ms
+ GET /admin/api/tenant/usage 200 in 70ms
+ GET /api/v1/stores 200 in 13ms
+ GET /api/listing/jobs 200 in 28ms
+ GET /api/v1/orders 200 in 32ms
+ GET /admin/api/tenant/usage 200 in 36ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 31ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 34ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 18ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 21ms
+ GET /stores 200 in 20ms
+ ✓ Compiled /listing/new in 187ms (564 modules)
+ GET /listing/new 307 in 565ms
+ GET /login 200 in 60ms
+ ✓ Compiled /api/[...path] in 151ms (570 modules)
+ POST /api/auth/login 200 in 317ms
+ ✓ Compiled /dashboard in 210ms (1053 modules)
+ GET /dashboard 200 in 322ms
+ GET /dashboard 200 in 39ms
+ GET /api/v1/dashboard/context 200 in 29ms
+ GET /api/auth/me 200 in 34ms
+ GET /api/auth/me 200 in 35ms
+ GET /api/v1/dashboard/context 200 in 37ms
+ ✓ Compiled /admin/api/[...path] in 245ms (1055 modules)
+ GET /api/v1/stores 200 in 711ms
+ GET /api/listing/jobs 200 in 709ms
+ GET /api/v1/orders 200 in 712ms
+ GET /api/v1/dashboard/summary 200 in 713ms
+ GET /api/v1/dashboard/summary 200 in 729ms
+ GET /admin/api/tenant/usage 200 in 745ms
+ GET /api/v1/stores 200 in 28ms
+ GET /api/listing/jobs 200 in 43ms
+ GET /api/v1/orders 200 in 46ms
+ GET /admin/api/tenant/usage 200 in 36ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 20ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 22ms
+ GET /api/v1/bidding/rules?store_id=66666666-6666-6666-6666-666666666666 200 in 16ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 19ms
+ GET /stores 200 in 67ms
+ GET /listing/new 200 in 221ms
+ GET /api/v1/dashboard/context 200 in 31ms
+ GET /api/v1/stores 200 in 36ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 200 in 20ms
+ POST /api/listing/categories/match 200 in 191ms
+ GET /stores 307 in 68ms
+ GET /login 200 in 58ms
+ GET /stores 307 in 55ms
+ GET /login 200 in 48ms
+ GET /stores 200 in 20ms
+ GET /listing/new 200 in 120ms
+ GET /api/v1/dashboard/context 200 in 27ms
+ GET /api/v1/stores 200 in 33ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 200 in 14ms
+ GET /stores?_rsc=test 307 in 52ms
+ GET /login 200 in 44ms

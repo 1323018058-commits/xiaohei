@@ -1,0 +1,16 @@
+INFO:     Will watch for changes in these directories: ['C:\\Workspace\\Ð¡ºÚerp']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [29140] using WatchFiles
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\Ð¡ºÚerp\apps/api\src\modules\common\dev_state.py", line 3165, in _build_app_state
+    from src.modules.common.postgres_state import DatabaseAppState
+  File "C:\Workspace\Ð¡ºÚerp\apps/api\src\modules\common\postgres_state.py", line 14, in <module>
+    from psycopg import sql
+ModuleNotFoundError: No module named 'psycopg'
+INFO:     Started server process [35192]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+[PROFILE-LOGIN] User: admin | PasswordVerify: 0ms | DB_Read: 0ms | DB_Write: 0ms (New)
+[PROFILE-LOGIN] User: admin | PasswordVerify: 0ms | DB_Read: 0ms | DB_Write: 0ms (New)

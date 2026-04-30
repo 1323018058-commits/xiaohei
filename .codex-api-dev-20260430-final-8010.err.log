@@ -1,0 +1,43 @@
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [39640]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8010 (Press CTRL+C to quit)
+[PROFILE-LOGIN] User: admin | PasswordVerify: 0ms | DB_Read: 0ms | DB_Write: 0ms (New)

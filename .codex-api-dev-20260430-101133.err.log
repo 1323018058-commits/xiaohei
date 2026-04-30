@@ -1,0 +1,2573 @@
+INFO:     Will watch for changes in these directories: ['C:\\Workspace\\小黑erp']
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [30968] using WatchFiles
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [17044]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\schemas.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [17044]
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\routes.py', 'apps\api\src\modules\listing\repository.py', 'apps\api\src\modules\listing\service.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [3752]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [30448]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'packages\db\scripts\import_takealot_catalog.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [30448]
+WARNING:  WatchFiles detected changes in 'packages\db\scripts\import_takealot_catalog.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [30488]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [10332]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\schemas.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [10332]
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\repository.py', 'apps\api\src\modules\listing\ai_service.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [2032]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [17356]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\category_matcher.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [17356]
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\routes.py', 'packages\db\scripts\smoke_listing_category_match.py', 'apps\api\src\modules\listing\category_matcher.py', 'apps\api\src\modules\listing\service.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [31480]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [34912]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\schemas.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [34912]
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\ai_service.py', 'apps\api\src\modules\listing\service.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [5076]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\service.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [31164]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\routes.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [12276]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [26520]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'packages\db\scripts\smoke_listing_ai_autopilot.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [26520]
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [13276]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\schemas.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [13276]
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\routes.py', 'apps\api\src\modules\listing\service.py', 'apps\api\src\modules\listing\repository.py', 'apps\api\src\modules\listing\image_service.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [28940]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+WARNING:  WatchFiles detected changes in 'packages\db\scripts\smoke_listing_images.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [37512]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [33300]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\schemas.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [33300]
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\repository.py', 'apps\api\src\modules\listing\loadsheet_service.py', 'apps\api\src\modules\listing\service.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [28248]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\routes.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [32672]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [2176]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'packages\db\scripts\smoke_listing_loadsheet_preview.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [2176]
+WARNING:  WatchFiles detected changes in 'packages\db\scripts\smoke_listing_loadsheet_preview.py'. Reloading...
+C:\Python\Lib\site-packages\uvicorn\_subprocess.py:84: RuntimeWarning: coroutine 'Server.serve' was never awaited
+  pass
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [29136]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'apps\api\src\platform\settings\base.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [29136]
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [28272]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\schemas.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [28272]
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\service.py', 'apps\api\src\modules\listing\repository.py', 'apps\api\src\modules\listing\loadsheet_service.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [29940]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [33024]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\service.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [33024]
+WARNING:  WatchFiles detected changes in 'apps\api\worker_main.py', 'packages\db\scripts\smoke_listing_submission_flow.py', 'apps\api\src\modules\listing\service.py', 'apps\api\src\modules\listing\routes.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [7720]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [32136]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\loadsheet_service.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [32136]
+WARNING:  WatchFiles detected changes in 'packages\db\scripts\smoke_listing_submission_flow.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [12872]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [13656]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\embedding_service.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [13656]
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\schemas.py', 'apps\api\src\modules\listing\repository.py', 'apps\api\src\modules\listing\category_matcher.py', 'apps\api\src\modules\listing\service.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [37348]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\category_matcher.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [23920]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\category_matcher.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [31268]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [35348]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'packages\db\scripts\build_takealot_category_embeddings.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [35348]
+WARNING:  WatchFiles detected changes in 'packages\db\scripts\smoke_listing_category_embeddings.py', 'apps\api\src\modules\listing\repository.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [9460]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [30888]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\schemas.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [30888]
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\repository.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [37924]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [38196]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\loadsheet_service.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [38196]
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\routes.py', 'apps\api\src\modules\listing\loadsheet_service.py', 'apps\api\worker_main.py', 'apps\api\src\modules\listing\service.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [9688]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [38500]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'packages\db\scripts\smoke_listing_submission_status.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [38500]
+WARNING:  WatchFiles detected changes in 'packages\db\scripts\smoke_listing_submission_status.py', 'apps\api\src\modules\listing\loadsheet_service.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [35692]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [38872]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\loadsheet_service.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [38872]
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\schemas.py', 'apps\api\src\modules\listing\service.py', 'apps\api\src\modules\listing\category_matcher.py', 'packages\db\scripts\smoke_listing_category_embeddings.py', 'apps\api\src\modules\listing\repository.py', 'apps\api\worker_main.py', 'packages\db\scripts\smoke_listing_submission_status.py', 'packages\db\scripts\smoke_listing_submission_flow.py', 'apps\api\src\modules\listing\loadsheet_service.py'. Reloading...
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [33024]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+Failed to initialize PostgreSQL app state, falling back to memory.
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 93, in _acquire_connection
+    connection = pool.get_nowait()
+  File "C:\Python\Lib\queue.py", line 234, in get_nowait
+    return self.get(block=False)
+           ~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Python\Lib\queue.py", line 199, in get
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\dev_state.py", line 3167, in _build_app_state
+    return DatabaseAppState(memory_state)
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 317, in __init__
+    self._bootstrap_if_needed()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Workspace\小黑erp\apps/api\src\modules\common\postgres_state.py", line 327, in _bootstrap_if_needed
+    with get_db_session() as connection:
+         ~~~~~~~~~~~~~~^^
+  File "C:\Python\Lib\contextlib.py", line 141, in __enter__
+    return next(self.gen)
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 152, in get_db_session
+    connection = _acquire_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 95, in _acquire_connection
+    connection = _open_connection()
+  File "C:\Workspace\小黑erp\apps/api\src\platform\db\session.py", line 41, in _open_connection
+    return connect(
+        settings.database_url,
+        row_factory=dict_row,
+        connect_timeout=DB_CONNECT_TIMEOUT_SECONDS,
+    )
+  File "C:\Python\Lib\site-packages\psycopg\connection.py", line 122, in connect
+    raise last_ex.with_traceback(None)
+psycopg.errors.ConnectionTimeout: connection timeout expired
+INFO:     Started server process [38068]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\repository.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [38068]
+WARNING:  WatchFiles detected changes in 'apps\api\src\modules\listing\category_matcher.py', 'packages\db\scripts\smoke_listing_submission_flow.py', 'packages\db\scripts\smoke_listing_category_match.py'. Reloading...
+INFO:     Started server process [41520]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\base_events.py", line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Python\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Python\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python\Lib\asyncio\queues.py", line 186, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+INFO:     Started server process [38124]
+INFO:     Waiting for application startup.
+anyio_thread_limiter_configured previous_tokens=40 total_tokens=500
+INFO:     Application startup complete.

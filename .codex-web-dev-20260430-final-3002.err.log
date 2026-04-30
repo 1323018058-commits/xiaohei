@@ -1,0 +1,47 @@
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ ReferenceError: WorkflowSummary is not defined
+    at NewListingPage (src\app\(dashboard)\listing\new\page.tsx:799:8)
+  797 |       {storeError ? <ErrorBanner message={storeError} /> : null}
+  798 |
+> 799 |       <WorkflowSummary
+      |        ^
+  800 |         storeName={selectedStore?.name ?? ""}
+  801 |         categoryId={categoryId}
+  802 |         imageCount={imageCount} {
+  digest: '992558309'
+}
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ SyntaxError: Unexpected end of JSON input
+    at JSON.parse (<anonymous>) {
+  page: '/listing'
+}
+ ⨯ [Error [InvariantError]: Invariant: Expected clientReferenceManifest to be defined. This is a bug in Next.js.]
+ ⨯ [Error [InvariantError]: Invariant: Expected clientReferenceManifest to be defined. This is a bug in Next.js.] {
+  page: '/listing'
+}
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Workspace\小黑erp\apps\web\.next\cache\webpack\server-development\5.pack.gz_' -> 'C:\Workspace\小黑erp\apps\web\.next\cache\webpack\server-development\5.pack.gz'
+TypeError: fetch failed
+    at async proxyRoute (src\lib\proxy-route.ts:53:28)
+  51 |
+  52 | export async function proxyRoute(request: NextRequest, prefix: string, path: string[]) {
+> 53 |   const upstreamResponse = await fetch(createUpstreamUrl(prefix, request.url, path), await createUpstreamInit(request));
+     |                            ^
+  54 |   const responseHeaders = new Headers();
+  55 |   const contentType = upstreamResponse.headers.get("content-type");
+  56 |   const cacheControl = upstreamResponse.headers.get("cache-control"); {
+  [cause]: Error: connect ECONNREFUSED 127.0.0.1:8010
+      at <unknown> (Error: connect ECONNREFUSED 127.0.0.1:8010) {
+    errno: -4078,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 8010
+  }
+}
+npm error Lifecycle script `dev` failed with error:
+npm error code 4294967295
+npm error path C:\Workspace\小黑erp\apps\web
+npm error workspace @xiaohei/web
+npm error location C:\Workspace\小黑erp\apps\web
+npm error command failed
+npm error command C:\Windows\system32\cmd.exe /d /s /c next dev --hostname 127.0.0.1 --port 3002

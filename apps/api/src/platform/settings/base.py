@@ -84,6 +84,7 @@ class Settings(BaseSettings):
     worker_stale_recovery_limit: int = 20
     alert_output_dir: str = "reports/alerts"
     alert_webhook_url: str | None = None
+    listing_file_storage_dir: str = "reports/listing-loadsheets"
 
 
 settings = Settings()

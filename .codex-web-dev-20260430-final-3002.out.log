@@ -1,0 +1,216 @@
+
+> dev
+> next dev --hostname 127.0.0.1 --port 3002
+
+   ▲ Next.js 15.5.15
+   - Local:        http://127.0.0.1:3002
+   - Network:      http://127.0.0.1:3002
+
+ ✓ Starting...
+ ✓ Ready in 2.4s
+ ○ Compiling /listing/new ...
+ ✓ Compiled /listing/new in 1030ms (666 modules)
+ GET /listing/new 307 in 1376ms
+ ✓ Compiled /login in 179ms (677 modules)
+ GET /login 200 in 366ms
+ GET /listing/new 307 in 96ms
+ GET /login 200 in 51ms
+ GET /listing/new 307 in 101ms
+ GET /login 200 in 78ms
+ ○ Compiling /api/[...path] ...
+ ✓ Compiled /api/[...path] in 691ms (683 modules)
+ POST /api/auth/login 200 in 1293ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 769ms (1646 modules)
+ GET /dashboard 200 in 923ms
+ GET /dashboard 200 in 49ms
+ GET /api/v1/dashboard/context 200 in 44ms
+ GET /api/auth/me 200 in 51ms
+ GET /api/auth/me 200 in 53ms
+ GET /api/v1/dashboard/context 200 in 55ms
+ GET /api/v1/dashboard/summary 200 in 21ms
+ ✓ Compiled /admin/api/[...path] in 503ms (1648 modules)
+ GET /api/v1/orders 200 in 574ms
+ GET /api/listing/jobs 200 in 576ms
+ GET /api/v1/dashboard/summary 200 in 577ms
+ GET /api/v1/stores 200 in 579ms
+ GET /api/v1/stores 200 in 194ms
+ GET /admin/api/tenant/usage 200 in 313ms
+ GET /api/v1/orders 200 in 314ms
+ GET /admin/api/tenant/usage 200 in 905ms
+ GET /api/listing/jobs 200 in 314ms
+ GET /listing/new 200 in 907ms
+ GET /api/v1/dashboard/context 200 in 50ms
+ GET /api/v1/stores 200 in 62ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 503 in 13ms
+ POST /api/listing/categories/match 503 in 33ms
+ POST /api/listing/images/validate-url 200 in 2387ms
+ GET /api/listing/categories/123/requirements 409 in 23ms
+ POST /api/listing/ai/autopilot 503 in 29ms
+ POST /api/listing/loadsheet/preview 503 in 32ms
+ POST /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions 503 in 22ms
+ ✓ Compiled in 919ms (751 modules)
+ ✓ Compiled in 329ms (751 modules)
+ GET /listing/new 200 in 339ms
+ GET /listing/new 200 in 44ms
+ GET /listing/new 200 in 128ms
+ GET /api/v1/dashboard/context 200 in 24ms
+ GET /api/v1/stores 200 in 33ms
+ GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 503 in 12ms
+ POST /api/listing/categories/match 503 in 20ms
+ GET /api/listing/categories/123/requirements 409 in 20ms
+ POST /api/listing/images/validate-url 200 in 2031ms
+ POST /api/listing/ai/autopilot 503 in 18ms
+ POST /api/listing/loadsheet/preview 503 in 23ms
+ POST /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions 503 in 16ms
+ ○ Compiling /bidding ...
+ ✓ Compiled /bidding in 561ms (1179 modules)
+ GET /bidding 200 in 708ms
+ ✓ Compiled /api/[...path] in 103ms (439 modules)
+ GET /api/v1/stores 200 in 210ms
+ GET /api/v1/stores 200 in 217ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 24ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/log 200 in 40ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/listings?limit=100&offset=0&status_group=buyable&sort_by=createdAt&sort_dir=desc 200 in 43ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/status 200 in 35ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 36ms
+ ✓ Compiled /listing in 245ms (1194 modules)
+ GET /listing 200 in 351ms
+ GET /api/listing/jobs 200 in 37ms
+ GET /api/v1/stores 200 in 39ms
+ GET /api/v1/stores 200 in 41ms
+ GET /api/listing/jobs 200 in 43ms
+ ✓ Compiled /_not-found in 481ms (1199 modules)
+ GET /listing%E3%80%81new 404 in 715ms
+ GET /listing 200 in 141ms
+ GET /api/v1/dashboard/context 200 in 33ms
+ GET /api/listing/jobs 200 in 35ms
+ GET /api/v1/stores 200 in 37ms
+ GET /listing 200 in 78ms
+ GET /api/v1/dashboard/context 200 in 25ms
+ GET /api/listing/jobs 200 in 30ms
+ GET /api/v1/stores 200 in 32ms
+ GET /bidding 200 in 27ms
+ GET /api/v1/stores 200 in 22ms
+ GET /api/v1/stores 200 in 25ms
+ GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 200 in 14ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/log 200 in 29ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/listings?limit=100&offset=0&status_group=buyable&sort_by=createdAt&sort_dir=desc 200 in 30ms
+ GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks 200 in 32ms
+ GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/status 200 in 34ms
+ GET /listing 200 in 18ms
+ GET /api/listing/jobs 200 in 19ms
+ GET /api/listing/jobs 200 in 39ms
+ GET /api/v1/stores 200 in 44ms
+ GET /api/v1/stores 200 in 45ms
+ ✓ Compiled in 737ms (1189 modules)
+ GET /listing 200 in 222ms
+ GET /listing/new 500 in 270ms
+ GET /listing 200 in 78ms
+ ✓ Compiled /api/[...path] in 116ms (432 modules)
+ GET /api/listing/jobs 200 in 235ms
+ GET /api/v1/dashboard/context 200 in 238ms
+ GET /api/v1/stores 200 in 239ms
+ ✓ Compiled in 580ms (1195 modules)
+ GET /listing 200 in 140ms
+ GET /listing 200 in 261ms
+ ✓ Compiled /_not-found in 259ms (1186 modules)
+ GET /api/v1/dashboard/context 404 in 576ms
+ GET /api/v1/stores 404 in 575ms
+ GET /api/listing/jobs 404 in 576ms
+ ✓ Compiled in 600ms (1200 modules)
+ GET /listing 200 in 98ms
+ ✓ Compiled in 547ms (1200 modules)
+ GET /listing 200 in 100ms
+ ✓ Compiled in 386ms (1200 modules)
+ GET /listing 200 in 113ms
+ ✓ Compiled in 571ms (1189 modules)
+ GET /listing 200 in 173ms
+ ✓ Compiled in 732ms (1189 modules)
+ GET /listing 200 in 116ms
+ ✓ Compiled in 378ms (1189 modules)
+ GET /listing 200 in 93ms
+ ✓ Compiled in 724ms (1191 modules)
+ GET /listing 200 in 183ms
+ ✓ Compiled in 496ms (1191 modules)
+ GET /listing 200 in 163ms
+ ✓ Compiled in 566ms (1191 modules)
+ GET /listing 200 in 204ms
+ ✓ Compiled in 791ms (1191 modules)
+ GET /listing 200 in 174ms
+ ✓ Compiled in 453ms (1191 modules)
+ GET /listing 200 in 111ms
+ ✓ Compiled in 549ms (1191 modules)
+ GET /listing 200 in 90ms
+ ✓ Compiled in 366ms (1191 modules)
+ GET /listing 200 in 130ms
+ ✓ Compiled in 368ms (1191 modules)
+ GET /listing 200 in 87ms
+ ✓ Compiled in 568ms (1191 modules)
+ GET /listing 200 in 129ms
+ ✓ Compiled in 356ms (1191 modules)
+ GET /listing 200 in 84ms
+ ✓ Compiled in 434ms (1191 modules)
+ GET /listing 200 in 101ms
+ ✓ Compiled in 562ms (1191 modules)
+ GET /listing 200 in 88ms
+ ✓ Compiled in 424ms (1191 modules)
+ GET /listing 200 in 97ms
+ ✓ Compiled in 371ms (1191 modules)
+ GET /listing 200 in 96ms
+ ✓ Compiled in 464ms (1191 modules)
+ GET /listing 200 in 100ms
+ ✓ Compiled in 592ms (1191 modules)
+ GET /listing 200 in 86ms
+ ✓ Compiled in 568ms (1191 modules)
+ GET /listing 200 in 96ms
+ ✓ Compiled in 570ms (1191 modules)
+ GET /listing 200 in 132ms
+ ✓ Compiled in 375ms (1191 modules)
+ GET /listing 200 in 82ms
+ ✓ Compiled in 528ms (1191 modules)
+ GET /listing 200 in 206ms
+ ✓ Compiled in 544ms (1191 modules)
+ GET /listing 200 in 127ms
+ ✓ Compiled in 421ms (1191 modules)
+ GET /listing 200 in 133ms
+ ✓ Compiled in 678ms (1191 modules)
+ GET /listing 200 in 177ms
+ ✓ Compiled in 219ms (764 modules)
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 1046ms (1537 modules)
+ GET /listing 500 in 1932ms
+ GET /listing 200 in 115ms
+ GET /listing 200 in 27ms
+ GET /listing 200 in 35ms
+ GET /listing 200 in 264ms
+ ✓ Compiled /api/[...path] in 188ms (627 modules)
+ GET /api/listing/jobs 200 in 334ms
+ GET /api/v1/stores 200 in 336ms
+ GET /api/v1/dashboard/context 200 in 340ms
+ ✓ Compiled in 250ms (915 modules)
+ ✓ Compiled in 301ms (915 modules)
+ GET /listing 200 in 307ms
+ GET /listing 200 in 150ms
+ ✓ Compiled in 266ms (915 modules)
+ ✓ Compiled /_error in 241ms (1523 modules)
+ GET /listing 500 in 1318ms
+ GET /listing 200 in 311ms
+ ✓ Compiled /api/[...path] in 118ms (627 modules)
+ GET /api/listing/jobs 200 in 307ms
+ GET /api/v1/stores 200 in 309ms
+ GET /api/v1/dashboard/context 200 in 312ms
+ GET /api/listing/brands/search?q=test&page=1&page_size=1 401 in 27ms
+ GET /api/v1/stores 401 in 14ms
+ ✓ Compiled in 326ms (915 modules)
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 534ms (1446 modules)
+ GET /listing 404 in 823ms
+ GET /listing 200 in 62ms
+ GET /listing 200 in 220ms
+ ✓ Compiled /api/[...path] in 218ms (533 modules)
+ GET /api/listing/jobs 200 in 370ms
+ GET /api/v1/stores 200 in 371ms
+ GET /api/v1/dashboard/context 200 in 374ms
+ GET /api/listing/brands/search?q=test&page=1&page_size=1 401 in 21ms
+ GET /api/listing/brands/search?q=test&page=1&page_size=1 500 in 164ms

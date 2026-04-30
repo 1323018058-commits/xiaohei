@@ -1,0 +1,86 @@
+
+> dev
+> next dev --hostname 127.0.0.1 --port 3001
+
+   ▲ Next.js 15.5.15
+   - Local:        http://127.0.0.1:3001
+   - Network:      http://127.0.0.1:3001
+
+ ✓ Starting...
+ ✓ Ready in 2.6s
+ ○ Compiling /listing/new ...
+ ✓ Compiled /listing/new in 1426ms (666 modules)
+ GET /listing/new 307 in 1803ms
+ ✓ Compiled /login in 181ms (677 modules)
+ GET /login 200 in 376ms
+ ✓ Compiled in 848ms (271 modules)
+ ✓ Compiled in 210ms (271 modules)
+ ✓ Compiled in 351ms (271 modules)
+ ✓ Compiled in 193ms (271 modules)
+ ✓ Compiled in 202ms (271 modules)
+ ✓ Compiled in 280ms (271 modules)
+ ✓ Compiled in 256ms (271 modules)
+ ✓ Compiled in 287ms (271 modules)
+ ✓ Compiled in 266ms (271 modules)
+ ✓ Compiled in 154ms (271 modules)
+ ✓ Compiled in 291ms (272 modules)
+ ✓ Compiled in 148ms (272 modules)
+ ✓ Compiled in 267ms (272 modules)
+ ✓ Compiled in 293ms (272 modules)
+ ✓ Compiled in 240ms (272 modules)
+ ✓ Compiled in 203ms (272 modules)
+ ✓ Compiled in 194ms (272 modules)
+ ✓ Compiled in 150ms (272 modules)
+ ✓ Compiled in 259ms (272 modules)
+ ✓ Compiled in 150ms (272 modules)
+ ✓ Compiled in 229ms (272 modules)
+ ✓ Compiled in 213ms (272 modules)
+ ✓ Compiled in 174ms (272 modules)
+ ✓ Compiled in 167ms (272 modules)
+ ✓ Compiled in 169ms (272 modules)
+ ✓ Compiled in 230ms (272 modules)
+ ✓ Compiled in 170ms (272 modules)
+ ✓ Compiled in 187ms (272 modules)
+ ✓ Compiled in 182ms (272 modules)
+ ✓ Compiled in 227ms (272 modules)
+ ✓ Compiled in 246ms (272 modules)
+ ✓ Compiled in 228ms (272 modules)
+ ✓ Compiled in 310ms (272 modules)
+ ✓ Compiled in 161ms (272 modules)
+ ✓ Compiled in 166ms (272 modules)
+ ✓ Compiled in 134ms (272 modules)
+ ✓ Compiled in 197ms (272 modules)
+ ✓ Compiled /api/[...path] in 159ms (345 modules)
+ GET /api/v1/stores 401 in 705ms
+ GET /api/listing/brands/search?q=test&page=1&page_size=1 404 in 25ms
+ GET /api/v1/stores 401 in 13ms
+ ✓ Compiled in 183ms (272 modules)
+ GET /api/listing/brands/search?q=test&page=1&page_size=1 401 in 27ms
+ GET /api/listing/brands/search?q=test&page=1&page_size=1 401 in 33ms
+ ✓ Compiled in 494ms (272 modules)
+ ✓ Compiled in 111ms (272 modules)
+ ✓ Compiled in 271ms (272 modules)
+ ✓ Compiled in 259ms (272 modules)
+ ✓ Compiled in 287ms (272 modules)
+ ✓ Compiled in 270ms (272 modules)
+ ✓ Compiled in 288ms (272 modules)
+ ✓ Compiled in 293ms (272 modules)
+ ✓ Compiled in 186ms (272 modules)
+ ✓ Compiled in 178ms (272 modules)
+ ✓ Compiled in 216ms (272 modules)
+ ✓ Compiled in 200ms (272 modules)
+ ✓ Compiled in 193ms (272 modules)
+ ✓ Compiled in 185ms (272 modules)
+ ✓ Compiled in 221ms (272 modules)
+ ✓ Compiled in 179ms (272 modules)
+ ✓ Compiled in 186ms (272 modules)
+ ✓ Compiled in 212ms (272 modules)
+ ✓ Compiled in 187ms (272 modules)
+ ✓ Compiled in 331ms (272 modules)
+ ✓ Compiled in 1493ms (272 modules)
+ ✓ Compiled in 290ms (272 modules)
+ ✓ Compiled in 190ms (272 modules)
+ ✓ Compiled in 120ms (272 modules)
+ ✓ Compiled in 190ms (272 modules)
+ ✓ Compiled in 231ms (272 modules)
+ ✓ Compiled in 254ms (272 modules)

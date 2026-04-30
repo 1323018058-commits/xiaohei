@@ -1,0 +1,94 @@
+INFO:     127.0.0.1:48264 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:21376 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21376 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21376 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21376 - "GET /api/v1/dashboard/context HTTP/1.1" 200 OK
+INFO:     127.0.0.1:12947 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:12949 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:12948 - "GET /api/v1/dashboard/context HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21376 - "GET /api/v1/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21376 - "GET /api/v1/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:12947 - "GET /api/listing/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:12948 - "GET /api/v1/dashboard/summary HTTP/1.1" 200 OK
+INFO:     127.0.0.1:12949 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21376 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:12947 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:12947 - "GET /api/listing/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21376 - "GET /api/v1/orders HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21376 - "GET /admin/api/tenant/usage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:12947 - "GET /admin/api/tenant/usage HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21376 - "GET /api/v1/dashboard/context HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21376 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:21376 - "GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:29774 - "POST /api/listing/categories/match HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:41148 - "POST /api/listing/images/validate-url HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37569 - "GET /api/listing/categories/123/requirements HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:19184 - "POST /api/listing/ai/autopilot HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:61031 - "POST /api/listing/loadsheet/preview HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:61031 - "POST /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:10596 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:10596 - "GET /api/v1/dashboard/context HTTP/1.1" 200 OK
+INFO:     127.0.0.1:10596 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:10596 - "GET /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions?page=1&page_size=8 HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:63924 - "POST /api/listing/categories/match HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:20225 - "GET /api/listing/categories/123/requirements HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:46441 - "POST /api/listing/images/validate-url HTTP/1.1" 200 OK
+INFO:     127.0.0.1:15964 - "POST /api/listing/ai/autopilot HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:41519 - "POST /api/listing/loadsheet/preview HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:41519 - "POST /api/listing/stores/55555555-5555-5555-5555-555555555555/submissions HTTP/1.1" 503 Service Unavailable
+INFO:     127.0.0.1:16829 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:16830 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:16829 - "GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:16830 - "GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/log HTTP/1.1" 200 OK
+INFO:     127.0.0.1:16829 - "GET /api/v1/stores/55555555-5555-5555-5555-555555555555/listings?limit=100&offset=0&status_group=buyable&sort_by=createdAt&sort_dir=desc HTTP/1.1" 200 OK
+INFO:     127.0.0.1:11820 - "GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:11821 - "GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:16829 - "GET /api/listing/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:11821 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:16830 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:11820 - "GET /api/listing/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:14322 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:14322 - "GET /api/v1/dashboard/context HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57647 - "GET /api/listing/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57648 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:14322 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:14322 - "GET /api/v1/dashboard/context HTTP/1.1" 200 OK
+INFO:     127.0.0.1:13767 - "GET /api/listing/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:13768 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:15754 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:15753 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:15753 - "GET /api/v1/bidding/rules?store_id=55555555-5555-5555-5555-555555555555 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:15754 - "GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/log HTTP/1.1" 200 OK
+INFO:     127.0.0.1:15753 - "GET /api/v1/stores/55555555-5555-5555-5555-555555555555/listings?limit=100&offset=0&status_group=buyable&sort_by=createdAt&sort_dir=desc HTTP/1.1" 200 OK
+INFO:     127.0.0.1:28142 - "GET /api/v1/stores/55555555-5555-5555-5555-555555555555/sync-tasks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:28141 - "GET /api/v1/bidding/stores/55555555-5555-5555-5555-555555555555/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:15753 - "GET /api/listing/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:15754 - "GET /api/listing/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:15753 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:28141 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51053 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51053 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51053 - "GET /api/listing/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64909 - "GET /api/v1/dashboard/context HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64908 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19266 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:13817 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:13817 - "GET /api/listing/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:13249 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:13250 - "GET /api/v1/dashboard/context HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57632 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57632 - "GET /api/listing/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63847 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63848 - "GET /api/v1/dashboard/context HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19785 - "GET /api/listing/brands/search?q=test&page=1&page_size=1 HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:19786 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:19788 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:13265 - "GET /api/listing/brands/search?q=test&page=1&page_size=1 HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:13265 - "GET /api/v1/stores HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:19743 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:12428 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:12428 - "GET /api/listing/jobs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:16691 - "GET /api/v1/stores HTTP/1.1" 200 OK
+INFO:     127.0.0.1:16692 - "GET /api/v1/dashboard/context HTTP/1.1" 200 OK
+INFO:     127.0.0.1:22432 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62273 - "GET /api/listing/brands/search?q=test&page=1&page_size=1 HTTP/1.1" 401 Unauthorized

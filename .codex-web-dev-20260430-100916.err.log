@@ -1,0 +1,153 @@
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⨯ ReferenceError: WorkflowSummary is not defined
+    at NewListingPage (src\app\(dashboard)\listing\new\page.tsx:799:8)
+  797 |       {storeError ? <ErrorBanner message={storeError} /> : null}
+  798 |
+> 799 |       <WorkflowSummary
+      |        ^
+  800 |         storeName={selectedStore?.name ?? ""}
+  801 |         categoryId={categoryId}
+  802 |         imageCount={imageCount} {
+  digest: '3922713666'
+}
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⨯ ReferenceError: WorkflowSummary is not defined
+    at NewListingPage (src\app\(dashboard)\listing\new\page.tsx:799:8)
+  797 |       {storeError ? <ErrorBanner message={storeError} /> : null}
+  798 |
+> 799 |       <WorkflowSummary
+      |        ^
+  800 |         storeName={selectedStore?.name ?? ""}
+  801 |         categoryId={categoryId}
+  802 |         imageCount={imageCount} {
+  digest: '3922713666'
+}
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ Failed to generate static paths for /api/[...path]:
+TypeError: __webpack_modules__[moduleId] is not a function
+    at __webpack_exec__ (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:140:39)
+    at <unknown> (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:141:83)
+    at <unknown> (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:141:47)
+    at Object.<anonymous> (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:144:3) {
+  type: 'TypeError'
+}
+ ⨯ Failed to generate static paths for /api/[...path]:
+TypeError: __webpack_modules__[moduleId] is not a function
+    at __webpack_exec__ (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:140:39)
+    at <unknown> (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:141:83)
+    at <unknown> (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:141:47)
+    at Object.<anonymous> (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:144:3) {
+  type: 'TypeError'
+}
+ ⨯ Failed to generate static paths for /api/[...path]:
+TypeError: __webpack_modules__[moduleId] is not a function
+    at __webpack_exec__ (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:140:39)
+    at <unknown> (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:141:83)
+    at <unknown> (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:141:47)
+    at Object.<anonymous> (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:144:3) {
+  type: 'TypeError'
+}
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Workspace\小黑erp\apps\web\.next\cache\webpack\client-development\0.pack.gz_' -> 'C:\Workspace\小黑erp\apps\web\.next\cache\webpack\client-development\0.pack.gz'
+ ⨯ TypeError: __webpack_modules__[moduleId] is not a function
+    at __webpack_exec__ (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:140:39)
+    at <unknown> (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:141:83)
+    at <unknown> (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:141:47)
+    at Object.<anonymous> (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:144:3) {
+  type: 'TypeError',
+  page: '/api/v1/stores'
+}
+ ⨯ TypeError: __webpack_modules__[moduleId] is not a function
+    at __webpack_exec__ (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:140:39)
+    at <unknown> (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:141:83)
+    at <unknown> (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:141:47)
+    at Object.<anonymous> (C:\Workspace\小黑erp\apps\web\.next\server\app\api\[...path]\route.js:144:3) {
+  type: 'TypeError',
+  page: '/api/v1/stores'
+}
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⨯ ReferenceError: CollapsibleIssueList is not defined
+    at NewListingPage (src\app\(dashboard)\listing\new\page.tsx:1233:14)
+  1231 |
+  1232 |           <FormBlock title="表单检查" last>
+> 1233 |             <CollapsibleIssueList
+       |              ^
+  1234 |               issues={localIssues}
+  1235 |               open={formCheckOpen}
+  1236 |               onToggle={() => setFormCheckOpen((current) => !current)} {
+  digest: '2094286623'
+}
+ ⨯ ReferenceError: CollapsibleIssueList is not defined
+    at NewListingPage (src\app\(dashboard)\listing\new\page.tsx:1233:14)
+  1231 |
+  1232 |           <FormBlock title="表单检查" last>
+> 1233 |             <CollapsibleIssueList
+       |              ^
+  1234 |               issues={localIssues}
+  1235 |               open={formCheckOpen}
+  1236 |               onToggle={() => setFormCheckOpen((current) => !current)} {
+  digest: '2094286623'
+}
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ ⨯ ReferenceError: CollapsibleIssueList is not defined
+    at NewListingPage (src\app\(dashboard)\listing\new\page.tsx:1233:14)
+  1231 |
+  1232 |           <FormBlock title="表单检查" last>
+> 1233 |             <CollapsibleIssueList
+       |              ^
+  1234 |               issues={localIssues}
+  1235 |               open={formCheckOpen}
+  1236 |               onToggle={() => setFormCheckOpen((current) => !current)} {
+  digest: '2094286623'
+}
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, rename 'C:\Workspace\小黑erp\apps\web\.next\cache\webpack\server-development\16.pack.gz_' -> 'C:\Workspace\小黑erp\apps\web\.next\cache\webpack\server-development\16.pack.gz'
+ ⨯ ReferenceError: CollapsibleIssueList is not defined
+    at NewListingPage (src\app\(dashboard)\listing\new\page.tsx:1233:14)
+  1231 |
+  1232 |           <FormBlock title="表单检查" last>
+> 1233 |             <CollapsibleIssueList
+       |              ^
+  1234 |               issues={localIssues}
+  1235 |               open={formCheckOpen}
+  1236 |               onToggle={() => setFormCheckOpen((current) => !current)} {
+  digest: '2094286623'
+}
+ ⨯ ReferenceError: CollapsibleIssueList is not defined
+    at NewListingPage (src\app\(dashboard)\listing\new\page.tsx:1233:14)
+  1231 |
+  1232 |           <FormBlock title="表单检查" last>
+> 1233 |             <CollapsibleIssueList
+       |              ^
+  1234 |               issues={localIssues}
+  1235 |               open={formCheckOpen}
+  1236 |               onToggle={() => setFormCheckOpen((current) => !current)} {
+  digest: '2094286623'
+}
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⨯ Failed to generate static paths for /api/[...path]:
+[Error [PageNotFoundError]: Cannot find module for page: /api/[...path]/route] {
+  type: 'PageNotFoundError',
+  code: 'ENOENT'
+}
+ ⨯ Failed to generate static paths for /api/[...path]:
+[Error [PageNotFoundError]: Cannot find module for page: /api/[...path]/route] {
+  type: 'PageNotFoundError',
+  code: 'ENOENT'
+}
+ ⨯ Failed to generate static paths for /api/[...path]:
+[Error [PageNotFoundError]: Cannot find module for page: /api/[...path]/route] {
+  type: 'PageNotFoundError',
+  code: 'ENOENT'
+}
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+npm error Lifecycle script `dev` failed with error:
+npm error code 4294967295
+npm error path C:\Workspace\小黑erp\apps\web
+npm error workspace @xiaohei/web
+npm error location C:\Workspace\小黑erp\apps\web
+npm error command failed
+npm error command C:\Windows\system32\cmd.exe /d /s /c next dev
