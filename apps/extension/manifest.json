@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "小黑 ERP Takealot 助手",
+  "description": "Takealot 商品页上架、保护价和 ERP 连接助手。",
+  "version": "0.1.28",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://www.takealot.com/*",
+    "https://*/*",
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "小黑 ERP"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "styles/panel.css"
+      ],
+      "matches": [
+        "https://www.takealot.com/*",
+        "https://takealot.com/*"
+      ]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.takealot.com/*",
+        "https://takealot.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "styles/panel.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

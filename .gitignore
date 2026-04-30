@@ -4,15 +4,18 @@ Thumbs.db
 *.bak
 .idea/
 .vscode/
+.claude/
 
 # Local secrets and machine-specific config
 .env
 .env.*
 !.env.example
+!.env.*.example
 
 # Runtime logs and Codex/dev-server output
 *.log
 .codex-*.log
+.tmp*
 
 # Dependencies and build/runtime output
 node_modules/
@@ -22,6 +25,8 @@ dist/
 build/
 coverage/
 reports/
+.venv/
+.pytest_cache/
 __pycache__/
 *.py[cod]
 *.egg-info/

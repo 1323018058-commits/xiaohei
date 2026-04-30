@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>小黑 ERP</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family:
+          "Microsoft YaHei",
+          "PingFang SC",
+          "Segoe UI",
+          sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        width: 348px;
+        margin: 0;
+        background: #f6f1df;
+        color: #151515;
+      }
+
+      .shell {
+        padding: 14px;
+      }
+
+      .panel {
+        border: 2px solid #151515;
+        background: #fffaf0;
+        box-shadow: 5px 5px 0 #151515;
+      }
+
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 12px;
+        border-bottom: 2px solid #151515;
+        background: #ffdf57;
+      }
+
+      .brand {
+        min-width: 0;
+      }
+
+      .eyebrow {
+        font-size: 10px;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 5px 0 0;
+        font-size: 18px;
+        line-height: 1.2;
+        font-weight: 900;
+      }
+
+      .state {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        min-height: 26px;
+        padding: 5px 8px;
+        border: 2px solid #151515;
+        background: #ffffff;
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .dot {
+        width: 9px;
+        height: 9px;
+        border: 2px solid #151515;
+        background: #9ca3af;
+      }
+
+      .state[data-mode="success"] .dot {
+        background: #22c55e;
+      }
+
+      .state[data-mode="error"] .dot {
+        background: #ef4444;
+      }
+
+      .body {
+        display: grid;
+        gap: 12px;
+        padding: 12px;
+      }
+
+      .field {
+        display: grid;
+        gap: 6px;
+      }
+
+      label {
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      input,
+      select {
+        width: 100%;
+        min-height: 36px;
+        border: 2px solid #151515;
+        border-radius: 0;
+        padding: 8px 9px;
+        background: #ffffff;
+        color: #151515;
+        font-size: 13px;
+        outline: none;
+      }
+
+      input:focus,
+      select:focus {
+        background: #fef3c7;
+        box-shadow: inset 0 0 0 2px #ffffff;
+      }
+
+      .meta {
+        border: 2px solid #151515;
+        padding: 9px;
+        background: #ffffff;
+        font-size: 12px;
+        font-weight: 800;
+        line-height: 1.5;
+      }
+
+      .actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      button {
+        min-height: 38px;
+        border: 2px solid #151515;
+        border-radius: 0;
+        padding: 8px 10px;
+        background: #ffffff;
+        color: #151515;
+        box-shadow: 3px 3px 0 #151515;
+        font-size: 13px;
+        font-weight: 900;
+        cursor: pointer;
+      }
+
+      button:hover {
+        transform: translate(1px, 1px);
+        box-shadow: 2px 2px 0 #151515;
+      }
+
+      button:active {
+        transform: translate(3px, 3px);
+        box-shadow: 0 0 0 #151515;
+      }
+
+      button:disabled {
+        cursor: wait;
+        opacity: 0.65;
+      }
+
+      .primary {
+        width: 100%;
+        background: #111827;
+        color: #ffffff;
+      }
+
+      .secondary {
+        background: #ffffff;
+      }
+
+      .danger {
+        background: #f3f4f6;
+      }
+
+      .status {
+        min-height: 34px;
+        border-top: 2px solid #151515;
+        padding: 9px 12px;
+        background: #ffffff;
+        color: #525252;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .status[data-mode="success"] {
+        color: #047857;
+      }
+
+      .status[data-mode="error"] {
+        color: #b91c1c;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="panel" aria-label="小黑 ERP 插件">
+        <header class="header">
+          <div class="brand">
+            <div class="eyebrow">Xiaohei ERP</div>
+            <h1 id="title">扩展连接</h1>
+          </div>
+          <div class="state" id="connectionState" data-mode="default">
+            <span class="dot" aria-hidden="true"></span>
+            <span id="connectionLabel">未连接</span>
+          </div>
+        </header>
+
+        <div class="body">
+          <div id="loginView">
+            <div class="field">
+              <label for="username">账号</label>
+              <input id="username" autocomplete="username" placeholder="输入 ERP 账号" />
+            </div>
+            <div class="field">
+              <label for="password">密码</label>
+              <input
+                id="password"
+                type="password"
+                autocomplete="current-password"
+                placeholder="输入 ERP 密码"
+              />
+            </div>
+            <button class="primary" id="loginButton" type="button">连接 ERP</button>
+          </div>
+
+          <div id="connectedView" class="hidden">
+            <div class="meta" id="userMeta"></div>
+            <div class="field">
+              <label for="storeSelect">默认店铺</label>
+              <select id="storeSelect"></select>
+            </div>
+            <div class="field">
+              <label for="defaultStockQty">默认直邮库存</label>
+              <input id="defaultStockQty" inputmode="numeric" placeholder="例如 40" />
+            </div>
+            <div class="actions">
+              <button class="secondary" id="refreshButton" type="button">刷新状态</button>
+              <button class="danger" id="logoutButton" type="button">断开连接</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="status" id="status"></div>
+      </section>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

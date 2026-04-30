@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>小黑 ERP · 黑白首发预览</title>
+  <style>
+    :root {
+      --bg: #f5f5f3;
+      --surface: rgba(255,255,255,.88);
+      --surface-2: rgba(255,255,255,.64);
+      --line: rgba(15,23,42,.10);
+      --line-2: rgba(15,23,42,.06);
+      --ink: #0c0d10;
+      --muted: #6b7280;
+      --soft: #a1a1aa;
+      --shadow: 0 28px 90px rgba(15, 23, 42, 0.10);
+      --radius-xl: 34px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(17,24,39,.08), transparent 18%),
+        linear-gradient(180deg, #fbfbfa 0%, var(--bg) 100%);
+      color: var(--ink);
+    }
+    .page {
+      width: 1720px;
+      margin: 0 auto;
+      padding: 36px 34px 42px;
+      display: grid;
+      gap: 24px;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 20px;
+      background: var(--surface);
+      backdrop-filter: blur(18px);
+      border: 1px solid var(--line);
+      border-radius: 38px;
+      box-shadow: var(--shadow);
+      padding: 28px 30px;
+    }
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 42px;
+      line-height: 1.02;
+      letter-spacing: -.05em;
+      max-width: 760px;
+    }
+    .hero p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      line-height: 1.9;
+      font-size: 14px;
+      max-width: 740px;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+      align-content: start;
+    }
+    .chip {
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.92);
+      font-size: 12px;
+      font-weight: 700;
+      color: #30353d;
+    }
+    .chip.dark {
+      background: #111316;
+      color: #fff;
+      border-color: #111316;
+    }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+    .screen {
+      background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,255,255,.90));
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-height: 980px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--line-2);
+      background: rgba(255,255,255,.78);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: -.02em;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #111;
+    }
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .shell {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      min-height: 0;
+    }
+    .sidebar {
+      border-right: 1px solid var(--line-2);
+      padding: 16px 12px;
+      display: grid;
+      align-content: start;
+      gap: 10px;
+      background: rgba(250,250,249,.74);
+    }
+    .nav {
+      width: 100%;
+      border-radius: 16px;
+      padding: 12px 10px;
+      font-size: 12px;
+      text-align: center;
+      color: #525a66;
+      border: 1px solid transparent;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+    .nav.active {
+      background: #111316;
+      color: #fff;
+      border-color: #111316;
+    }
+    .nav.muted {
+      border-color: var(--line-2);
+      background: rgba(255,255,255,.56);
+    }
+    .content {
+      padding: 18px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+    .section-title {
+      display: grid;
+      gap: 6px;
+    }
+    .section-title strong {
+      font-size: 28px;
+      letter-spacing: -.04em;
+    }
+    .section-title span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .row-2, .row-4 {
+      display: grid;
+      gap: 12px;
+    }
+    .row-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .row-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .card {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.88);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      display: grid;
+      gap: 10px;
+    }
+    .card.soft { background: rgba(247,247,246,.90); }
+    .metric-label { color: var(--muted); font-size: 12px; }
+    .metric-value { font-size: 24px; font-weight: 800; letter-spacing: -.04em; }
+    .stack { display: grid; gap: 10px; }
+    .item {
+      display: grid;
+      grid-template-columns: 40px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 11px 12px;
+      border: 1px solid var(--line-2);
+      border-radius: 16px;
+      background: #fff;
+    }
+    .thumb {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(180deg,#f1f2f4,#e3e7ec);
+      border: 1px solid var(--line-2);
+    }
+    .item-title { font-size: 13px; font-weight: 700; line-height: 1.4; }
+    .item-sub { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .badge {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 800;
+      width: fit-content;
+    }
+    .ok { background: rgba(17,17,17,.08); color: #111; }
+    .fail { background: rgba(209,67,67,.12); color: #d14343; }
+    .doing { background: rgba(17,17,17,.05); color: #444; }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .panel-header h4 { margin: 0; font-size: 18px; letter-spacing: -.03em; }
+    .helper {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .footnote {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: -6px;
+    }
+    .split {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 12px;
+      min-height: 260px;
+    }
+    .listbox {
+      border: 1px solid var(--line-2);
+      border-radius: 18px;
+      background: #fff;
+      padding: 10px;
+      display: grid;
+      gap: 10px;
+    }
+    .listcard {
+      border: 1px solid var(--line-2);
+      border-radius: 14px;
+      padding: 12px;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .listcard.active {
+      background: #111316;
+      color: white;
+      border-color: #111316;
+    }
+    .rightbox {
+      border: 1px solid var(--line-2);
+      border-radius: 18px;
+      background: white;
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }
+    .tabs {
+      display: inline-flex;
+      gap: 8px;
+      border: 1px solid var(--line-2);
+      border-radius: 14px;
+      padding: 6px;
+      width: fit-content;
+      background: #f8f8f7;
+    }
+    .tab {
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .tab.active {
+      background: #fff;
+      color: #111;
+      box-shadow: 0 8px 18px rgba(15,23,42,.08);
+    }
+    .table-shell {
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+    }
+    .thead, .trow {
+      display: grid;
+      gap: 10px;
+      align-items: center;
+      font-size: 12px;
+    }
+    .thead {
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .trow {
+      border: 1px solid var(--line-2);
+      border-radius: 14px;
+      background: #fff;
+      padding: 12px 10px;
+    }
+    .trow.center { grid-template-columns: 1.7fr .75fr .75fr .7fr .7fr; }
+    .trow.bid { grid-template-columns: 1.55fr .7fr .7fr .7fr .65fr; }
+    .trow.order { grid-template-columns: 1.3fr .65fr .65fr .6fr .55fr; }
+    .subtle { font-size: 11px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">黑白 Apple 风格 · 首发版本预览</div>
+        <h1>安静、克制、商业化。<br/>不是炫技后台，而是能长期卖钱的产品。</h1>
+        <p>这版刻意收掉了花哨颜色、无意义图表和过多菜单，只保留真正高频的任务入口。黑白主色、薄边框、柔和层次，让界面更像高端商业工具，而不是功能堆叠的传统 ERP。</p>
+      </div>
+      <div class="chips">
+        <div class="chip dark">黑白主色</div>
+        <div class="chip">更少一级导航</div>
+        <div class="chip">结果优先</div>
+        <div class="chip">分步式上新</div>
+      </div>
+    </section>
+
+    <section class="board">
+      <div class="screen">
+        <div class="topbar">
+          <div class="brand"><div class="dot"></div><span>工作台</span></div>
+          <div class="top-actions"><div class="chip">今天</div><div class="chip dark">刷新</div></div>
+        </div>
+        <div class="shell">
+          <div class="sidebar">
+            <div class="nav active">总览</div>
+            <div class="nav muted">待处理</div>
+            <div class="nav muted">最近结果</div>
+          </div>
+          <div class="content">
+            <div class="section-title">
+              <strong>今天先做什么</strong>
+              <span>先看结果、风险和待处理，不做大而空的报表墙。</span>
+            </div>
+            <div class="row-4">
+              <div class="card"><div class="metric-label">今日订单</div><div class="metric-value">20</div></div>
+              <div class="card"><div class="metric-label">今日销售额</div><div class="metric-value">R 33,506</div></div>
+              <div class="card"><div class="metric-label">已上架</div><div class="metric-value">12</div></div>
+              <div class="card"><div class="metric-label">失败</div><div class="metric-value">2</div></div>
+            </div>
+            <div class="row-2">
+              <div class="card soft">
+                <div class="panel-header"><h4>待处理事项</h4><span class="badge fail">优先</span></div>
+                <div class="stack">
+                  <div class="item"><div class="thumb"></div><div><div class="item-title">2 条上架失败</div><div class="item-sub">需要重新确认商品和保护底价</div></div><span class="subtle">现在</span></div>
+                  <div class="item"><div class="thumb"></div><div><div class="item-title">5 条订单待处理</div><div class="item-sub">今天有新单，需要尽快跟进</div></div><span class="subtle">10 分钟前</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="panel-header"><h4>最近结果</h4><span class="badge ok">稳定</span></div>
+                <div class="stack">
+                  <div class="item"><div class="thumb"></div><div><div class="item-title">上架成功 8 条</div><div class="item-sub">最近一小时表现稳定</div></div><span class="subtle">刚刚</span></div>
+                  <div class="item"><div class="thumb"></div><div><div class="item-title">订单同步完成</div><div class="item-sub">店铺数据刷新正常</div></div><span class="subtle">3 分钟前</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen">
+        <div class="topbar">
+          <div class="brand"><div class="dot"></div><span>店铺管理</span></div>
+          <div class="top-actions"><div class="chip">1 个已连接</div><div class="chip dark">新建店铺</div></div>
+        </div>
+        <div class="shell">
+          <div class="sidebar">
+            <div class="nav active">店铺列表</div>
+            <div class="nav muted">概览</div>
+            <div class="nav muted">SKU 策略</div>
+            <div class="nav muted">上架记录</div>
+          </div>
+          <div class="content">
+            <div class="section-title">
+              <strong>店铺状态</strong>
+              <span>左侧店铺列表，右侧详情。新建与更新凭证都走弹窗，不让表单常驻主视图。</span>
+            </div>
+            <div class="split">
+              <div class="listbox">
+                <div class="listcard active">King store<br/><span class="subtle">最近同步 · 正常</span></div>
+                <div class="listcard">Pilot store</div>
+                <div class="listcard">Backup store</div>
+              </div>
+              <div class="rightbox">
+                <div class="panel-header"><h4>当前店铺</h4><span class="badge ok">可用</span></div>
+                <div class="tabs"><div class="tab active">概览</div><div class="tab">SKU 策略</div><div class="tab">上架记录</div></div>
+                <div class="item"><div class="thumb"></div><div><div class="item-title">店铺凭证</div><div class="item-sub">平台 / 凭证状态 / 最近同步</div></div><span class="chip">更新凭证</span></div>
+                <div class="item"><div class="thumb"></div><div><div class="item-title">上架记录</div><div class="item-sub">只看已上架和失败，不展示处理中噪音</div></div><span class="badge green">8 成功</span></div>
+                <div class="item"><div class="thumb"></div><div><div class="item-title">SKU 策略</div><div class="item-sub">只关心售价、保护底价和状态</div></div><span class="chip dark">查看</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen">
+        <div class="topbar">
+          <div class="brand"><div class="dot"></div><span>上架中心</span></div>
+          <div class="top-actions"><div class="chip">跟卖上架</div><div class="chip dark">新品上架</div></div>
+        </div>
+        <div class="shell">
+          <div class="sidebar">
+            <div class="nav active">跟卖上架</div>
+            <div class="nav muted">新品上架</div>
+            <div class="nav muted">上架记录</div>
+          </div>
+          <div class="content">
+            <div class="section-title">
+              <strong>上架只保留最短路径</strong>
+              <span>跟卖上架强调结果，新品上架改成四步式向导，不再像数据库字段编辑器。</span>
+            </div>
+            <div class="table-shell">
+              <div class="thead trow center"><span>商品</span><span>PLID</span><span>保护价</span><span>状态</span><span>操作</span></div>
+              <div class="trow center"><span><strong>商品图 + 标题</strong><div class="subtle">推荐售价已算好</div></span><span>101...</span><span>R 3,000</span><span class="badge green">已上架</span><span>查看</span></div>
+              <div class="trow center"><span><strong>商品图 + 标题</strong><div class="subtle">待重新处理</div></span><span>102...</span><span>R 2,350</span><span class="badge fail">失败</span><span>重试</span></div>
+            </div>
+            <div class="card soft">
+              <div class="panel-header"><h4>新品上架四步</h4><span class="chip">严格分步</span></div>
+              <div class="row-4">
+                <div class="card"><div class="metric-label">步骤 1</div><div class="item-title">商品识别</div><div class="helper">描述 / 参考图 / 类目建议</div></div>
+                <div class="card"><div class="metric-label">步骤 2</div><div class="item-title">内容生成</div><div class="helper">标题 / 副标题 / 描述 / 包装清单</div></div>
+                <div class="card"><div class="metric-label">步骤 3</div><div class="item-title">类目属性</div><div class="helper">属性 / 图片 / 尺寸重量</div></div>
+                <div class="card"><div class="metric-label">步骤 4</div><div class="item-title">提交确认</div><div class="helper">最终校验 / 预览 / 提交</div></div>
+              </div>
+            </div>
+            <div class="row-2">
+              <div class="table-shell">
+                <div class="thead trow bid"><span>自动竞价</span><span>售价</span><span>底价</span><span>状态</span><span>编辑</span></div>
+                <div class="trow bid"><span>商品</span><span>R 1,856</span><span>R 1,671</span><span class="badge doing">运行中</span><span>打开</span></div>
+                <div class="trow bid"><span>商品</span><span>R 3,495</span><span>R 3,000</span><span class="badge ok">已生效</span><span>打开</span></div>
+              </div>
+              <div class="table-shell">
+                <div class="thead trow order"><span>订单中心</span><span>时间</span><span>金额</span><span>状态</span><span>查看</span></div>
+                <div class="trow order"><span>订单</span><span>04/25</span><span>R 1,748</span><span class="badge doing">待处理</span><span>详情</span></div>
+                <div class="trow order"><span>订单</span><span>04/25</span><span>R 997</span><span class="badge ok">已发货</span><span>详情</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footnote">这不是最终像素稿，但它已经是正确的黑白首发方向：少导航、强主线、安静、克制、可商用。</div>
+  </div>
+</body>
+</html>
