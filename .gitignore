@@ -4,3 +4,26 @@ Thumbs.db
 *.bak
 .idea/
 .vscode/
+
+# Local secrets and machine-specific config
+.env
+.env.*
+!.env.example
+
+# Runtime logs and Codex/dev-server output
+*.log
+.codex-*.log
+
+# Dependencies and build/runtime output
+node_modules/
+.next/
+.next-build/
+dist/
+build/
+coverage/
+reports/
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.tsbuildinfo
+tools/*.exe
