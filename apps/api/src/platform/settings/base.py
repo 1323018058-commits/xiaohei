@@ -45,6 +45,7 @@ class Settings(BaseSettings):
     store_credential_encryption_key: str = "xiaohei-erp-dev-store-credential-key"
     takealot_api_base_url: str = "https://marketplace-api.takealot.com/v1"
     takealot_catalog_base_url: str = "https://seller-api.takealot.com"
+    takealot_seller_api_base_url: str = "https://seller-api.takealot.com/v2"
     takealot_catalog_email: str | None = None
     takealot_catalog_password: str | None = None
     takealot_catalog_api_key: str | None = None
@@ -84,6 +85,7 @@ class Settings(BaseSettings):
     worker_stale_recovery_limit: int = 20
     alert_output_dir: str = "reports/alerts"
     alert_webhook_url: str | None = None
+    listing_file_storage_dir: str = "reports/listing-loadsheets"
 
 
 settings = Settings()

@@ -461,7 +461,8 @@ export interface paths {
         put?: never;
         /** Update Store */
         post: operations["update_store_api_v1_stores__store_id__post"];
-        delete?: never;
+        /** Delete Store */
+        delete: operations["delete_store_api_v1_stores__store_id__delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -546,6 +547,23 @@ export interface paths {
         put?: never;
         /** Update Credentials */
         post: operations["update_credentials_api_v1_stores__store_id__credentials_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/stores/{store_id}/credentials/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Validate Credentials */
+        post: operations["validate_credentials_api_v1_stores__store_id__credentials_validate_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -960,6 +978,245 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/listing/images": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Upload Listing Images */
+        post: operations["upload_listing_images_api_listing_images_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/listing/images/validate-url": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Validate Listing Image Url */
+        post: operations["validate_listing_image_url_api_listing_images_validate_url_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/listing/images/check-requirements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Check Listing Image Requirements */
+        post: operations["check_listing_image_requirements_api_listing_images_check_requirements_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/listing/loadsheet/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Preview Listing Loadsheet */
+        post: operations["preview_listing_loadsheet_api_listing_loadsheet_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/listing/stores/{store_id}/submissions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Listing Submissions */
+        get: operations["list_listing_submissions_api_listing_stores__store_id__submissions_get"];
+        put?: never;
+        /** Create Listing Submission */
+        post: operations["create_listing_submission_api_listing_stores__store_id__submissions_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/listing/stores/{store_id}/submissions/sync": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Sync Store Listing Submissions */
+        post: operations["sync_store_listing_submissions_api_listing_stores__store_id__submissions_sync_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/listing/submissions/{submission_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Listing Submission Detail */
+        get: operations["get_listing_submission_detail_api_listing_submissions__submission_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/listing/submissions/{submission_id}/sync-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Sync Listing Submission Status */
+        post: operations["sync_listing_submission_status_api_listing_submissions__submission_id__sync_status_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/listing/submissions/{submission_id}/finalize-offer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Finalize Listing Submission Offer */
+        post: operations["finalize_listing_submission_offer_api_listing_submissions__submission_id__finalize_offer_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/listing/ai/autopilot": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Generate Listing Content */
+        post: operations["generate_listing_content_api_listing_ai_autopilot_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/listing/categories/match": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Match Category */
+        post: operations["match_category_api_listing_categories_match_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/listing/categories/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search Categories */
+        get: operations["search_categories_api_listing_categories_search_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/listing/categories/{category_id}/requirements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Category Requirements */
+        get: operations["get_category_requirements_api_listing_categories__category_id__requirements_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/listing/brands/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search Brands */
+        get: operations["search_brands_api_listing_brands_search_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/listing/jobs": {
         parameters: {
             query?: never;
@@ -1189,13 +1446,9 @@ export interface components {
             /** Target Label */
             target_label: string | null;
             /** Before */
-            before: {
-                [key: string]: unknown;
-            } | null;
+            before: Record<string, never> | null;
             /** After */
-            after: {
-                [key: string]: unknown;
-            } | null;
+            after: Record<string, never> | null;
             /** Reason */
             reason: string | null;
             /** Result */
@@ -1371,9 +1624,7 @@ export interface components {
              */
             last_cycle_error: string;
             /** Last Decision */
-            last_decision?: {
-                [key: string]: unknown;
-            } | null;
+            last_decision?: Record<string, never> | null;
             /** Version */
             version: number;
             /**
@@ -1403,12 +1654,21 @@ export interface components {
             retrying_count: number;
             /** Fresh Count */
             fresh_count: number;
-            /** Won Buybox Count */
-            won_buybox_count?: number;
-            /** Lost Buybox Count */
-            lost_buybox_count?: number;
-            /** Alert Count */
-            alert_count?: number;
+            /**
+             * Won Buybox Count
+             * @default 0
+             */
+            won_buybox_count: number;
+            /**
+             * Lost Buybox Count
+             * @default 0
+             */
+            lost_buybox_count: number;
+            /**
+             * Alert Count
+             * @default 0
+             */
+            alert_count: number;
             /** Dry Run Default */
             dry_run_default: boolean;
             /** Real Write Enabled */
@@ -1426,9 +1686,16 @@ export interface components {
             /** Last Worker Cycle At */
             last_worker_cycle_at?: string | null;
             /** Last Cycle Summary */
-            last_cycle_summary?: {
-                [key: string]: unknown;
-            } | null;
+            last_cycle_summary?: Record<string, never> | null;
+        };
+        /** Body_upload_listing_images_api_listing_images_post */
+        Body_upload_listing_images_api_listing_images_post: {
+            /** Store Id */
+            store_id: string;
+            /** Submission Id */
+            submission_id?: string | null;
+            /** Files */
+            files: string[];
         };
         /** BulkImportBiddingRuleItem */
         BulkImportBiddingRuleItem: {
@@ -1447,6 +1714,158 @@ export interface components {
             updated_count: number;
             /** Rules */
             rules: components["schemas"]["BiddingRuleResponse"][];
+        };
+        /** CategoryMatchRequest */
+        CategoryMatchRequest: {
+            /** Description */
+            description: string;
+            /** Language Hint */
+            language_hint?: string | null;
+            /**
+             * Limit
+             * @default 5
+             */
+            limit: number;
+            /**
+             * Use Ai
+             * @default true
+             */
+            use_ai: boolean;
+        };
+        /** CategoryMatchResponse */
+        CategoryMatchResponse: {
+            /** Suggestions */
+            suggestions: components["schemas"]["CategoryMatchSuggestion"][];
+            /** Total Candidates */
+            total_candidates: number;
+            /** Catalog Ready */
+            catalog_ready: boolean;
+            /** Ai Used */
+            ai_used: boolean;
+            /**
+             * Vector Used
+             * @default false
+             */
+            vector_used: boolean;
+            /**
+             * Vector Candidates
+             * @default 0
+             */
+            vector_candidates: number;
+            /**
+             * Keyword Candidates
+             * @default 0
+             */
+            keyword_candidates: number;
+            /**
+             * Fuzzy Candidates
+             * @default 0
+             */
+            fuzzy_candidates: number;
+            /** Embedding Model */
+            embedding_model?: string | null;
+            /** Embedding Dimensions */
+            embedding_dimensions?: number | null;
+            /**
+             * Translation Used
+             * @default false
+             */
+            translation_used: boolean;
+            /** Translation Model */
+            translation_model?: string | null;
+            /**
+             * Match Strategy
+             * @default keyword_rules
+             */
+            match_strategy: string;
+            /** Normalized Keywords */
+            normalized_keywords?: string[];
+            /** Message */
+            message?: string | null;
+        };
+        /** CategoryMatchSuggestion */
+        CategoryMatchSuggestion: {
+            /** Category Id */
+            category_id: number;
+            /** Path En */
+            path_en: string;
+            /** Path Zh */
+            path_zh: string;
+            /** Confidence */
+            confidence: number;
+            /** Min Required Images */
+            min_required_images: number;
+            /** Compliance Certificates */
+            compliance_certificates?: string[];
+            /** Image Requirement Texts */
+            image_requirement_texts?: string[];
+            /** Required Attributes */
+            required_attributes?: (string | Record<string, never>)[];
+            /** Optional Attributes */
+            optional_attributes?: (string | Record<string, never>)[];
+            /** Loadsheet Template Id */
+            loadsheet_template_id?: string | null;
+            /**
+             * Loadsheet Template Name
+             * @default
+             */
+            loadsheet_template_name: string;
+            /**
+             * Division
+             * @default
+             */
+            division: string;
+            /**
+             * Department
+             * @default
+             */
+            department: string;
+            /**
+             * Main Category Id
+             * @default 0
+             */
+            main_category_id: number;
+            /**
+             * Main Category Name
+             * @default
+             */
+            main_category_name: string;
+            /**
+             * Lowest Category Name
+             * @default
+             */
+            lowest_category_name: string;
+            /**
+             * Lowest Category Raw
+             * @default
+             */
+            lowest_category_raw: string;
+            /**
+             * Attributes Ready
+             * @default false
+             */
+            attributes_ready: boolean;
+            /**
+             * Attribute Source
+             * @default missing
+             */
+            attribute_source: string;
+            /** Attribute Message */
+            attribute_message?: string | null;
+            /**
+             * Translation Source
+             * @default rules
+             */
+            translation_source: string;
+            /** Matched Keywords */
+            matched_keywords?: string[];
+            /** Match Reasons */
+            match_reasons?: string[];
+            /**
+             * Source
+             * @default rules
+             */
+            source: string;
         };
         /** CreateStoreRequest */
         CreateStoreRequest: {
@@ -1616,6 +2035,22 @@ export interface components {
             chart_30d: components["schemas"]["DashboardChartPoint"][];
             order_data_status: components["schemas"]["DashboardOrderDataStatus"];
         };
+        /** DynamicAttributeDraft */
+        DynamicAttributeDraft: {
+            /** Key */
+            key: string;
+            /** Value */
+            value?: unknown | null;
+            /** Value Type */
+            value_type?: string | null;
+            /**
+             * Source
+             * @default fallback
+             */
+            source: string;
+            /** Warning */
+            warning?: string | null;
+        };
         /** ExtensionAuthRequest */
         ExtensionAuthRequest: {
             /** Store Id */
@@ -1770,6 +2205,202 @@ export interface components {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /** ListingAiAutopilotRequest */
+        ListingAiAutopilotRequest: {
+            /** Product Description */
+            product_description: string;
+            /** Category Id */
+            category_id: number;
+            /**
+             * Brand Name
+             * @default
+             */
+            brand_name: string;
+            /** Required Attributes */
+            required_attributes?: (string | Record<string, never>)[];
+            /** Optional Attributes */
+            optional_attributes?: (string | Record<string, never>)[];
+            /** Language Hint */
+            language_hint?: string | null;
+            /**
+             * Use Ai
+             * @default true
+             */
+            use_ai: boolean;
+        };
+        /** ListingAiAutopilotResponse */
+        ListingAiAutopilotResponse: {
+            /** Category Id */
+            category_id: number;
+            /** Category Path En */
+            category_path_en: string;
+            /** Category Path Zh */
+            category_path_zh: string;
+            /** Title */
+            title: string;
+            /** Subtitle */
+            subtitle: string;
+            /** Description */
+            description: string;
+            /** Whats In The Box */
+            whats_in_the_box: string;
+            /** Length Cm */
+            length_cm: number;
+            /** Width Cm */
+            width_cm: number;
+            /** Height Cm */
+            height_cm: number;
+            /** Weight G */
+            weight_g: number;
+            /** Dynamic Attributes */
+            dynamic_attributes?: components["schemas"]["DynamicAttributeDraft"][];
+            /** Ai Used */
+            ai_used: boolean;
+            /** Fallback Used */
+            fallback_used: boolean;
+            /** Warnings */
+            warnings?: string[];
+        };
+        /** ListingFinalizeOfferResponse */
+        ListingFinalizeOfferResponse: {
+            /** Submission Id */
+            submission_id: string;
+            /** Task Id */
+            task_id?: string | null;
+            /** Status */
+            status: string;
+            /** Stage */
+            stage: string;
+            /** Review Status */
+            review_status: string;
+            /**
+             * Takealot Offer Id
+             * @default
+             */
+            takealot_offer_id: string;
+            /** Listing Id */
+            listing_id?: string | null;
+            /** Platform Product Id */
+            platform_product_id?: string | null;
+            /** Message */
+            message: string;
+            /** Warnings */
+            warnings?: string[];
+        };
+        /** ListingImageAsset */
+        ListingImageAsset: {
+            /** Id */
+            id?: string | null;
+            /** Tenant Id */
+            tenant_id?: string | null;
+            /** Store Id */
+            store_id?: string | null;
+            /** Submission Id */
+            submission_id?: string | null;
+            /**
+             * Asset Type
+             * @default image
+             */
+            asset_type: string;
+            /** Source */
+            source: string;
+            /** Original File Name */
+            original_file_name?: string | null;
+            /** File Name */
+            file_name?: string | null;
+            /** Storage Path */
+            storage_path?: string | null;
+            /** Public Url */
+            public_url?: string | null;
+            /** External Url */
+            external_url?: string | null;
+            /** Content Type */
+            content_type?: string | null;
+            /** Size Bytes */
+            size_bytes?: number | null;
+            /** Checksum Sha256 */
+            checksum_sha256?: string | null;
+            /** Width */
+            width?: number | null;
+            /** Height */
+            height?: number | null;
+            /**
+             * Sort Order
+             * @default 0
+             */
+            sort_order: number;
+            /**
+             * Validation Status
+             * @default pending
+             */
+            validation_status: string;
+            /** Validation Errors */
+            validation_errors?: string[];
+            /** Warnings */
+            warnings?: string[];
+            /** Created At */
+            created_at?: string | null;
+            /** Updated At */
+            updated_at?: string | null;
+        };
+        /** ListingImageRequirementCheckRequest */
+        ListingImageRequirementCheckRequest: {
+            /** Category Id */
+            category_id: number;
+            /** Image Urls */
+            image_urls?: string[];
+            /** Asset Ids */
+            asset_ids?: string[];
+        };
+        /** ListingImageRequirementCheckResponse */
+        ListingImageRequirementCheckResponse: {
+            /** Passed */
+            passed: boolean;
+            /** Required Count */
+            required_count: number;
+            /** Current Count */
+            current_count: number;
+            /** Missing Count */
+            missing_count: number;
+            /** Warnings */
+            warnings?: string[];
+            /** Valid Image Urls */
+            valid_image_urls?: string[];
+            /** Valid Asset Ids */
+            valid_asset_ids?: string[];
+        };
+        /** ListingImageUploadResponse */
+        ListingImageUploadResponse: {
+            /** Items */
+            items: components["schemas"]["ListingImageAsset"][];
+            /** Warnings */
+            warnings?: string[];
+        };
+        /** ListingImageUrlValidateRequest */
+        ListingImageUrlValidateRequest: {
+            /** Image Url */
+            image_url: string;
+            /**
+             * Check Remote
+             * @default true
+             */
+            check_remote: boolean;
+        };
+        /** ListingImageUrlValidateResponse */
+        ListingImageUrlValidateResponse: {
+            /** Image Url */
+            image_url: string;
+            /** Valid */
+            valid: boolean;
+            /** Content Type */
+            content_type?: string | null;
+            /** Size Bytes */
+            size_bytes?: number | null;
+            /** Warnings */
+            warnings?: string[];
+            /** Errors */
+            errors?: string[];
+        };
         /** ListingJobListResponse */
         ListingJobListResponse: {
             /** Jobs */
@@ -1806,9 +2437,7 @@ export interface components {
             /** Note */
             note: string | null;
             /** Raw Payload */
-            raw_payload: {
-                [key: string]: unknown;
-            } | null;
+            raw_payload: Record<string, never> | null;
             /**
              * Created At
              * Format: date-time
@@ -1819,6 +2448,502 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+        };
+        /** ListingLoadsheetAsset */
+        ListingLoadsheetAsset: {
+            /** Asset Id */
+            asset_id?: string | null;
+            /** Storage Path */
+            storage_path?: string | null;
+            /** Public Url */
+            public_url?: string | null;
+            /** Content Type */
+            content_type: string;
+            /** Size Bytes */
+            size_bytes: number;
+            /** Checksum Sha256 */
+            checksum_sha256: string;
+        };
+        /** ListingLoadsheetPreviewRequest */
+        ListingLoadsheetPreviewRequest: {
+            /** Store Id */
+            store_id: string;
+            /** Category Id */
+            category_id: number;
+            /** Brand Id */
+            brand_id?: string | null;
+            /**
+             * Brand Name
+             * @default
+             */
+            brand_name: string;
+            /**
+             * Sku
+             * @default
+             */
+            sku: string;
+            /**
+             * Barcode
+             * @default
+             */
+            barcode: string;
+            /**
+             * Title
+             * @default
+             */
+            title: string;
+            /**
+             * Subtitle
+             * @default
+             */
+            subtitle: string;
+            /**
+             * Description
+             * @default
+             */
+            description: string;
+            /**
+             * Whats In The Box
+             * @default
+             */
+            whats_in_the_box: string;
+            /** Selling Price */
+            selling_price?: number | null;
+            /** Rrp */
+            rrp?: number | null;
+            /** Stock Quantity */
+            stock_quantity?: number | null;
+            /** Minimum Leadtime Days */
+            minimum_leadtime_days?: number | null;
+            /**
+             * Seller Warehouse Id
+             * @default
+             */
+            seller_warehouse_id: string;
+            /** Length Cm */
+            length_cm?: number | null;
+            /** Width Cm */
+            width_cm?: number | null;
+            /** Height Cm */
+            height_cm?: number | null;
+            /** Weight G */
+            weight_g?: number | null;
+            /** Image Urls */
+            image_urls?: string[];
+            /** Asset Ids */
+            asset_ids?: string[];
+            /** Dynamic Attributes */
+            dynamic_attributes?: Record<string, never> | components["schemas"]["DynamicAttributeDraft"][];
+        };
+        /** ListingLoadsheetPreviewResponse */
+        ListingLoadsheetPreviewResponse: {
+            /** Valid */
+            valid: boolean;
+            /** Issues */
+            issues?: components["schemas"]["ListingLoadsheetValidationIssue"][];
+            loadsheet_asset?: components["schemas"]["ListingLoadsheetAsset"] | null;
+            /** Generated Fields */
+            generated_fields?: Record<string, never>;
+            /** Missing Required Fields */
+            missing_required_fields?: string[];
+            /** Warnings */
+            warnings?: string[];
+        };
+        /** ListingLoadsheetValidationIssue */
+        ListingLoadsheetValidationIssue: {
+            /** Level */
+            level: string;
+            /** Field */
+            field: string;
+            /** Message */
+            message: string;
+        };
+        /** ListingSubmissionCreateRequest */
+        ListingSubmissionCreateRequest: {
+            /** Category Id */
+            category_id: number;
+            /** Brand Id */
+            brand_id?: string | null;
+            /**
+             * Brand Name
+             * @default
+             */
+            brand_name: string;
+            /**
+             * Sku
+             * @default
+             */
+            sku: string;
+            /**
+             * Barcode
+             * @default
+             */
+            barcode: string;
+            /**
+             * Title
+             * @default
+             */
+            title: string;
+            /**
+             * Subtitle
+             * @default
+             */
+            subtitle: string;
+            /**
+             * Description
+             * @default
+             */
+            description: string;
+            /**
+             * Whats In The Box
+             * @default
+             */
+            whats_in_the_box: string;
+            /** Selling Price */
+            selling_price?: number | null;
+            /** Rrp */
+            rrp?: number | null;
+            /** Stock Quantity */
+            stock_quantity?: number | null;
+            /** Minimum Leadtime Days */
+            minimum_leadtime_days?: number | null;
+            /**
+             * Seller Warehouse Id
+             * @default
+             */
+            seller_warehouse_id: string;
+            /** Length Cm */
+            length_cm?: number | null;
+            /** Width Cm */
+            width_cm?: number | null;
+            /** Height Cm */
+            height_cm?: number | null;
+            /** Weight G */
+            weight_g?: number | null;
+            /** Image Urls */
+            image_urls?: string[];
+            /** Asset Ids */
+            asset_ids?: string[];
+            /** Dynamic Attributes */
+            dynamic_attributes?: Record<string, never> | components["schemas"]["DynamicAttributeDraft"][];
+            /**
+             * Submit Immediately
+             * @default false
+             */
+            submit_immediately: boolean;
+        };
+        /** ListingSubmissionCreateResponse */
+        ListingSubmissionCreateResponse: {
+            /** Submission Id */
+            submission_id?: string | null;
+            /** Task Id */
+            task_id?: string | null;
+            /** Status */
+            status: string;
+            /** Stage */
+            stage: string;
+            /** Message */
+            message: string;
+            /**
+             * Reused Existing
+             * @default false
+             */
+            reused_existing: boolean;
+            /**
+             * Submit Immediately
+             * @default false
+             */
+            submit_immediately: boolean;
+            /** Submit Succeeded */
+            submit_succeeded?: boolean | null;
+            /**
+             * Takealot Submission Id
+             * @default
+             */
+            takealot_submission_id: string;
+            /**
+             * Official Status
+             * @default
+             */
+            official_status: string;
+            /** Error Code */
+            error_code?: string | null;
+            /** Error Message */
+            error_message?: string | null;
+            loadsheet_asset?: components["schemas"]["ListingLoadsheetAsset"] | null;
+            /** Validation Issues */
+            validation_issues?: components["schemas"]["ListingLoadsheetValidationIssue"][];
+            /** Warnings */
+            warnings?: string[];
+        };
+        /** ListingSubmissionDetailResponse */
+        ListingSubmissionDetailResponse: {
+            /** Submission Id */
+            submission_id: string;
+            /** Tenant Id */
+            tenant_id: string;
+            /** Store Id */
+            store_id: string;
+            /** Listing Id */
+            listing_id?: string | null;
+            /** Task Id */
+            task_id?: string | null;
+            /** Status */
+            status: string;
+            /** Stage */
+            stage: string;
+            /** Review Status */
+            review_status: string;
+            /** Sku */
+            sku: string;
+            /** Barcode */
+            barcode: string;
+            /** Title */
+            title: string;
+            /** Category Id */
+            category_id: number;
+            /** Category Path */
+            category_path: string;
+            /**
+             * Brand Id
+             * @default
+             */
+            brand_id: string;
+            /**
+             * Brand Name
+             * @default
+             */
+            brand_name: string;
+            /** Selling Price */
+            selling_price?: number | null;
+            /** Rrp */
+            rrp?: number | null;
+            /** Stock Quantity */
+            stock_quantity: number;
+            /** Minimum Leadtime Days */
+            minimum_leadtime_days: number;
+            /**
+             * Takealot Submission Id
+             * @default
+             */
+            takealot_submission_id: string;
+            /**
+             * Takealot Offer Id
+             * @default
+             */
+            takealot_offer_id: string;
+            /** Platform Product Id */
+            platform_product_id?: string | null;
+            /**
+             * Official Status
+             * @default
+             */
+            official_status: string;
+            /** Error Code */
+            error_code?: string | null;
+            /** Error Message */
+            error_message?: string | null;
+            /** Offer Error Message */
+            offer_error_message?: string | null;
+            loadsheet_asset?: components["schemas"]["ListingLoadsheetAsset"] | null;
+            /** Validation Issues */
+            validation_issues?: components["schemas"]["ListingLoadsheetValidationIssue"][];
+            /** Warnings */
+            warnings?: string[];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Submitted At */
+            submitted_at?: string | null;
+            /** Last Checked At */
+            last_checked_at?: string | null;
+            /** Last Status Sync At */
+            last_status_sync_at?: string | null;
+            /** Finalized At */
+            finalized_at?: string | null;
+            /** Content Payload */
+            content_payload?: Record<string, never> | null;
+            /** Loadsheet Payload */
+            loadsheet_payload?: Record<string, never> | null;
+            /** Official Response */
+            official_response?: Record<string, never> | null;
+        };
+        /** ListingSubmissionItem */
+        ListingSubmissionItem: {
+            /** Submission Id */
+            submission_id: string;
+            /** Tenant Id */
+            tenant_id: string;
+            /** Store Id */
+            store_id: string;
+            /** Listing Id */
+            listing_id?: string | null;
+            /** Task Id */
+            task_id?: string | null;
+            /** Status */
+            status: string;
+            /** Stage */
+            stage: string;
+            /** Review Status */
+            review_status: string;
+            /** Sku */
+            sku: string;
+            /** Barcode */
+            barcode: string;
+            /** Title */
+            title: string;
+            /** Category Id */
+            category_id: number;
+            /** Category Path */
+            category_path: string;
+            /**
+             * Brand Id
+             * @default
+             */
+            brand_id: string;
+            /**
+             * Brand Name
+             * @default
+             */
+            brand_name: string;
+            /** Selling Price */
+            selling_price?: number | null;
+            /** Rrp */
+            rrp?: number | null;
+            /** Stock Quantity */
+            stock_quantity: number;
+            /** Minimum Leadtime Days */
+            minimum_leadtime_days: number;
+            /**
+             * Takealot Submission Id
+             * @default
+             */
+            takealot_submission_id: string;
+            /**
+             * Takealot Offer Id
+             * @default
+             */
+            takealot_offer_id: string;
+            /** Platform Product Id */
+            platform_product_id?: string | null;
+            /**
+             * Official Status
+             * @default
+             */
+            official_status: string;
+            /** Error Code */
+            error_code?: string | null;
+            /** Error Message */
+            error_message?: string | null;
+            /** Offer Error Message */
+            offer_error_message?: string | null;
+            loadsheet_asset?: components["schemas"]["ListingLoadsheetAsset"] | null;
+            /** Validation Issues */
+            validation_issues?: components["schemas"]["ListingLoadsheetValidationIssue"][];
+            /** Warnings */
+            warnings?: string[];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Submitted At */
+            submitted_at?: string | null;
+            /** Last Checked At */
+            last_checked_at?: string | null;
+            /** Last Status Sync At */
+            last_status_sync_at?: string | null;
+            /** Finalized At */
+            finalized_at?: string | null;
+        };
+        /** ListingSubmissionListResponse */
+        ListingSubmissionListResponse: {
+            /** Items */
+            items: components["schemas"]["ListingSubmissionItem"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+        };
+        /** ListingSubmissionStatusItem */
+        ListingSubmissionStatusItem: {
+            /** Submission Id */
+            submission_id: string;
+            /** Store Id */
+            store_id: string;
+            /** Task Id */
+            task_id?: string | null;
+            /** Status */
+            status: string;
+            /** Stage */
+            stage: string;
+            /** Review Status */
+            review_status: string;
+            /**
+             * Official Status
+             * @default
+             */
+            official_status: string;
+            /**
+             * Takealot Submission Id
+             * @default
+             */
+            takealot_submission_id: string;
+            /**
+             * Takealot Offer Id
+             * @default
+             */
+            takealot_offer_id: string;
+            /** Listing Id */
+            listing_id?: string | null;
+            /** Platform Product Id */
+            platform_product_id?: string | null;
+            /** Last Checked At */
+            last_checked_at?: string | null;
+            /** Last Status Sync At */
+            last_status_sync_at?: string | null;
+            /** Finalized At */
+            finalized_at?: string | null;
+            /** Message */
+            message?: string | null;
+            /** Warnings */
+            warnings?: string[];
+        };
+        /** ListingSubmissionSyncResponse */
+        ListingSubmissionSyncResponse: {
+            /** Store Id */
+            store_id?: string | null;
+            /** Submission Id */
+            submission_id?: string | null;
+            /** Task Id */
+            task_id?: string | null;
+            /**
+             * Queued Count
+             * @default 0
+             */
+            queued_count: number;
+            /** Status */
+            status: string;
+            /** Message */
+            message: string;
+            /** Items */
+            items?: components["schemas"]["ListingSubmissionStatusItem"][];
+            /** Warnings */
+            warnings?: string[];
         };
         /** LoginRequest */
         LoginRequest: {
@@ -1881,9 +3006,7 @@ export interface components {
              */
             updated_at: string;
             /** Raw Payload */
-            raw_payload: {
-                [key: string]: unknown;
-            } | null;
+            raw_payload: Record<string, never> | null;
             /** Items */
             items: components["schemas"]["OrderItemResponse"][];
             /** Events */
@@ -1902,9 +3025,7 @@ export interface components {
             /** Message */
             message: string | null;
             /** Payload */
-            payload: {
-                [key: string]: unknown;
-            } | null;
+            payload: Record<string, never> | null;
             /**
              * Occurred At
              * Format: date-time
@@ -1935,9 +3056,7 @@ export interface components {
             /** Status */
             status: string | null;
             /** Raw Payload */
-            raw_payload: {
-                [key: string]: unknown;
-            } | null;
+            raw_payload: Record<string, never> | null;
             /**
              * Created At
              * Format: date-time
@@ -2049,10 +3168,22 @@ export interface components {
             po_fee_cny: number;
             /** Po Fee Zar */
             po_fee_zar: number | null;
+            /** Success Fee Category */
+            success_fee_category: string | null;
+            /** Success Fee Rate */
+            success_fee_rate: number;
+            /** Success Fee Vat Rate */
+            success_fee_vat_rate: number;
+            /** Success Fee Amount Zar */
+            success_fee_amount_zar: number | null;
             /** Tail Shipping Fee Zar */
-            tail_shipping_fee_zar: number;
+            tail_shipping_fee_zar: number | null;
             /** Tail Vat Fee Zar */
-            tail_vat_fee_zar: number;
+            tail_vat_fee_zar: number | null;
+            /** Fulfillment Size Tier */
+            fulfillment_size_tier: string | null;
+            /** Fulfillment Weight Tier */
+            fulfillment_weight_tier: string | null;
             /** Purchase Converted Cost Zar */
             purchase_converted_cost_zar: number | null;
             /** Payout Amount Zar */
@@ -2112,6 +3243,10 @@ export interface components {
             width_cm: number | null;
             /** Height Cm */
             height_cm: number | null;
+            /** Category Path */
+            category_path: string[];
+            /** Category Label */
+            category_label: string | null;
             /** Last Refreshed At */
             last_refreshed_at: string | null;
         };
@@ -2123,6 +3258,8 @@ export interface components {
             plid: string;
             /** Title */
             title?: string | null;
+            /** Category Path */
+            category_path?: string[] | null;
             /** Air Freight Unit Cny Per Kg */
             air_freight_unit_cny_per_kg?: number | null;
             /** Purchase Price Cny */
@@ -2137,6 +3274,11 @@ export interface components {
             width_cm?: number | null;
             /** Height Cm */
             height_cm?: number | null;
+            /**
+             * Force Refresh Facts
+             * @default false
+             */
+            force_refresh_facts: boolean;
         };
         /** ProfitPreviewResponse */
         ProfitPreviewResponse: {
@@ -2300,6 +3442,24 @@ export interface components {
             /** Reason */
             reason: string;
         };
+        /** StoreCredentialValidationResponse */
+        StoreCredentialValidationResponse: {
+            /** Store Id */
+            store_id: string;
+            /** Status */
+            status: string;
+            /** Message */
+            message: string;
+            platform_profile?: components["schemas"]["StorePlatformProfile"] | null;
+            store: components["schemas"]["StoreDetail"];
+        };
+        /** StoreDeleteResponse */
+        StoreDeleteResponse: {
+            /** Store Id */
+            store_id: string;
+            /** Deleted */
+            deleted: boolean;
+        };
         /** StoreDetail */
         StoreDetail: {
             /** Store Id */
@@ -2333,6 +3493,7 @@ export interface components {
             version: number;
             /** Masked Api Key */
             masked_api_key: string | null;
+            platform_profile?: components["schemas"]["StorePlatformProfile"] | null;
             /** Sync Tasks */
             sync_tasks: components["schemas"]["TaskRunSummary"][];
         };
@@ -2404,9 +3565,7 @@ export interface components {
             /** Sync Status */
             sync_status: string;
             /** Raw Payload */
-            raw_payload: {
-                [key: string]: unknown;
-            } | null;
+            raw_payload: Record<string, never> | null;
             /** Last Synced At */
             last_synced_at: string | null;
             /**
@@ -2419,6 +3578,23 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+        };
+        /** StorePlatformProfile */
+        StorePlatformProfile: {
+            /** Seller Id */
+            seller_id?: string | null;
+            /** Display Name */
+            display_name?: string | null;
+            /** Business Status */
+            business_status?: string | null;
+            /** On Vacation */
+            on_vacation?: boolean | null;
+            /** Leadtime Label */
+            leadtime_label?: string | null;
+            /** Tenure Label */
+            tenure_label?: string | null;
+            /** Validated At */
+            validated_at?: string | null;
         };
         /** StoreSummary */
         StoreSummary: {
@@ -2461,7 +3637,7 @@ export interface components {
              * @default full
              * @enum {string}
              */
-            sync_scope?: "full" | "bidding";
+            sync_scope: "full" | "bidding";
         };
         /** StoreSyncTaskListResponse */
         StoreSyncTaskListResponse: {
@@ -2505,6 +3681,194 @@ export interface components {
              * Format: date-time
              */
             updated_at: string;
+        };
+        /** TakealotBrandItem */
+        TakealotBrandItem: {
+            /** Id */
+            id: string;
+            /** Brand Id */
+            brand_id: string;
+            /** Brand Name */
+            brand_name: string;
+            /** Match Score */
+            match_score?: number | null;
+            /**
+             * Source
+             * @default catalog
+             */
+            source: string;
+        };
+        /** TakealotBrandSearchResponse */
+        TakealotBrandSearchResponse: {
+            /** Items */
+            items: components["schemas"]["TakealotBrandItem"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            /** Catalog Ready */
+            catalog_ready: boolean;
+            /** Message */
+            message?: string | null;
+        };
+        /** TakealotCategoryItem */
+        TakealotCategoryItem: {
+            /** Id */
+            id: string;
+            /** Category Id */
+            category_id: number;
+            /** Division */
+            division: string;
+            /** Department */
+            department: string;
+            /** Main Category Id */
+            main_category_id: number;
+            /** Main Category Name */
+            main_category_name: string;
+            /** Lowest Category Name */
+            lowest_category_name: string;
+            /** Lowest Category Raw */
+            lowest_category_raw: string;
+            /** Path En */
+            path_en: string;
+            /** Path Zh */
+            path_zh: string;
+            /** Min Required Images */
+            min_required_images: number;
+            /** Compliance Certificates */
+            compliance_certificates?: string[];
+            /** Image Requirement Texts */
+            image_requirement_texts?: string[];
+            /** Required Attributes */
+            required_attributes?: (string | Record<string, never>)[];
+            /** Optional Attributes */
+            optional_attributes?: (string | Record<string, never>)[];
+            /** Loadsheet Template Id */
+            loadsheet_template_id?: string | null;
+            /**
+             * Loadsheet Template Name
+             * @default
+             */
+            loadsheet_template_name: string;
+            /**
+             * Attributes Ready
+             * @default false
+             */
+            attributes_ready: boolean;
+            /**
+             * Attribute Source
+             * @default missing
+             */
+            attribute_source: string;
+            /** Attribute Message */
+            attribute_message?: string | null;
+            /**
+             * Translation Source
+             * @default rules
+             */
+            translation_source: string;
+            /** Match Score */
+            match_score?: number | null;
+            /**
+             * Source
+             * @default catalog
+             */
+            source: string;
+        };
+        /** TakealotCategoryRequirementsResponse */
+        TakealotCategoryRequirementsResponse: {
+            /** Id */
+            id: string;
+            /** Category Id */
+            category_id: number;
+            /** Division */
+            division: string;
+            /** Department */
+            department: string;
+            /** Main Category Id */
+            main_category_id: number;
+            /** Main Category Name */
+            main_category_name: string;
+            /** Lowest Category Name */
+            lowest_category_name: string;
+            /** Lowest Category Raw */
+            lowest_category_raw: string;
+            /** Path En */
+            path_en: string;
+            /** Path Zh */
+            path_zh: string;
+            /** Min Required Images */
+            min_required_images: number;
+            /** Compliance Certificates */
+            compliance_certificates?: string[];
+            /** Image Requirement Texts */
+            image_requirement_texts?: string[];
+            /** Required Attributes */
+            required_attributes?: (string | Record<string, never>)[];
+            /** Optional Attributes */
+            optional_attributes?: (string | Record<string, never>)[];
+            /** Loadsheet Template Id */
+            loadsheet_template_id?: string | null;
+            /**
+             * Loadsheet Template Name
+             * @default
+             */
+            loadsheet_template_name: string;
+            /**
+             * Attributes Ready
+             * @default false
+             */
+            attributes_ready: boolean;
+            /**
+             * Attribute Source
+             * @default missing
+             */
+            attribute_source: string;
+            /** Attribute Message */
+            attribute_message?: string | null;
+            /**
+             * Translation Source
+             * @default rules
+             */
+            translation_source: string;
+            /** Match Score */
+            match_score?: number | null;
+            /**
+             * Source
+             * @default catalog
+             */
+            source: string;
+            /**
+             * Catalog Ready
+             * @default true
+             */
+            catalog_ready: boolean;
+            /** Message */
+            message?: string | null;
+            /**
+             * Matching Variants
+             * @default 1
+             */
+            matching_variants: number;
+            /** Raw Payload */
+            raw_payload?: Record<string, never> | null;
+        };
+        /** TakealotCategorySearchResponse */
+        TakealotCategorySearchResponse: {
+            /** Items */
+            items: components["schemas"]["TakealotCategoryItem"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            /** Catalog Ready */
+            catalog_ready: boolean;
+            /** Message */
+            message?: string | null;
         };
         /** TakealotWebhookAck */
         TakealotWebhookAck: {
@@ -2555,9 +3919,7 @@ export interface components {
             /** Message */
             message: string;
             /** Details */
-            details: {
-                [key: string]: unknown;
-            } | null;
+            details: Record<string, never> | null;
             /** Source */
             source: string;
             /** Source Id */
@@ -2610,9 +3972,7 @@ export interface components {
             /** Next Retry At */
             next_retry_at: string | null;
             /** Ui Meta */
-            ui_meta: {
-                [key: string]: unknown;
-            } | null;
+            ui_meta: Record<string, never> | null;
             /**
              * Created At
              * Format: date-time
@@ -2652,9 +4012,7 @@ export interface components {
             /** Cancel Reason */
             cancel_reason: string | null;
             /** Error Details */
-            error_details: {
-                [key: string]: unknown;
-            } | null;
+            error_details: Record<string, never> | null;
             /** Recent Events */
             recent_events: components["schemas"]["TaskEventResponse"][];
         };
@@ -2695,9 +4053,7 @@ export interface components {
             /** Next Retry At */
             next_retry_at: string | null;
             /** Ui Meta */
-            ui_meta: {
-                [key: string]: unknown;
-            } | null;
+            ui_meta: Record<string, never> | null;
             /**
              * Created At
              * Format: date-time
@@ -2854,6 +4210,8 @@ export interface components {
             selling_price?: number | null;
             /** Seller Stock */
             seller_stock?: number | null;
+            /** Seller Stock Enabled */
+            seller_stock_enabled?: boolean | null;
         };
         /** UpdateStoreRequest */
         UpdateStoreRequest: {
@@ -2899,10 +4257,6 @@ export interface components {
             msg: string;
             /** Error Type */
             type: string;
-            /** Input */
-            input?: unknown;
-            /** Context */
-            ctx?: Record<string, never>;
         };
     };
     responses: never;
@@ -3979,12 +5333,46 @@ export interface operations {
             };
         };
     };
+    delete_store_api_v1_stores__store_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                store_id: string;
+            };
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StoreDeleteResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_store_listings_api_v1_stores__store_id__listings_get: {
         parameters: {
             query?: {
                 sku?: string | null;
                 q?: string | null;
                 status_group?: string | null;
+                bidding_filter?: string | null;
                 sort_by?: string | null;
                 sort_dir?: string | null;
                 limit?: number;
@@ -4150,6 +5538,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TaskCreatedResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    validate_credentials_api_v1_stores__store_id__credentials_validate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                store_id: string;
+            };
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StoreCredentialValidationResponse"];
                 };
             };
             /** @description Validation Error */
@@ -5011,6 +6432,525 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ExtensionListNowTaskStatusResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upload_listing_images_api_listing_images_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_listing_images_api_listing_images_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingImageUploadResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    validate_listing_image_url_api_listing_images_validate_url_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ListingImageUrlValidateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingImageUrlValidateResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    check_listing_image_requirements_api_listing_images_check_requirements_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ListingImageRequirementCheckRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingImageRequirementCheckResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_listing_loadsheet_api_listing_loadsheet_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ListingLoadsheetPreviewRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingLoadsheetPreviewResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_listing_submissions_api_listing_stores__store_id__submissions_get: {
+        parameters: {
+            query?: {
+                status?: string | null;
+                page?: number;
+                page_size?: number;
+            };
+            header?: never;
+            path: {
+                store_id: string;
+            };
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingSubmissionListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_listing_submission_api_listing_stores__store_id__submissions_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                store_id: string;
+            };
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ListingSubmissionCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingSubmissionCreateResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    sync_store_listing_submissions_api_listing_stores__store_id__submissions_sync_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                store_id: string;
+            };
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingSubmissionSyncResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_listing_submission_detail_api_listing_submissions__submission_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                submission_id: string;
+            };
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingSubmissionDetailResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    sync_listing_submission_status_api_listing_submissions__submission_id__sync_status_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                submission_id: string;
+            };
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingSubmissionSyncResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    finalize_listing_submission_offer_api_listing_submissions__submission_id__finalize_offer_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                submission_id: string;
+            };
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingFinalizeOfferResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    generate_listing_content_api_listing_ai_autopilot_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ListingAiAutopilotRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ListingAiAutopilotResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    match_category_api_listing_categories_match_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CategoryMatchRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoryMatchResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    search_categories_api_listing_categories_search_get: {
+        parameters: {
+            query?: {
+                q?: string | null;
+                page?: number;
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TakealotCategorySearchResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_category_requirements_api_listing_categories__category_id__requirements_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                category_id: number;
+            };
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TakealotCategoryRequirementsResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    search_brands_api_listing_brands_search_get: {
+        parameters: {
+            query?: {
+                q?: string | null;
+                page?: number;
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: {
+                erp_session?: string | null;
+            };
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TakealotBrandSearchResponse"];
                 };
             };
             /** @description Validation Error */
