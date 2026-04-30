@@ -1,4 +1,6 @@
 ﻿from datetime import datetime, timezone
+import hashlib
+import secrets
 from threading import Lock
 from time import monotonic
 from typing import Any
@@ -12,6 +14,10 @@ from src.modules.subscription.service import subscription_service
 
 from .schemas import (
     AdminActionResponse,
+    ActivationCardActionResponse,
+    ActivationCardCreateResponse,
+    ActivationCardListResponse,
+    ActivationCardResponse,
     AdminFeatureFlagResponse,
     AdminUserDetail,
     AdminUserListResponse,
@@ -92,6 +98,105 @@ class AdminService:
                 self._to_tenant_summary(tenant)
                 for tenant in app_state.list_tenants()
             ]
+        )
+
+    def list_activation_cards(self, actor: dict[str, Any]) -> ActivationCardListResponse:
+        self._ensure_admin_enabled()
+        self._ensure_super_admin(actor)
+        cards = app_state.list_activation_cards()
+        return ActivationCardListResponse(
+            cards=[self._to_activation_card(card, include_plain_code=False) for card in cards]
+        )
+
+    def create_activation_cards(
+        self,
+        payload: dict[str, Any],
+        actor: dict[str, Any],
+        request_id: str,
+    ) -> ActivationCardCreateResponse:
+        self._ensure_admin_enabled()
+        self._ensure_super_admin(actor)
+        quantity = int(payload["quantity"])
+        days = int(payload["days"])
+        records = []
+        for _ in range(quantity):
+            code = self._generate_activation_code()
+            records.append(
+                {
+                    "code": code,
+                    "code_hash": self._hash_activation_code(code),
+                    "code_suffix": code[-4:],
+                    "days": days,
+                    "note": payload.get("note"),
+                    "created_by": actor["id"],
+                }
+            )
+        cards = app_state.create_activation_cards(records)
+        app_state.append_audit(
+            request_id=request_id,
+            tenant_id=actor["tenant_id"],
+            actor_user_id=actor["id"],
+            actor_role=actor["role"],
+            action="admin.activation_cards.create",
+            action_label="Create activation cards",
+            risk_level="high",
+            target_type="activation_card_batch",
+            target_id=None,
+            target_label=f"{quantity} cards / {days} days",
+            before=None,
+            after={"quantity": quantity, "days": days, "note": payload.get("note")},
+            reason=payload.get("note") or "create activation cards",
+            result="success",
+            task_id=None,
+        )
+        return ActivationCardCreateResponse(
+            cards=[self._to_activation_card(card, include_plain_code=True) for card in cards]
+        )
+
+    def void_activation_card(
+        self,
+        card_id: str,
+        reason: str,
+        actor: dict[str, Any],
+        request_id: str,
+    ) -> ActivationCardActionResponse:
+        self._ensure_admin_enabled()
+        self._ensure_super_admin(actor)
+        before = app_state.get_activation_card(card_id)
+        if before is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Activation card not found",
+            )
+        try:
+            card = app_state.void_activation_card(
+                card_id=card_id,
+                voided_by=actor["id"],
+            )
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=str(exc),
+            ) from exc
+        app_state.append_audit(
+            request_id=request_id,
+            tenant_id=actor["tenant_id"],
+            actor_user_id=actor["id"],
+            actor_role=actor["role"],
+            action="admin.activation_cards.void",
+            action_label="Void activation card",
+            risk_level="high",
+            target_type="activation_card",
+            target_id=card_id,
+            target_label=f"****{card['code_suffix']}",
+            before=self._activation_card_audit_snapshot(before),
+            after=self._activation_card_audit_snapshot(card),
+            reason=reason,
+            result="success",
+            task_id=None,
+        )
+        return ActivationCardActionResponse(
+            card=self._to_activation_card(card, include_plain_code=False)
         )
 
     def create_tenant(
@@ -745,6 +850,58 @@ class AdminService:
             source=flag["source"],
             updated_at=flag["updated_at"],
         )
+
+    @staticmethod
+    def _to_activation_card(
+        card: dict[str, Any],
+        *,
+        include_plain_code: bool,
+    ) -> ActivationCardResponse:
+        return ActivationCardResponse(
+            card_id=card["id"],
+            code=card.get("code") if include_plain_code else None,
+            code_suffix=card["code_suffix"],
+            days=card["days"],
+            status=card["status"],
+            note=card.get("note"),
+            created_by=card.get("created_by"),
+            redeemed_by=card.get("redeemed_by"),
+            redeemed_tenant_id=card.get("redeemed_tenant_id"),
+            redeemed_at=card.get("redeemed_at"),
+            voided_by=card.get("voided_by"),
+            voided_at=card.get("voided_at"),
+            created_at=card["created_at"],
+            updated_at=card["updated_at"],
+        )
+
+    @staticmethod
+    def _activation_card_audit_snapshot(card: dict[str, Any] | None) -> dict[str, Any] | None:
+        if card is None:
+            return None
+        return {
+            "id": card["id"],
+            "code_suffix": card["code_suffix"],
+            "days": card["days"],
+            "status": card["status"],
+            "redeemed_tenant_id": card.get("redeemed_tenant_id"),
+            "redeemed_by": card.get("redeemed_by"),
+            "redeemed_at": card.get("redeemed_at"),
+            "voided_at": card.get("voided_at"),
+        }
+
+    @staticmethod
+    def _generate_activation_code() -> str:
+        alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+        chunks = [
+            "".join(secrets.choice(alphabet) for _ in range(4))
+            for _ in range(4)
+        ]
+        return "XH-" + "-".join(chunks)
+
+    @staticmethod
+    def _hash_activation_code(code: str) -> str:
+        normalized = "".join(ch for ch in code.upper() if ch.isalnum())
+        return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
 
     @staticmethod
     def _to_system_setting(setting: dict[str, Any]) -> SystemSettingResponse:

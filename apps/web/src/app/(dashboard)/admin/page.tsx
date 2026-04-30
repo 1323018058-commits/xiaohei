@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
 import { DangerousActionDialog } from "@/components/risk/DangerousActionDialog";
+import { ActivationCardManager } from "@/components/admin/ActivationCardManager";
 import type { components } from "@/generated/api-types";
 import { apiFetch } from "@/lib/api";
 
@@ -1251,6 +1252,7 @@ export default function AdminPage() {
                             onChange={(event) => setSubscriptionField("subscriptionStatus", event.target.value)}
                             style={inputStyle}
                           >
+                            <option value="unactivated">未激活</option>
                             <option value="active">正常</option>
                             <option value="trialing">试用中</option>
                             <option value="past_due">逾期</option>
@@ -1363,6 +1365,8 @@ export default function AdminPage() {
         </section>
 
         <section style={sideRailStyle}>
+          <ActivationCardManager />
+
           <section style={subPanelStyle}>
             <div style={subSectionTitleStyle}>系统概览</div>
             <div style={gridStyle}>
@@ -1861,6 +1865,8 @@ function resolveUserStatus(
 
 function getStatusLabel(status: string | null | undefined) {
   switch (status) {
+    case "unactivated":
+      return "未激活";
     case "active":
       return "正常";
     case "expired":

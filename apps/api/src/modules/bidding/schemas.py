@@ -72,6 +72,7 @@ class BulkImportBiddingRuleResponse(BaseModel):
 class BiddingCycleRequest(BaseModel):
     dry_run: bool = True
     limit: int = Field(default=50, ge=1, le=500)
+    force: bool = False
 
 
 class BiddingCycleItemResponse(BaseModel):

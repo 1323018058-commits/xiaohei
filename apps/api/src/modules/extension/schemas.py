@@ -65,6 +65,8 @@ class ProfitPreviewRequest(BaseModel):
     store_id: str = Field(min_length=1)
     plid: str = Field(min_length=1, max_length=128)
     title: str | None = Field(default=None, max_length=512)
+    barcode: str | None = Field(default=None, max_length=128)
+    gtin: str | None = Field(default=None, max_length=128)
     category_path: list[str] | None = None
     air_freight_unit_cny_per_kg: float | None = None
     purchase_price_cny: float | None = None
@@ -75,7 +77,7 @@ class ProfitPreviewRequest(BaseModel):
     height_cm: float | None = None
     force_refresh_facts: bool = False
 
-    @field_validator("store_id", "plid", "title", mode="before")
+    @field_validator("store_id", "plid", "title", "barcode", "gtin", mode="before")
     @classmethod
     def strip_text(cls, value: str | None) -> str | None:
         return value.strip() if isinstance(value, str) else value
@@ -219,10 +221,12 @@ class ExtensionListNowRequest(BaseModel):
     store_id: str = Field(min_length=1)
     plid: str = Field(min_length=1, max_length=128)
     title: str | None = Field(default=None, max_length=512)
+    barcode: str | None = Field(default=None, max_length=128)
+    gtin: str | None = Field(default=None, max_length=128)
     sale_price_zar: float | None = None
     quantity: int | None = None
 
-    @field_validator("store_id", "plid", "title", mode="before")
+    @field_validator("store_id", "plid", "title", "barcode", "gtin", mode="before")
     @classmethod
     def strip_list_now_fields(cls, value: str | None) -> str | None:
         return value.strip() if isinstance(value, str) else value

@@ -19,7 +19,8 @@ type DisplayRecord = {
   job: ListingJob;
   submittedAt: string;
   title: string;
-  barcode: string;
+  barcode: string | null;
+  plid: string;
   store: string;
   source: string;
   status: ListingStatus;
@@ -55,6 +56,7 @@ export default function ListingPage() {
         submittedAt: formatDateTime(job.created_at),
         title: displayTitle(job),
         barcode: extractBarcode(job),
+        plid: extractPlid(job),
         store: storeNameMap.get(job.store_id) ?? shortId(job.store_id),
         source: formatSource(job.source),
         status: statusKey(job),
@@ -73,6 +75,7 @@ export default function ListingPage() {
         ? [
             record.title,
             record.barcode,
+            record.plid,
             record.store,
             record.source,
             record.job.job_id,
@@ -255,8 +258,10 @@ export default function ListingPage() {
                             {record.title}
                           </div>
                         )}
-                        <div className="text-xs text-[#595959]">Barcode: {record.barcode}</div>
-                        {record.failureReason ? (
+                        <div className="text-xs text-[#595959]">
+                          {record.barcode ? `Barcode: ${record.barcode}` : `PLID: ${record.plid || "--"}`}
+                        </div>
+                        {record.status === "failed" && record.failureReason ? (
                           <div className="line-clamp-1 text-xs text-[#D9363E]">
                             {record.failureReason}
                           </div>
@@ -281,9 +286,9 @@ export default function ListingPage() {
           </table>
         </div>
 
-        {!isLoading && visibleRecords.length === 0 ? (
+        {visibleRecords.length === 0 ? (
           <div className="px-6 py-10 text-center text-sm text-[#595959]">
-            当前筛选条件下没有记录。
+            {isLoading ? "正在加载上架记录..." : "暂无上架记录。"}
           </div>
         ) : null}
       </section>
@@ -380,10 +385,8 @@ function extractBarcode(job: ListingJob) {
     payloadValue(nestedPayload(payload, "batch_status_payload"), "barcode"),
     payloadValue(payload, "Barcode"),
     payloadValue(payload, "bar_code"),
-    payloadValue(payload, "plid"),
-    job.source_ref,
   ];
-  return candidates.find(Boolean) ?? "--";
+  return candidates.find(Boolean) ?? null;
 }
 
 function extractFailureReason(job: ListingJob) {

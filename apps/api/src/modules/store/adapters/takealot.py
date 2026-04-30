@@ -206,7 +206,7 @@ class TakealotAdapter(BaseAdapter):
         sku: str,
         selling_price: float,
         rrp: float | None = None,
-        quantity: int,
+        quantity: int | None,
         minimum_leadtime_days: int,
         leadtime_merchant_warehouse_id: int | None = None,
     ) -> dict[str, Any]:
@@ -225,12 +225,13 @@ class TakealotAdapter(BaseAdapter):
         if rrp is not None:
             body["rrp"] = max(0, int(round(float(rrp))))
         if warehouse_id is not None:
-            body["seller_warehouse_stock"] = [
-                {
-                    "seller_warehouse_id": warehouse_id,
-                    "quantity_available": max(1, int(quantity)),
-                }
-            ]
+            if quantity is not None:
+                body["seller_warehouse_stock"] = [
+                    {
+                        "seller_warehouse_id": warehouse_id,
+                        "quantity_available": max(1, int(quantity)),
+                    }
+                ]
         else:
             body["minimum_leadtime_days"] = max(1, int(minimum_leadtime_days))
 
@@ -256,7 +257,7 @@ class TakealotAdapter(BaseAdapter):
                                     ],
                                     "status_action": "Re-enable",
                                 }
-                                if (leadtime_merchant_warehouse_id or settings.takealot_leadtime_merchant_warehouse_id) is not None
+                                if quantity is not None and (leadtime_merchant_warehouse_id or settings.takealot_leadtime_merchant_warehouse_id) is not None
                                 else {}
                             ),
                         }

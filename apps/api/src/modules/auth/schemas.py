@@ -6,6 +6,24 @@ class LoginRequest(BaseModel):
     password: str = Field(min_length=1, max_length=128)
 
 
+class PhoneVerificationCodeRequest(BaseModel):
+    phone: str = Field(min_length=8, max_length=32)
+
+
+class PhoneVerificationCodeResponse(BaseModel):
+    success: bool = True
+    phone: str
+    expires_at: str
+    debug_code: str | None = None
+
+
+class RegisterRequest(BaseModel):
+    company_name: str = Field(min_length=2, max_length=128)
+    phone: str = Field(min_length=8, max_length=32)
+    verification_code: str = Field(min_length=4, max_length=12)
+    password: str = Field(min_length=8, max_length=128)
+
+
 class FeatureFlagResponse(BaseModel):
     feature_key: str
     enabled: bool

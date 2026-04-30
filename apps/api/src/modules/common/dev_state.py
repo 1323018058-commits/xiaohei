@@ -106,6 +106,22 @@ def _bidding_rule_lost_buybox(rule: dict[str, Any]) -> bool:
     )
 
 
+def _bidding_candidate_priority(rule: dict[str, Any]) -> int:
+    last_action = rule.get("last_action")
+    if rule.get("last_cycle_error") or rule.get("buybox_status") == "retrying" or last_action in {
+        "api_error",
+        "buybox_refresh_failed",
+    }:
+        return 0
+    if _bidding_rule_lost_buybox(rule):
+        return 1
+    if last_action in {"lowered", "floor"}:
+        return 2
+    if rule.get("last_buybox_price") is None:
+        return 3
+    return 4
+
+
 def _bidding_rule_has_alert(rule: dict[str, Any]) -> bool:
     if not rule.get("is_active"):
         return False
@@ -423,6 +439,8 @@ DEFAULT_PLAN_LIMITS: dict[str, dict[str, Any]] = {
         "max_listings": 500,
         "autobid_enabled": False,
         "sync_enabled": True,
+        "extension_enabled": False,
+        "listing_enabled": False,
     },
     "growth": {
         "plan_name": "Growth",
@@ -432,6 +450,8 @@ DEFAULT_PLAN_LIMITS: dict[str, dict[str, Any]] = {
         "max_listings": 5000,
         "autobid_enabled": True,
         "sync_enabled": True,
+        "extension_enabled": True,
+        "listing_enabled": True,
     },
     "scale": {
         "plan_name": "Scale",
@@ -441,6 +461,8 @@ DEFAULT_PLAN_LIMITS: dict[str, dict[str, Any]] = {
         "max_listings": 50000,
         "autobid_enabled": True,
         "sync_enabled": True,
+        "extension_enabled": True,
+        "listing_enabled": True,
     },
     "war-room": {
         "plan_name": "War Room",
@@ -450,6 +472,8 @@ DEFAULT_PLAN_LIMITS: dict[str, dict[str, Any]] = {
         "max_listings": 1000000,
         "autobid_enabled": True,
         "sync_enabled": True,
+        "extension_enabled": True,
+        "listing_enabled": True,
     },
 }
 
@@ -651,6 +675,8 @@ class MemoryAppState:
         self.library_products: dict[str, dict[str, Any]] = {}
         self.tenant_product_guardrails: dict[str, dict[str, Any]] = {}
         self.extension_auth_tokens: dict[str, dict[str, Any]] = {}
+        self.activation_cards: dict[str, dict[str, Any]] = {}
+        self.phone_verification_codes: dict[str, dict[str, Any]] = {}
         self.listing_jobs: dict[str, dict[str, Any]] = {}
         self.listings: dict[str, dict[str, Any]] = {}
         self.orders: dict[str, dict[str, Any]] = {}
@@ -1052,7 +1078,7 @@ class MemoryAppState:
     def create_tenant_with_admin(
         self,
         payload: dict[str, Any],
-        updated_by: str,
+        updated_by: str | None,
     ) -> dict[str, dict[str, Any]]:
         now = utcnow()
         tenant_id = new_id()
@@ -1194,6 +1220,176 @@ class MemoryAppState:
         }
         self.user_feature_flags.append(flag)
         return deepcopy(flag)
+
+    def list_activation_cards(self) -> list[dict[str, Any]]:
+        return [
+            deepcopy(card)
+            for card in sorted(
+                self.activation_cards.values(),
+                key=lambda item: item["created_at"],
+                reverse=True,
+            )
+        ]
+
+    def get_activation_card(self, card_id: str) -> dict[str, Any] | None:
+        card = self.activation_cards.get(card_id)
+        return deepcopy(card) if card else None
+
+    def create_activation_cards(self, records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        now = utcnow()
+        cards: list[dict[str, Any]] = []
+        for record in records:
+            card_id = new_id()
+            card = {
+                "id": card_id,
+                "code_hash": record["code_hash"],
+                "code_suffix": record["code_suffix"],
+                "code": record.get("code"),
+                "days": int(record["days"]),
+                "status": "active",
+                "note": record.get("note"),
+                "created_by": record.get("created_by"),
+                "redeemed_by": None,
+                "redeemed_tenant_id": None,
+                "redeemed_at": None,
+                "voided_by": None,
+                "voided_at": None,
+                "created_at": now,
+                "updated_at": now,
+            }
+            self.activation_cards[card_id] = card
+            cards.append(deepcopy(card))
+        return cards
+
+    def void_activation_card(self, *, card_id: str, voided_by: str) -> dict[str, Any]:
+        card = self.activation_cards[card_id]
+        if card["status"] != "active":
+            raise ValueError("Only active activation cards can be voided")
+        now = utcnow()
+        card["status"] = "voided"
+        card["voided_by"] = voided_by
+        card["voided_at"] = now
+        card["updated_at"] = now
+        return deepcopy(card)
+
+    def redeem_activation_card(
+        self,
+        *,
+        code_hash: str,
+        tenant_id: str,
+        user_id: str,
+    ) -> dict[str, dict[str, Any]]:
+        card = next(
+            (
+                candidate
+                for candidate in self.activation_cards.values()
+                if candidate["code_hash"] == code_hash
+            ),
+            None,
+        )
+        if card is None:
+            raise KeyError("Activation card not found")
+        if card["status"] != "active":
+            raise ValueError("Activation card is not active")
+
+        now = utcnow()
+        entitlement = self.get_tenant_entitlement(tenant_id)
+        current_period_ends_at = entitlement.get("current_period_ends_at")
+        if isinstance(current_period_ends_at, str):
+            current_period_ends_at = datetime.fromisoformat(current_period_ends_at)
+        if current_period_ends_at is not None and current_period_ends_at.tzinfo is None:
+            current_period_ends_at = current_period_ends_at.replace(tzinfo=UTC)
+        base = current_period_ends_at if current_period_ends_at and current_period_ends_at > now else now
+        next_period_ends_at = base + timedelta(days=int(card["days"]))
+
+        updated = self.update_tenant_subscription(
+            tenant_id,
+            plan=entitlement["plan"],
+            status="active",
+            trial_ends_at=None,
+            current_period_ends_at=next_period_ends_at,
+            update_trial_ends_at=True,
+            update_current_period_ends_at=True,
+            updated_by=user_id,
+        )
+        card["status"] = "redeemed"
+        card["redeemed_by"] = user_id
+        card["redeemed_tenant_id"] = tenant_id
+        card["redeemed_at"] = now
+        card["updated_at"] = now
+        return {
+            "card": deepcopy(card),
+            "subscription": deepcopy(updated["subscription"]),
+        }
+
+    def create_phone_verification_code(
+        self,
+        *,
+        phone: str,
+        purpose: str,
+        code_hash: str,
+        expires_at: datetime,
+    ) -> dict[str, Any]:
+        now = utcnow()
+        for record in self.phone_verification_codes.values():
+            if (
+                record["phone"] == phone
+                and record["purpose"] == purpose
+                and record["status"] == "active"
+            ):
+                record["status"] = "expired"
+                record["updated_at"] = now
+        record = {
+            "id": new_id(),
+            "phone": phone,
+            "purpose": purpose,
+            "code_hash": code_hash,
+            "status": "active",
+            "expires_at": expires_at,
+            "consumed_at": None,
+            "attempt_count": 0,
+            "created_at": now,
+            "updated_at": now,
+        }
+        self.phone_verification_codes[record["id"]] = record
+        return deepcopy(record)
+
+    def consume_phone_verification_code(
+        self,
+        *,
+        phone: str,
+        purpose: str,
+        code_hash: str,
+    ) -> dict[str, Any]:
+        now = utcnow()
+        candidates = sorted(
+            (
+                record
+                for record in self.phone_verification_codes.values()
+                if record["phone"] == phone
+                and record["purpose"] == purpose
+                and record["status"] == "active"
+            ),
+            key=lambda item: item["created_at"],
+            reverse=True,
+        )
+        if not candidates:
+            raise KeyError("Verification code not found")
+        record = candidates[0]
+        if record["expires_at"] <= now:
+            record["status"] = "expired"
+            record["updated_at"] = now
+            raise KeyError("Verification code expired")
+        if record["code_hash"] != code_hash:
+            record["attempt_count"] += 1
+            if record["attempt_count"] >= 5:
+                record["status"] = "expired"
+            record["updated_at"] = now
+            raise ValueError("验证码不正确")
+        record["status"] = "consumed"
+        record["consumed_at"] = now
+        record["updated_at"] = now
+        return deepcopy(record)
 
     def list_system_settings(self) -> list[dict[str, Any]]:
         return [deepcopy(setting) for setting in self.system_settings.values()]
@@ -2185,6 +2381,7 @@ class MemoryAppState:
         chart_end: datetime,
     ) -> dict[str, Any]:
         business_zone = ZoneInfo(business_timezone)
+        business_date = business_day_start.astimezone(business_zone).date().isoformat()
         relevant_orders = [
             order
             for order in self.orders.values()
@@ -2193,8 +2390,7 @@ class MemoryAppState:
         today_orders = [
             order
             for order in relevant_orders
-            if _is_at_or_after(order.get("placed_at") or order.get("created_at"), business_day_start)
-            and _is_before(order.get("placed_at") or order.get("created_at"), business_day_end)
+            if _local_date_key(order.get("placed_at") or order.get("created_at"), business_zone) == business_date
         ]
         order_quantities = self._dashboard_order_quantities()
         chart: dict[str, dict[str, Any]] = {}
@@ -2450,7 +2646,9 @@ class MemoryAppState:
     def _with_order_counts(self, order: dict[str, Any]) -> dict[str, Any]:
         enriched = deepcopy(order)
         enriched["item_count"] = sum(
-            1 for item in self.order_items.values() if item["order_id"] == order["id"]
+            int(item.get("quantity") or 0)
+            for item in self.order_items.values()
+            if item["order_id"] == order["id"]
         )
         return enriched
 
@@ -2505,6 +2703,7 @@ class MemoryAppState:
         store_id: str,
         limit: int,
         now: datetime | None = None,
+        include_not_due: bool = False,
     ) -> list[dict[str, Any]]:
         effective_now = now or utcnow()
         candidates: list[dict[str, Any]] = []
@@ -2514,7 +2713,7 @@ class MemoryAppState:
             if float(rule.get("floor_price") or 0) <= 0:
                 continue
             next_check = rule.get("next_check_at")
-            if next_check is not None and next_check > effective_now:
+            if not include_not_due and next_check is not None and next_check > effective_now:
                 continue
             listing = self._bidding_listing_for_rule(rule)
             candidates.append(
@@ -2525,8 +2724,10 @@ class MemoryAppState:
             )
         candidates.sort(
             key=lambda item: (
+                _bidding_candidate_priority(item["rule"]),
                 item["rule"].get("next_check_at") or datetime.min.replace(tzinfo=UTC),
                 item["rule"].get("updated_at") or datetime.min.replace(tzinfo=UTC),
+                item["rule"].get("sku") or "",
             )
         )
         return candidates[: max(1, limit)]
@@ -2579,9 +2780,14 @@ class MemoryAppState:
     def _bidding_listing_for_rule(self, rule: dict[str, Any]) -> dict[str, Any] | None:
         listing_id = rule.get("listing_id")
         if listing_id and listing_id in self.listings:
-            return self.listings[listing_id]
+            listing = self.listings[listing_id]
+            return None if listing.get("sync_status") == "stale" else listing
         for listing in self.listings.values():
-            if listing["store_id"] == rule["store_id"] and listing["sku"] == rule["sku"]:
+            if (
+                listing["store_id"] == rule["store_id"]
+                and listing["sku"] == rule["sku"]
+                and listing.get("sync_status") != "stale"
+            ):
                 return listing
         return None
 
@@ -3018,6 +3224,13 @@ class MemoryAppState:
             "subscription_status": effective_status,
             "trial_ends_at": subscription.get("trial_ends_at") if subscription else None,
             "current_period_ends_at": subscription.get("current_period_ends_at") if subscription else None,
+            "features": {
+                "sync": bool(limits.get("sync_enabled")),
+                "autobid": bool(limits.get("autobid_enabled")),
+                "extension": bool(limits.get("extension_enabled")),
+                "listing": bool(limits.get("listing_enabled")),
+            },
+            "is_writable": effective_status in {"trialing", "active"},
             "limits": limits,
         }
 
@@ -3086,7 +3299,9 @@ def _is_before(value: datetime | None, cutoff: datetime) -> bool:
     return value < cutoff
 
 
-def _local_date_key(value: datetime, zone: ZoneInfo) -> str:
+def _local_date_key(value: datetime | None, zone: ZoneInfo) -> str:
+    if value is None:
+        return ""
     if value.tzinfo is None:
         value = value.replace(tzinfo=UTC)
     return value.astimezone(zone).date().isoformat()

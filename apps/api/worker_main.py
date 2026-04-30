@@ -25,12 +25,6 @@ RECOVERABLE_TASK_TYPES = {
     "TAKEALOT_WEBHOOK_PROCESS",
     "EXTENSION_LIST_NOW",
     "PROCESS_LISTING_JOB",
-    "SUBMIT_LISTING_LOADSHEET",
-    # Phase 8 post-loadsheet tasks are recoverable because listing_submissions
-    # now carries row-level claim tokens for every Takealot side effect. Stale
-    # retries can only write back while their original claim still matches.
-    "SYNC_LISTING_SUBMISSION_STATUS",
-    "FINALIZE_LISTING_OFFER",
 }
 
 

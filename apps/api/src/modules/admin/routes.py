@@ -6,6 +6,10 @@ from src.modules.auth.dependencies import require_roles
 
 from .schemas import (
     AdminActionResponse,
+    ActivationCardActionResponse,
+    ActivationCardCreateRequest,
+    ActivationCardCreateResponse,
+    ActivationCardListResponse,
     TenantActionResponse,
     TenantListResponse,
     AdminUserDetail,
@@ -33,6 +37,39 @@ AdminUser = Annotated[
 @router.get("/tenants", response_model=TenantListResponse)
 def list_tenants(current_user: AdminUser):
     return service.list_tenants(current_user)
+
+
+@router.get("/activation-cards", response_model=ActivationCardListResponse)
+def list_activation_cards(current_user: AdminUser):
+    return service.list_activation_cards(current_user)
+
+
+@router.post("/activation-cards", response_model=ActivationCardCreateResponse)
+def create_activation_cards(
+    payload: ActivationCardCreateRequest,
+    request: Request,
+    current_user: AdminUser,
+):
+    return service.create_activation_cards(
+        payload.model_dump(),
+        current_user,
+        get_request_id(request.headers),
+    )
+
+
+@router.post("/activation-cards/{card_id}/void", response_model=ActivationCardActionResponse)
+def void_activation_card(
+    card_id: str,
+    payload: ReasonRequest,
+    request: Request,
+    current_user: AdminUser,
+):
+    return service.void_activation_card(
+        card_id,
+        payload.reason,
+        current_user,
+        get_request_id(request.headers),
+    )
 
 
 @router.post("/tenants", response_model=TenantActionResponse)

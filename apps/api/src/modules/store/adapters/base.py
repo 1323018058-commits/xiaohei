@@ -94,7 +94,7 @@ class BaseAdapter(ABC):
         sku: str,
         selling_price: float,
         rrp: float | None = None,
-        quantity: int,
+        quantity: int | None,
         minimum_leadtime_days: int,
         leadtime_merchant_warehouse_id: int | None = None,
     ) -> dict[str, Any]:

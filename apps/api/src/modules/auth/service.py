@@ -1,7 +1,11 @@
+import hashlib
 import logging
-from typing import Any
+import re
+import secrets
+from datetime import UTC, datetime, timedelta
 from threading import Lock
 from time import monotonic
+from typing import Any
 
 from fastapi import HTTPException, status
 from fastapi.concurrency import run_in_threadpool
@@ -15,6 +19,9 @@ from .schemas import (
     LoginRequest,
     LoginResponse,
     LogoutResponse,
+    PhoneVerificationCodeRequest,
+    PhoneVerificationCodeResponse,
+    RegisterRequest,
     SessionInfoResponse,
 )
 
@@ -24,6 +31,7 @@ logger = logging.getLogger(__name__)
 class AuthService:
     _SWITCH_CACHE_SECONDS = 5
     _FEATURE_FLAG_CACHE_SECONDS = 10
+    _PHONE_CODE_TTL_SECONDS = 10 * 60
 
     def __init__(self) -> None:
         self._switch_cache_until = 0.0
@@ -34,9 +42,10 @@ class AuthService:
 
     async def login(self, payload: LoginRequest) -> tuple[str, LoginResponse]:
         login_profile: dict[str, Any] = {}
+        username = self._normalize_phone_if_possible(payload.username)
         session_token, user = await run_in_threadpool(
             self._login_hot_path,
-            payload.username,
+            username,
             payload.password,
             login_profile,
         )
@@ -45,7 +54,7 @@ class AuthService:
         db_write_ms = float(login_profile.get("db_write_ms", 0.0))
         logger.warning(
             "[PROFILE-LOGIN] User: %s | PasswordVerify: %.0fms | DB_Read: %.0fms | DB_Write: %.0fms (%s)",
-            payload.username,
+            username,
             bcrypt_elapsed_ms,
             db_read_ms,
             db_write_ms,
@@ -54,6 +63,138 @@ class AuthService:
         return session_token, LoginResponse(
             session=self._to_session_info(user, include_feature_flags=False)
         )
+
+    async def send_registration_code(
+        self,
+        payload: PhoneVerificationCodeRequest,
+    ) -> PhoneVerificationCodeResponse:
+        return await run_in_threadpool(self._send_registration_code_hot_path, payload)
+
+    def _send_registration_code_hot_path(
+        self,
+        payload: PhoneVerificationCodeRequest,
+    ) -> PhoneVerificationCodeResponse:
+        auth_enabled, maintenance_mode = self._login_switches()
+        if not auth_enabled:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="认证服务暂时不可用",
+            )
+        if maintenance_mode:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="系统维护中，请稍后再试",
+            )
+
+        phone = self._normalize_phone(payload.phone)
+        if app_state.get_user_by_username(phone) is not None:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="该手机号已经注册，请直接登录",
+            )
+
+        code = f"{secrets.randbelow(1_000_000):06d}"
+        expires_at = datetime.now(UTC) + timedelta(seconds=self._PHONE_CODE_TTL_SECONDS)
+        app_state.create_phone_verification_code(
+            phone=phone,
+            purpose="register",
+            code_hash=self._hash_phone_code(phone, "register", code),
+            expires_at=expires_at,
+        )
+        logger.warning("[DEV-SMS] register phone=%s code=%s", phone, code)
+        return PhoneVerificationCodeResponse(
+            phone=phone,
+            expires_at=expires_at.isoformat(),
+            debug_code=code,
+        )
+
+    async def register(self, payload: RegisterRequest) -> tuple[str, LoginResponse]:
+        return await run_in_threadpool(self._register_hot_path, payload)
+
+    def _register_hot_path(self, payload: RegisterRequest) -> tuple[str, LoginResponse]:
+        auth_enabled, maintenance_mode = self._login_switches()
+        if not auth_enabled:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="认证服务暂时不可用",
+            )
+        if maintenance_mode:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="系统维护中，请稍后再试",
+            )
+
+        phone = self._normalize_phone(payload.phone)
+        if app_state.get_user_by_username(phone) is not None:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="该手机号已经注册，请直接登录",
+            )
+        try:
+            app_state.consume_phone_verification_code(
+                phone=phone,
+                purpose="register",
+                code_hash=self._hash_phone_code(
+                    phone,
+                    "register",
+                    payload.verification_code,
+                ),
+            )
+        except KeyError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="验证码不存在或已过期，请重新发送",
+            ) from exc
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=str(exc),
+            ) from exc
+
+        slug = self._build_unique_tenant_slug(payload.company_name, phone)
+        result = app_state.create_tenant_with_admin(
+            {
+                "slug": slug,
+                "name": payload.company_name.strip(),
+                "plan": "growth",
+                "subscription_status": "unactivated",
+                "admin_username": phone,
+                "admin_email": None,
+                "admin_password": payload.password,
+                "reason": "self registration",
+            },
+            None,
+        )
+        admin_user = result["admin_user"]
+        if hasattr(app_state, "append_audit"):
+            app_state.append_audit(
+                request_id=f"register-{secrets.token_hex(8)}",
+                tenant_id=result["tenant"]["id"],
+                actor_user_id=admin_user["id"],
+                actor_role=admin_user["role"],
+                action="auth.register",
+                action_label="Register tenant",
+                risk_level="medium",
+                target_type="tenant",
+                target_id=result["tenant"]["id"],
+                target_label=result["tenant"]["slug"],
+                before=None,
+                after={
+                    "tenant": {
+                        "slug": result["tenant"]["slug"],
+                        "name": result["tenant"]["name"],
+                    },
+                    "subscription": {
+                        "plan": "growth",
+                        "status": "unactivated",
+                    },
+                },
+                reason="self registration",
+                result="success",
+                task_id=None,
+            )
+        session_token = auth_repository.create_session(admin_user)
+        return session_token, LoginResponse(session=self._to_session_info(admin_user))
 
     def _login_hot_path(
         self,
@@ -81,7 +222,7 @@ class AuthService:
         if session is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="用户名或密码错误",
+                detail="账号或密码错误",
             )
 
         return session
@@ -97,6 +238,47 @@ class AuthService:
             )
             self._switch_cache_until = now + self._SWITCH_CACHE_SECONDS
             return self._switch_cache
+
+    def _build_unique_tenant_slug(self, company_name: str, username: str) -> str:
+        base_text = f"{company_name}-{username}".strip().lower()
+        base = re.sub(r"[^a-z0-9]+", "-", base_text).strip("-")
+        if len(base) < 3:
+            base = f"xh-{re.sub(r'[^a-z0-9]+', '-', username.lower()).strip('-')}"
+        base = base[:48].strip("-") or "xh-tenant"
+        for _ in range(12):
+            suffix = secrets.token_hex(3)
+            slug = f"{base}-{suffix}"[:64].strip("-")
+            if len(slug) >= 3 and app_state.get_tenant_by_slug(slug) is None:
+                return slug
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="无法创建租户标识，请稍后重试",
+        )
+
+    @staticmethod
+    def _normalize_phone_if_possible(value: str) -> str:
+        stripped = value.strip()
+        compact = re.sub(r"[\s\-().]", "", stripped)
+        if re.fullmatch(r"\+?[0-9]{8,16}", compact):
+            return compact
+        return stripped
+
+    @staticmethod
+    def _normalize_phone(value: str) -> str:
+        compact = re.sub(r"[\s\-().]", "", value.strip())
+        if compact.startswith("00"):
+            compact = "+" + compact[2:]
+        if not re.fullmatch(r"\+?[0-9]{8,16}", compact):
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="手机号格式不正确",
+            )
+        return compact
+
+    @staticmethod
+    def _hash_phone_code(phone: str, purpose: str, code: str) -> str:
+        normalized_code = re.sub(r"\D", "", code)
+        return hashlib.sha256(f"{purpose}:{phone}:{normalized_code}".encode("utf-8")).hexdigest()
 
     def me(self, session_token: str | None) -> SessionInfoResponse:
         user = auth_repository.get_session_user(session_token)

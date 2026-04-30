@@ -11,7 +11,7 @@ from src.modules.subscription.schemas import (
 
 
 TenantPlan = Literal["starter", "growth", "scale", "war-room"]
-TenantSubscriptionStatus = Literal["trialing", "active", "past_due", "paused", "cancelled"]
+TenantSubscriptionStatus = Literal["unactivated", "trialing", "active", "past_due", "paused", "cancelled"]
 TenantStatus = Literal["active", "suspended", "disabled"]
 
 
@@ -65,6 +65,48 @@ class TenantSummary(BaseModel):
 
 class TenantListResponse(BaseModel):
     tenants: list[TenantSummary]
+
+
+class ActivationCardResponse(BaseModel):
+    card_id: str
+    code: str | None = None
+    code_suffix: str
+    days: int
+    status: str
+    note: str | None = None
+    created_by: str | None = None
+    redeemed_by: str | None = None
+    redeemed_tenant_id: str | None = None
+    redeemed_at: datetime | None = None
+    voided_by: str | None = None
+    voided_at: datetime | None = None
+    created_at: datetime
+    updated_at: datetime
+
+
+class ActivationCardListResponse(BaseModel):
+    cards: list[ActivationCardResponse]
+
+
+class ActivationCardCreateRequest(BaseModel):
+    days: int = Field(ge=1, le=3660)
+    quantity: int = Field(default=1, ge=1, le=200)
+    note: str | None = Field(default=None, max_length=500)
+
+    @field_validator("note", mode="before")
+    @classmethod
+    def strip_note(cls, value: str | None) -> str | None:
+        return value.strip() if isinstance(value, str) and value.strip() else None
+
+
+class ActivationCardCreateResponse(BaseModel):
+    success: bool = True
+    cards: list[ActivationCardResponse]
+
+
+class ActivationCardActionResponse(BaseModel):
+    success: bool = True
+    card: ActivationCardResponse
 
 
 class CreateTenantRequest(BaseModel):

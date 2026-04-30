@@ -29,6 +29,7 @@ function formatRole(role: string) {
 }
 
 function formatSubscription(status: string) {
+  if (status === "unactivated") return "未激活";
   if (status === "active") return "订阅正常";
   if (status === "trialing") return "试用中";
   if (status === "past_due") return "待续费";

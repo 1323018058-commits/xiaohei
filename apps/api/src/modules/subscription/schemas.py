@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class TenantPlanLimits(BaseModel):
@@ -10,6 +10,8 @@ class TenantPlanLimits(BaseModel):
     max_listings: int
     autobid_enabled: bool
     sync_enabled: bool
+    extension_enabled: bool = False
+    listing_enabled: bool = False
 
 
 class TenantUsage(BaseModel):
@@ -37,4 +39,19 @@ class TenantUsageResponse(BaseModel):
     limits: TenantPlanLimits
     usage: TenantUsage
     remaining: TenantRemaining
+    features: dict[str, bool]
+    is_writable: bool
     warnings: list[str]
+
+
+class RedeemActivationCardRequest(BaseModel):
+    code: str = Field(min_length=6, max_length=64)
+
+
+class RedeemActivationCardResponse(BaseModel):
+    success: bool = True
+    tenant_id: str
+    plan: str
+    subscription_status: str
+    current_period_ends_at: datetime
+    added_days: int

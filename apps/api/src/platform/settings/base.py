@@ -45,7 +45,6 @@ class Settings(BaseSettings):
     store_credential_encryption_key: str = "xiaohei-erp-dev-store-credential-key"
     takealot_api_base_url: str = "https://marketplace-api.takealot.com/v1"
     takealot_catalog_base_url: str = "https://seller-api.takealot.com"
-    takealot_seller_api_base_url: str = "https://seller-api.takealot.com/v2"
     takealot_catalog_email: str | None = None
     takealot_catalog_password: str | None = None
     takealot_catalog_api_key: str | None = None
@@ -68,7 +67,12 @@ class Settings(BaseSettings):
     autobid_worker_enabled: bool = True
     autobid_worker_cycle_limit: int = 2
     autobid_worker_global_cycle_limit: int = 120
+    autobid_admin_full_scan_interval_minutes: int = 10
     autobid_buybox_timeout_seconds: float = 10.0
+    autobid_next_check_jitter_seconds: int = 180
+    autobid_write_idempotency_window_seconds: int = 900
+    autobid_store_circuit_breaker_failure_cycles: int = 3
+    autobid_store_circuit_breaker_pause_seconds: int = 300
     db_pool_max_size: int = 50
     db_pool_max_overflow: int = 100
     db_pool_timeout_seconds: int = 30
@@ -85,7 +89,6 @@ class Settings(BaseSettings):
     worker_stale_recovery_limit: int = 20
     alert_output_dir: str = "reports/alerts"
     alert_webhook_url: str | None = None
-    listing_file_storage_dir: str = "reports/listing-loadsheets"
 
 
 settings = Settings()

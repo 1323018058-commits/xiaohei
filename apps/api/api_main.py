@@ -14,6 +14,7 @@ from src.modules.listing.routes import router as listing_router
 from src.modules.orders.routes import router as orders_router
 from src.modules.selection.routes import router as selection_router
 from src.modules.store.routes import router as store_router
+from src.modules.subscription.routes import public_router as subscription_public_router
 from src.modules.subscription.routes import router as subscription_router
 from src.modules.tasking.routes import router as task_router
 from src.modules.webhook.routes import router as webhook_router
@@ -59,6 +60,7 @@ app.include_router(selection_router)
 app.include_router(extension_router)
 app.include_router(listing_router)
 app.include_router(subscription_router)
+app.include_router(subscription_public_router)
 app.include_router(webhook_router)
 
 

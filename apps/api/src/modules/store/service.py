@@ -149,14 +149,10 @@ class StoreService:
             else None
         )
         normalized_bidding_filter = (bidding_filter or "").strip()
-        floor_sku_filter = (
-            self._floor_price_sku_filter(store_id)
-            if normalized_bidding_filter == "with_floor"
-            else None
-        )
+        bidding_sku_filter = self._bidding_sku_filter(store_id, normalized_bidding_filter)
         normalized_sort_by = sort_by.strip() if sort_by and sort_by.strip() in LISTING_SORT_FIELDS else "createdAt"
         normalized_sort_dir = "asc" if sort_dir == "asc" else "desc"
-        if floor_sku_filter is None:
+        if bidding_sku_filter is None:
             listings = app_state.list_store_listings(
                 store_id=store_id,
                 sku_query=normalized_sku_query,
@@ -178,13 +174,13 @@ class StoreService:
                     limit=None,
                     offset=0,
                 )
-                if listing["sku"] in floor_sku_filter
+                if listing["sku"] in bidding_sku_filter
             ]
             listings = filtered_listings[normalized_offset:normalized_offset + normalized_limit]
         status_counts = self._listing_status_counts(
             store_id,
             normalized_sku_query,
-            sku_filter=floor_sku_filter,
+            sku_filter=bidding_sku_filter,
         )
         total = status_counts[normalized_status_group or "all"]
         return StoreListingListResponse(
@@ -2458,6 +2454,69 @@ class StoreService:
             for rule in app_state.list_bidding_rules(store_id=store_id)
             if rule.get("floor_price") is not None
         }
+
+    @staticmethod
+    def _bidding_sku_filter(store_id: str, bidding_filter: str) -> set[str] | None:
+        if bidding_filter == "with_floor":
+            return StoreService._floor_price_sku_filter(store_id)
+        if bidding_filter not in {"active", "won", "lost", "alerts", "blocked", "paused"}:
+            return None
+        return {
+            rule["sku"]
+            for rule in app_state.list_bidding_rules(store_id=store_id)
+            if StoreService._bidding_rule_matches_filter(rule, bidding_filter)
+        }
+
+    @staticmethod
+    def _bidding_rule_matches_filter(rule: dict[str, Any], bidding_filter: str) -> bool:
+        if bidding_filter == "active":
+            return bool(rule.get("is_active"))
+        if bidding_filter == "won":
+            return bool(rule.get("is_active")) and StoreService._bidding_rule_owns_lowest(rule)
+        if bidding_filter == "lost":
+            return (
+                bool(rule.get("is_active"))
+                and rule.get("last_buybox_price") is not None
+                and not StoreService._bidding_rule_owns_lowest(rule)
+            )
+        if bidding_filter == "alerts":
+            return StoreService._bidding_rule_has_alert(rule)
+        if bidding_filter == "blocked":
+            return rule.get("buybox_status") == "blocked"
+        if bidding_filter == "paused":
+            return not bool(rule.get("is_active")) and (
+                rule.get("floor_price") is not None
+                or bool(rule.get("last_action"))
+                or bool(rule.get("last_cycle_error"))
+                or bool(rule.get("repricing_blocked_reason"))
+            )
+        return False
+
+    @staticmethod
+    def _bidding_rule_owns_lowest(rule: dict[str, Any]) -> bool:
+        decision = rule.get("last_decision")
+        return isinstance(decision, dict) and decision.get("owns_buybox") is True
+
+    @staticmethod
+    def _bidding_rule_has_alert(rule: dict[str, Any]) -> bool:
+        if not rule.get("is_active"):
+            return False
+        if rule.get("floor_price") is None:
+            return True
+        if rule.get("buybox_status") in {"blocked", "retrying"}:
+            return True
+        if rule.get("last_cycle_error") or rule.get("repricing_blocked_reason"):
+            return True
+        if rule.get("last_action") == "floor":
+            return True
+        floor_price = StoreService._numeric_value(rule.get("floor_price"))
+        lowest_price = StoreService._numeric_value(rule.get("last_buybox_price"))
+        return bool(
+            floor_price is not None
+            and lowest_price is not None
+            and lowest_price < floor_price
+            and not StoreService._bidding_rule_owns_lowest(rule)
+        )
 
     @staticmethod
     def _count_store_listings_for_skus(

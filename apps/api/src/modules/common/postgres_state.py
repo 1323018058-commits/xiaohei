@@ -10,6 +10,7 @@ from threading import Lock
 from time import monotonic, perf_counter
 from typing import Any
 from uuid import UUID, uuid4
+from zoneinfo import ZoneInfo
 
 from psycopg import sql
 from psycopg.types.json import Jsonb
@@ -1243,7 +1244,7 @@ class DatabaseAppState:
     def create_tenant_with_admin(
         self,
         payload: dict[str, Any],
-        updated_by: str,
+        updated_by: str | None,
     ) -> dict[str, dict[str, Any]]:
         tenant_id = str(uuid4())
         user_id = str(uuid4())
@@ -1302,9 +1303,15 @@ class DatabaseAppState:
                 )
             connection.commit()
         self._forget_auth_record(payload["admin_username"])
+        admin_user = self._to_user(user_row)
+        admin_user["subscription_status"] = self._effective_subscription_status(
+            subscription_row["status"],
+            subscription_row["trial_ends_at"],
+            subscription_row["current_period_ends_at"],
+        )
         return {
             "tenant": self._to_tenant(tenant_row),
-            "admin_user": self._to_user(user_row),
+            "admin_user": admin_user,
             "subscription": self._to_subscription(subscription_row),
         }
 
@@ -1541,6 +1548,279 @@ class DatabaseAppState:
                 ).fetchone()
             connection.commit()
         return self._normalize_value(dict(row))
+
+    def list_activation_cards(self) -> list[dict[str, Any]]:
+        with get_db_session() as connection:
+            with connection.cursor() as cursor:
+                rows = cursor.execute(
+                    """
+                    select *
+                    from activation_cards
+                    order by created_at desc
+                    limit 500
+                    """
+                ).fetchall()
+                connection.rollback()
+        return [self._normalize_value(dict(row)) for row in rows]
+
+    def get_activation_card(self, card_id: str) -> dict[str, Any] | None:
+        with get_db_session() as connection:
+            with connection.cursor() as cursor:
+                row = cursor.execute(
+                    "select * from activation_cards where id = %s",
+                    (card_id,),
+                ).fetchone()
+                connection.rollback()
+        return self._normalize_value(dict(row)) if row else None
+
+    def create_activation_cards(self, records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        cards: list[dict[str, Any]] = []
+        with get_db_session() as connection:
+            with connection.cursor() as cursor:
+                for record in records:
+                    row = cursor.execute(
+                        """
+                        insert into activation_cards (
+                          id, code_hash, code_suffix, days, status, note, created_by,
+                          created_at, updated_at
+                        )
+                        values (%s, %s, %s, %s, 'active', %s, %s, now(), now())
+                        returning *
+                        """,
+                        (
+                            str(uuid4()),
+                            record["code_hash"],
+                            record["code_suffix"],
+                            int(record["days"]),
+                            record.get("note"),
+                            record.get("created_by"),
+                        ),
+                    ).fetchone()
+                    normalized = self._normalize_value(dict(row))
+                    normalized["code"] = record.get("code")
+                    cards.append(normalized)
+            connection.commit()
+        return cards
+
+    def void_activation_card(self, *, card_id: str, voided_by: str) -> dict[str, Any]:
+        with get_db_session() as connection:
+            with connection.cursor() as cursor:
+                existing = cursor.execute(
+                    "select * from activation_cards where id = %s for update",
+                    (card_id,),
+                ).fetchone()
+                if existing is None:
+                    connection.rollback()
+                    raise KeyError("Activation card not found")
+                if existing["status"] != "active":
+                    connection.rollback()
+                    raise ValueError("Only active activation cards can be voided")
+                row = cursor.execute(
+                    """
+                    update activation_cards
+                    set status = 'voided',
+                        voided_by = %s,
+                        voided_at = now(),
+                        updated_at = now()
+                    where id = %s
+                    returning *
+                    """,
+                    (voided_by, card_id),
+                ).fetchone()
+            connection.commit()
+        return self._normalize_value(dict(row))
+
+    def redeem_activation_card(
+        self,
+        *,
+        code_hash: str,
+        tenant_id: str,
+        user_id: str,
+    ) -> dict[str, dict[str, Any]]:
+        now = datetime.now(UTC)
+        with get_db_session() as connection:
+            with connection.cursor() as cursor:
+                card = cursor.execute(
+                    "select * from activation_cards where code_hash = %s for update",
+                    (code_hash,),
+                ).fetchone()
+                if card is None:
+                    connection.rollback()
+                    raise KeyError("Activation card not found")
+                if card["status"] != "active":
+                    connection.rollback()
+                    raise ValueError("Activation card is not active")
+
+                current = cursor.execute(
+                    """
+                    select
+                      t.id as tenant_id,
+                      coalesce(ts.plan, t.plan) as plan,
+                      ts.current_period_ends_at
+                    from tenants t
+                    left join tenant_subscriptions ts on ts.tenant_id = t.id
+                    where t.id = %s
+                    for update of t
+                    """,
+                    (tenant_id,),
+                ).fetchone()
+                if current is None:
+                    connection.rollback()
+                    raise KeyError("Tenant not found")
+
+                current_period_ends_at = current["current_period_ends_at"]
+                if current_period_ends_at is not None and current_period_ends_at.tzinfo is None:
+                    current_period_ends_at = current_period_ends_at.replace(tzinfo=UTC)
+                base = current_period_ends_at if current_period_ends_at and current_period_ends_at > now else now
+                next_period_ends_at = base + timedelta(days=int(card["days"]))
+
+                subscription_row = cursor.execute(
+                    """
+                    insert into tenant_subscriptions (
+                      tenant_id, plan, status, trial_ends_at, current_period_ends_at,
+                      updated_by, created_at, updated_at
+                    )
+                    values (%s, %s, 'active', null, %s, %s, now(), now())
+                    on conflict (tenant_id) do update set
+                      plan = excluded.plan,
+                      status = excluded.status,
+                      trial_ends_at = null,
+                      current_period_ends_at = excluded.current_period_ends_at,
+                      updated_by = excluded.updated_by,
+                      updated_at = now()
+                    returning *
+                    """,
+                    (
+                        tenant_id,
+                        current["plan"],
+                        next_period_ends_at,
+                        user_id,
+                    ),
+                ).fetchone()
+                card_row = cursor.execute(
+                    """
+                    update activation_cards
+                    set status = 'redeemed',
+                        redeemed_by = %s,
+                        redeemed_tenant_id = %s,
+                        redeemed_at = now(),
+                        updated_at = now()
+                    where id = %s
+                    returning *
+                    """,
+                    (user_id, tenant_id, card["id"]),
+                ).fetchone()
+                users = cursor.execute(
+                    "select id, username from users where tenant_id = %s",
+                    (tenant_id,),
+                ).fetchall()
+            connection.commit()
+        with self._cache_lock:
+            for user in users:
+                self._recent_session_cache.pop(self._normalize_value(user["id"]), None)
+                self._auth_record_cache.pop(user["username"], None)
+                self._password_verify_cache.pop(user["username"], None)
+        return {
+            "card": self._normalize_value(dict(card_row)),
+            "subscription": self._to_subscription(subscription_row),
+        }
+
+    def create_phone_verification_code(
+        self,
+        *,
+        phone: str,
+        purpose: str,
+        code_hash: str,
+        expires_at: datetime,
+    ) -> dict[str, Any]:
+        with get_db_session() as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    """
+                    update auth_phone_verification_codes
+                    set status = 'expired', updated_at = now()
+                    where phone = %s and purpose = %s and status = 'active'
+                    """,
+                    (phone, purpose),
+                )
+                row = cursor.execute(
+                    """
+                    insert into auth_phone_verification_codes (
+                      id, phone, purpose, code_hash, status, expires_at,
+                      attempt_count, created_at, updated_at
+                    )
+                    values (%s, %s, %s, %s, 'active', %s, 0, now(), now())
+                    returning *
+                    """,
+                    (str(uuid4()), phone, purpose, code_hash, expires_at),
+                ).fetchone()
+            connection.commit()
+        return self._normalize_value(dict(row))
+
+    def consume_phone_verification_code(
+        self,
+        *,
+        phone: str,
+        purpose: str,
+        code_hash: str,
+    ) -> dict[str, Any]:
+        with get_db_session() as connection:
+            with connection.cursor() as cursor:
+                row = cursor.execute(
+                    """
+                    select *
+                    from auth_phone_verification_codes
+                    where phone = %s
+                      and purpose = %s
+                      and status = 'active'
+                    order by created_at desc
+                    limit 1
+                    for update
+                    """,
+                    (phone, purpose),
+                ).fetchone()
+                if row is None:
+                    connection.rollback()
+                    raise KeyError("Verification code not found")
+                if row["expires_at"] <= datetime.now(UTC):
+                    cursor.execute(
+                        """
+                        update auth_phone_verification_codes
+                        set status = 'expired', updated_at = now()
+                        where id = %s
+                        """,
+                        (row["id"],),
+                    )
+                    connection.commit()
+                    raise KeyError("Verification code expired")
+                if row["code_hash"] != code_hash:
+                    next_attempt_count = int(row["attempt_count"]) + 1
+                    next_status = "expired" if next_attempt_count >= 5 else "active"
+                    cursor.execute(
+                        """
+                        update auth_phone_verification_codes
+                        set attempt_count = %s,
+                            status = %s,
+                            updated_at = now()
+                        where id = %s
+                        """,
+                        (next_attempt_count, next_status, row["id"]),
+                    )
+                    connection.commit()
+                    raise ValueError("验证码不正确")
+                consumed = cursor.execute(
+                    """
+                    update auth_phone_verification_codes
+                    set status = 'consumed',
+                        consumed_at = now(),
+                        updated_at = now()
+                    where id = %s
+                    returning *
+                    """,
+                    (row["id"],),
+                ).fetchone()
+            connection.commit()
+        return self._normalize_value(dict(consumed))
 
     def list_system_settings(self) -> list[dict[str, Any]]:
         cached_settings = self._cached_system_settings()
@@ -2757,7 +3037,7 @@ class DatabaseAppState:
             params.extend([like_query, like_query, like_query])
         where_clause = f"where {' and '.join(filters)}" if filters else ""
         sql_text = f"""
-            select o.*, count(oi.id) as item_count
+            select o.*, coalesce(sum(oi.quantity), 0)::int as item_count
             from orders o
             left join order_items oi on oi.order_id = o.id
             {where_clause}
@@ -2776,7 +3056,7 @@ class DatabaseAppState:
             with connection.cursor() as cursor:
                 row = cursor.execute(
                     """
-                    select o.*, count(oi.id) as item_count
+                    select o.*, coalesce(sum(oi.quantity), 0)::int as item_count
                     from orders o
                     left join order_items oi on oi.order_id = o.id
                     where o.id = %s
@@ -2820,7 +3100,8 @@ class DatabaseAppState:
         order_tenant_clause = ""
         job_tenant_clause = ""
         task_tenant_clause = ""
-        today_order_params: list[Any] = [business_day_start, business_day_end]
+        business_date = business_day_start.astimezone(ZoneInfo(business_timezone)).date()
+        today_order_params: list[Any] = [business_timezone, business_date]
         chart_params: list[Any] = [business_timezone, chart_start, chart_end]
         job_params: list[Any] = [business_day_start, business_day_end]
         sync_params: list[Any] = []
@@ -2843,8 +3124,7 @@ class DatabaseAppState:
                     with scoped_orders as (
                         select id, total_amount
                         from orders
-                        where coalesce(placed_at, created_at) >= %s
-                          and coalesce(placed_at, created_at) < %s
+                        where timezone(%s, coalesce(placed_at, created_at))::date = %s
                           {order_tenant_clause}
                     ),
                     order_quantities as (
@@ -3246,6 +3526,7 @@ class DatabaseAppState:
         store_id: str,
         limit: int,
         now: datetime | None = None,
+        include_not_due: bool = False,
     ) -> list[dict[str, Any]]:
         effective_now = now or datetime.now(UTC)
         with get_db_session() as connection:
@@ -3274,14 +3555,32 @@ class DatabaseAppState:
                        l.id::text = br.listing_id
                        or l.sku = br.sku
                      )
+                     and coalesce(l.sync_status, '') <> 'stale'
                     where br.store_id = %s
                       and br.is_active = true
                       and br.floor_price > 0
-                      and (br.next_check_at is null or br.next_check_at <= %s)
-                    order by br.next_check_at nulls first, br.updated_at asc, br.sku asc
+                      and (%s = true or br.next_check_at is null or br.next_check_at <= %s)
+                    order by
+                      case
+                        when coalesce(br.last_cycle_error, '') <> ''
+                          or br.buybox_status = 'retrying'
+                          or br.last_action in ('api_error', 'buybox_refresh_failed')
+                          then 0
+                        when br.last_buybox_price is not null
+                          and coalesce(br.last_decision ->> 'owns_buybox', 'false') <> 'true'
+                          then 1
+                        when br.last_action in ('lowered', 'floor')
+                          then 2
+                        when br.last_buybox_price is null
+                          then 3
+                        else 4
+                      end,
+                      br.next_check_at nulls first,
+                      br.updated_at asc,
+                      br.sku asc
                     limit %s
                     """,
-                    (store_id, effective_now, max(1, limit)),
+                    (store_id, bool(include_not_due), effective_now, max(1, limit)),
                 ).fetchall()
                 connection.rollback()
         candidates: list[dict[str, Any]] = []
@@ -4046,7 +4345,9 @@ class DatabaseAppState:
                       tpl.max_active_sync_tasks,
                       tpl.max_listings,
                       tpl.autobid_enabled,
-                      tpl.sync_enabled
+                      tpl.sync_enabled,
+                      tpl.extension_enabled,
+                      tpl.listing_enabled
                     from selected_tenant st
                     join tenant_plan_limits tpl on tpl.plan = st.plan
                     """,
@@ -4068,7 +4369,16 @@ class DatabaseAppState:
                     "max_listings": 1000000,
                     "autobid_enabled": True,
                     "sync_enabled": True,
+                    "extension_enabled": True,
+                    "listing_enabled": True,
                 },
+                "features": {
+                    "sync": True,
+                    "autobid": True,
+                    "extension": True,
+                    "listing": True,
+                },
+                "is_writable": True,
             }
         effective_status = self._effective_subscription_status(
             row["subscription_status"],
@@ -4089,7 +4399,16 @@ class DatabaseAppState:
                 "max_listings": row["max_listings"],
                 "autobid_enabled": row["autobid_enabled"],
                 "sync_enabled": row["sync_enabled"],
+                "extension_enabled": row["extension_enabled"],
+                "listing_enabled": row["listing_enabled"],
             },
+            "features": {
+                "sync": bool(row["sync_enabled"]),
+                "autobid": bool(row["autobid_enabled"]),
+                "extension": bool(row["extension_enabled"]),
+                "listing": bool(row["listing_enabled"]),
+            },
+            "is_writable": effective_status in {"trialing", "active"},
         }
 
     def get_tenant_usage(self, tenant_id: str) -> dict[str, int]:

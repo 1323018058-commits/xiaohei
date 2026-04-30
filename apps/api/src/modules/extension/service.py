@@ -15,6 +15,7 @@ from src.modules.auth.repo import auth_repository
 from src.modules.bidding.service import BiddingService
 from src.modules.common.dev_state import app_state
 from src.modules.common.tenant_scope import require_tenant_access
+from src.modules.subscription.service import subscription_service
 from src.platform.settings.base import settings
 from .takealot_catalog import catalog_client
 from .success_fee_data import SUCCESS_FEE_RULES
@@ -146,6 +147,7 @@ class ExtensionService:
         actor: dict[str, Any],
         store_id: str | None,
     ) -> ExtensionAuthResponse:
+        subscription_service.ensure_writable_feature_enabled(actor, "extension")
         if store_id is not None:
             self._require_store(store_id, actor)
         plain_token = secrets.token_urlsafe(32)
@@ -182,10 +184,12 @@ class ExtensionService:
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="当前账号无扩展访问权限",
             )
-        if not self._is_extension_enabled(user["id"]):
+        try:
+            subscription_service.ensure_writable_feature_enabled(user, "extension")
+        except HTTPException:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="当前账号未开通扩展能力",
+                detail="当前套餐未开通插件能力，或订阅已到期",
             )
         auth_payload = self.issue_auth_token(actor=user, store_id=store_id)
         profile = self.profile(user)
@@ -223,12 +227,12 @@ class ExtensionService:
         )
 
     @staticmethod
-    def _is_extension_enabled(user_id: str) -> bool:
-        flags = app_state.list_user_feature_flags(user_id)
-        extension_flags = [flag for flag in flags if flag.get("feature_key") == "extension"]
-        if not extension_flags:
-            return True
-        return any(bool(flag.get("enabled")) for flag in extension_flags)
+    def _positive_int_or_none(value: Any) -> int | None:
+        try:
+            number = int(value)
+        except (TypeError, ValueError):
+            return None
+        return number if number > 0 else None
 
     def profit_preview(
         self,
@@ -242,6 +246,7 @@ class ExtensionService:
             title=payload.title,
             store_id=store["id"],
             force_refresh_facts=payload.force_refresh_facts,
+            barcode=payload.barcode or payload.gtin,
         )
         listing = app_state.find_store_listing_by_platform_product_id(
             store_id=store["id"],
@@ -266,6 +271,7 @@ class ExtensionService:
         actor: dict[str, Any],
         request_headers: dict[str, str],
     ) -> ProtectedFloorResponse:
+        subscription_service.ensure_writable_feature_enabled(actor, "extension")
         if payload.protected_floor_price <= 0:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -341,12 +347,15 @@ class ExtensionService:
         actor: dict[str, Any],
         request_headers: dict[str, str],
     ) -> ExtensionListNowResponse:
+        subscription_service.ensure_writable_feature_enabled(actor, "listing")
         store = self._require_store(payload.store_id, actor)
         product = self._ensure_library_product(
             plid=payload.plid,
             title=payload.title,
             store_id=store["id"],
+            barcode=payload.barcode or payload.gtin,
         )
+        payload_barcode = self._normalize_barcode(payload.barcode or payload.gtin)
         guardrail = app_state.get_tenant_product_guardrail(
             tenant_id=store["tenant_id"],
             store_id=store["id"],
@@ -379,6 +388,7 @@ class ExtensionService:
                 "plid": payload.plid,
                 "sale_price_zar": payload.sale_price_zar,
                 "quantity": payload.quantity,
+                "barcode": payload_barcode,
             },
         )
         app_state.append_audit(
@@ -401,6 +411,7 @@ class ExtensionService:
                 "guardrail_id": guardrail["id"],
                 "protected_floor_price": guardrail["protected_floor_price"],
                 "quantity": payload.quantity,
+                "barcode": payload_barcode,
             },
             reason="Create extension list-now task shell",
             result="success",
@@ -438,6 +449,8 @@ class ExtensionService:
 
         task_error_details = task.get("error_details")
         task_error_details = task_error_details if isinstance(task_error_details, dict) else {}
+        task_ui_meta = task.get("ui_meta") if isinstance(task.get("ui_meta"), dict) else {}
+        task_quantity = self._positive_int_or_none(task_ui_meta.get("quantity"))
         listing_job_id = task_error_details.get("listing_job_id")
         listing_job = app_state.get_listing_job(listing_job_id) if listing_job_id else None
         if listing_job is not None:
@@ -507,7 +520,7 @@ class ExtensionService:
                 else (
                     str(listing_payload.get("barcode"))
                     if listing_payload.get("barcode") is not None
-                    else None
+                    else self._extract_gtin_from_product(product)
                 )
             ),
             sku=(
@@ -528,6 +541,7 @@ class ExtensionService:
             default_leadtime_days=int(settings.extension_listing_default_leadtime_days),
             can_auto_make_buyable=bool(
                 offer_id is not None and leadtime_merchant_warehouse_id is not None
+                and task_quantity is not None
             ),
             needs_buyable_patch=needs_buyable_patch,
         )
@@ -616,6 +630,7 @@ class ExtensionService:
             if linked_listing is not None and isinstance(linked_listing.get("raw_payload"), dict)
             else {}
         )
+        task_meta = task.get("ui_meta") if isinstance(task.get("ui_meta"), dict) else {}
         listing_job = app_state.create_listing_job(
             tenant_id=store["tenant_id"],
             store_id=store["id"],
@@ -633,9 +648,10 @@ class ExtensionService:
             raw_payload={
                 "plid": product["external_product_id"],
                 "sale_price_zar": (task.get("ui_meta") or {}).get("sale_price_zar"),
+                "quantity": task_meta.get("quantity"),
                 "guardrail_id": guardrail["id"] if guardrail else None,
                 "protected_floor_price": guardrail["protected_floor_price"] if guardrail else None,
-                "barcode": linked_listing_payload.get("barcode") or self._extract_gtin_from_product(product),
+                "barcode": linked_listing_payload.get("barcode") or task_meta.get("barcode") or self._extract_gtin_from_product(product),
                 "existing_offer_id": linked_listing_payload.get("offer_id"),
                 "existing_listing_id": linked_listing["id"] if linked_listing is not None else None,
             },
@@ -735,6 +751,7 @@ class ExtensionService:
         title: str | None,
         store_id: str,
         force_refresh_facts: bool = False,
+        barcode: str | None = None,
     ) -> dict[str, Any]:
         existing = app_state.get_library_product(platform="takealot", external_product_id=plid)
         if existing is None:
@@ -752,7 +769,44 @@ class ExtensionService:
             fallback_title=title,
             force_refresh_facts=force_refresh_facts,
         )
-        return refreshed or existing
+        product = refreshed or existing
+        return self._persist_extension_barcode(product=product, barcode=barcode)
+
+    def _persist_extension_barcode(
+        self,
+        *,
+        product: dict[str, Any],
+        barcode: str | None,
+    ) -> dict[str, Any]:
+        normalized = self._normalize_barcode(barcode)
+        if not normalized:
+            return product
+        if self._extract_gtin_from_product(product):
+            return product
+
+        raw_payload = product.get("raw_payload") if isinstance(product.get("raw_payload"), dict) else {}
+        merged_payload = {**raw_payload, "barcode": normalized, "gtin": normalized}
+        nested_payload = merged_payload.get("payload")
+        if isinstance(nested_payload, dict):
+            merged_payload["payload"] = {
+                **nested_payload,
+                "barcode": nested_payload.get("barcode") or normalized,
+                "gtin": nested_payload.get("gtin") or normalized,
+            }
+
+        return app_state.upsert_library_product(
+            platform=product["platform"],
+            external_product_id=product["external_product_id"],
+            title=product["title"],
+            fact_status=product.get("fact_status") or "pending_enrichment",
+            raw_payload=merged_payload,
+            merchant_packaged_weight_raw=product.get("merchant_packaged_weight_raw"),
+            merchant_packaged_dimensions_raw=product.get("merchant_packaged_dimensions_raw"),
+            cbs_package_weight_raw=product.get("cbs_package_weight_raw"),
+            cbs_package_dimensions_raw=product.get("cbs_package_dimensions_raw"),
+            consolidated_packaged_dimensions_raw=product.get("consolidated_packaged_dimensions_raw"),
+            last_refreshed_at=product.get("last_refreshed_at"),
+        )
 
     def _refresh_library_product(
         self,
@@ -1686,24 +1740,82 @@ class ExtensionService:
             return None
 
     @staticmethod
+    def _normalize_barcode(value: Any) -> str | None:
+        if value is None or value == "":
+            return None
+        text = re.sub(r"\s+", "", str(value).strip())
+        text = re.sub(r"[^0-9A-Za-z-]", "", text)
+        return text if len(text) >= 6 else None
+
+    @staticmethod
     def _extract_gtin_from_product(product: dict[str, Any] | None) -> str | None:
         if product is None:
             return None
-        raw_payload = product.get("raw_payload") or {}
-        payload = raw_payload.get("payload") if isinstance(raw_payload.get("payload"), dict) else None
-        if not isinstance(payload, dict):
+
+        target_keys = {
+            "gtin",
+            "gtin13",
+            "globaltradeitemnumber",
+            "barcode",
+            "ean",
+            "ean13",
+            "upc",
+            "isbn",
+            "productbarcode",
+            "productgtin",
+            "productean",
+            "variantgtin",
+            "variantbarcode",
+        }
+
+        def normalize_key(value: Any) -> str:
+            return re.sub(r"[^a-z0-9]+", "", str(value or "").lower())
+
+        def scalar(value: Any) -> Any:
+            if value is None or value == "":
+                return None
+            if isinstance(value, (str, int, float)):
+                return value
+            if isinstance(value, dict):
+                for key in ("value", "display_value", "displayValue", "name", "label", "text"):
+                    candidate = scalar(value.get(key))
+                    if candidate:
+                        return candidate
             return None
-        variants = payload.get("variants") if isinstance(payload.get("variants"), list) else []
-        first_variant = variants[0] if variants and isinstance(variants[0], dict) else {}
-        for candidate in (
-            first_variant.get("gtin"),
-            first_variant.get("barcode"),
-            payload.get("gtin"),
-            payload.get("barcode"),
-        ):
-            if candidate:
-                return str(candidate)
-        return None
+
+        def scan(value: Any, depth: int = 0) -> str | None:
+            if value is None or depth > 7:
+                return None
+            if isinstance(value, list):
+                for item in value[:80]:
+                    found = scan(item, depth + 1)
+                    if found:
+                        return found
+                return None
+            if isinstance(value, dict):
+                label = normalize_key(
+                    value.get("key")
+                    or value.get("name")
+                    or value.get("label")
+                    or value.get("display_name")
+                    or value.get("displayName")
+                )
+                if label in target_keys:
+                    normalized = ExtensionService._normalize_barcode(scalar(value.get("value")))
+                    if normalized:
+                        return normalized
+                for key, nested in value.items():
+                    if normalize_key(key) in target_keys:
+                        normalized = ExtensionService._normalize_barcode(scalar(nested))
+                        if normalized:
+                            return normalized
+                    found = scan(nested, depth + 1)
+                    if found:
+                        return found
+            return None
+
+        raw_payload = product.get("raw_payload") if isinstance(product.get("raw_payload"), dict) else {}
+        return scan(product) or scan(raw_payload)
 
     @staticmethod
     def _parse_weight_kg(raw: str | None) -> float | None:

@@ -1,5 +1,6 @@
 import re
 import time
+from datetime import timedelta
 from typing import Any
 
 import httpx
@@ -48,6 +49,10 @@ PUBLIC_HEADERS = {
 
 
 class BiddingService:
+    _store_failure_streaks: dict[str, int] = {}
+    _store_circuit_until: dict[str, Any] = {}
+    _admin_full_scan_at: dict[str, Any] = {}
+
     def status(
         self,
         *,
@@ -160,7 +165,8 @@ class BiddingService:
     ) -> BiddingCycleResponse:
         store = self._require_store(store_id, actor)
         plan = self._store_plan(store)
-        limit = min(payload.limit, self._cycle_limit(plan))
+        admin_force = actor.get("role") == "super_admin" and bool(payload.force)
+        limit = min(payload.limit, 500 if admin_force else self._cycle_limit(plan))
         effective_dry_run = payload.dry_run or not settings.autobid_real_write_enabled
         candidate_loader = getattr(app_state, "list_bidding_cycle_candidates", None)
         if candidate_loader is None:
@@ -170,6 +176,7 @@ class BiddingService:
                 store_id=store_id,
                 limit=limit,
                 now=utcnow(),
+                include_not_due=admin_force,
             )
 
         items: list[BiddingCycleItemResponse] = []
@@ -243,32 +250,67 @@ class BiddingService:
         for store, _runtime in eligible_stores:
             if remaining_budget <= 0:
                 break
+            if self._store_circuit_is_open(store["id"]):
+                cycle_summaries.append(
+                    {
+                        "store_id": store["id"],
+                        "status": "circuit_open",
+                        "dry_run": dry_run,
+                        "processed_count": 0,
+                        "suggested_count": 0,
+                        "applied_count": 0,
+                        "skipped_count": 0,
+                        "failed_count": 0,
+                        "circuit_until": self._store_circuit_until.get(store["id"]).isoformat(),
+                    }
+                )
+                continue
             summary_getter = getattr(app_state, "bidding_runtime_summary", None)
             if summary_getter is None:
                 continue
             runtime_summary = summary_getter(store_id=store["id"])
             due_rule_count = int(runtime_summary.get("due_rule_count") or 0)
-            if due_rule_count <= 0:
+            active_rule_count = int(runtime_summary.get("active_rule_count") or 0)
+            admin_force = self._admin_full_scan_is_due(store)
+            candidate_count = active_rule_count if admin_force else due_rule_count
+            if candidate_count <= 0:
                 continue
+            per_store_limit = (
+                500
+                if admin_force
+                else max(1, int(limit_per_store or settings.autobid_cycle_default_limit))
+            )
             requested_limit = min(
-                remaining_budget,
+                500 if admin_force else remaining_budget,
                 500,
-                due_rule_count,
-                max(1, int(limit_per_store or settings.autobid_cycle_default_limit)),
+                candidate_count,
+                per_store_limit,
             )
             try:
                 result = self.run_cycle(
                     actor=actor,
                     store_id=store["id"],
-                    payload=BiddingCycleRequest(dry_run=dry_run, limit=requested_limit),
+                    payload=BiddingCycleRequest(
+                        dry_run=dry_run,
+                        force=admin_force,
+                        limit=requested_limit,
+                    ),
                     request_headers={},
                     cycle_source="worker",
                 )
+                if admin_force:
+                    self._admin_full_scan_at[store["id"]] = utcnow()
                 remaining_budget -= max(1, result.processed_count)
+                self._record_store_cycle_health(
+                    store_id=store["id"],
+                    processed_count=result.processed_count,
+                    failed_count=result.failed_count,
+                )
                 cycle_summaries.append(
                     {
                         "store_id": result.store_id,
                         "status": "succeeded",
+                        "mode": "admin_full_scan" if admin_force else "due_scan",
                         "dry_run": result.dry_run,
                         "processed_count": result.processed_count,
                         "suggested_count": result.suggested_count,
@@ -279,6 +321,11 @@ class BiddingService:
                 )
             except Exception as exc:
                 remaining_budget -= max(1, requested_limit)
+                self._record_store_cycle_health(
+                    store_id=store["id"],
+                    processed_count=requested_limit,
+                    failed_count=requested_limit,
+                )
                 cycle_summaries.append(
                     {
                         "store_id": store["id"],
@@ -555,13 +602,13 @@ class BiddingService:
                 last_action="buybox_refresh_failed",
                 last_cycle_dry_run=dry_run,
                 last_cycle_error=error,
-                next_check_at=next_check_at(
+                next_check_at=self._next_check_at(
                     last_action="buybox_refresh_failed",
                     plan=plan,
                     fail_count=fail_count,
                     now=now,
                 ),
-                buybox_next_retry_at=next_check_at(
+                buybox_next_retry_at=self._next_check_at(
                     last_action="buybox_refresh_failed",
                     plan=plan,
                     fail_count=fail_count,
@@ -661,49 +708,65 @@ class BiddingService:
             "last_cycle_dry_run": dry_run,
             "last_cycle_error": "",
             "last_decision": last_decision,
-            "next_check_at": next_check_at(last_action=action, plan=plan, now=now),
+            "next_check_at": self._next_check_at(last_action=action, plan=plan, now=now),
         }
 
         applied_price: float | None = None
         status_value = "suggested" if suggested_price is not None else "skipped"
         reason = "" if suggested_price is not None else "No price change needed"
         if suggested_price is not None and not dry_run:
-            try:
-                self._apply_offer_price(
-                    store=store,
-                    listing=listing,
-                    offer_id=offer_id,
-                    new_price=suggested_price,
-                )
-                applied_price = float(suggested_price)
-                runtime_updates["last_applied_price"] = applied_price
-                runtime_updates["last_cycle_error"] = ""
-                status_value = "applied"
-                reason = ""
+            if self._recent_duplicate_write(
+                rule=rule,
+                offer_id=offer_id,
+                suggested_price=suggested_price,
+                now=now,
+            ):
+                last_decision["write_suppressed"] = "duplicate_target_recently_applied"
+                status_value = "skipped"
+                reason = "Recent identical price write already applied"
+            else:
                 try:
-                    self._append_reprice_audit(
+                    self._apply_offer_price(
                         store=store,
-                        rule=rule,
-                        actor=actor,
-                        old_price=current_price,
-                        new_price=applied_price,
-                        decision=last_decision,
+                        listing=listing,
+                        offer_id=offer_id,
+                        new_price=suggested_price,
                     )
-                except Exception as audit_exc:
-                    audit_error = str(audit_exc)[:300]
-                    last_decision["audit_error"] = audit_error
-                    runtime_updates["last_cycle_error"] = f"audit_log_failed_after_apply: {audit_error}"
-            except Exception as exc:
-                runtime_updates["last_action"] = "api_error"
-                runtime_updates["last_cycle_error"] = str(exc)[:500]
-                runtime_updates["next_check_at"] = next_check_at(
-                    last_action="api_error",
-                    plan=plan,
-                    fail_count=1,
-                    now=now,
-                )
-                status_value = "failed"
-                reason = str(exc)
+                    applied_price = float(suggested_price)
+                    listing = self._mark_listing_price_applied(
+                        store=store,
+                        listing=listing,
+                        applied_price=applied_price,
+                        applied_at=now,
+                    )
+                    runtime_updates["last_applied_price"] = applied_price
+                    runtime_updates["last_cycle_error"] = ""
+                    status_value = "applied"
+                    reason = ""
+                    try:
+                        self._append_reprice_audit(
+                            store=store,
+                            rule=rule,
+                            actor=actor,
+                            old_price=current_price,
+                            new_price=applied_price,
+                            decision=last_decision,
+                        )
+                    except Exception as audit_exc:
+                        audit_error = str(audit_exc)[:300]
+                        last_decision["audit_error"] = audit_error
+                        runtime_updates["last_cycle_error"] = f"audit_log_failed_after_apply: {audit_error}"
+                except Exception as exc:
+                    runtime_updates["last_action"] = "api_error"
+                    runtime_updates["last_cycle_error"] = str(exc)[:500]
+                    runtime_updates["next_check_at"] = self._next_check_at(
+                        last_action="api_error",
+                        plan=plan,
+                        fail_count=1,
+                        now=now,
+                    )
+                    status_value = "failed"
+                    reason = str(exc)
 
         self._update_runtime(rule["id"], **runtime_updates)
         return BiddingCycleItemResponse(
@@ -761,7 +824,12 @@ class BiddingService:
                 "reason": message,
                 "dry_run": dry_run,
             },
-            next_check_at=next_check_at(last_action=reason, plan=plan, fail_count=1, now=now),
+            next_check_at=self._next_check_at(
+                last_action=reason,
+                plan=plan,
+                fail_count=self._skip_retry_weight(reason),
+                now=now,
+            ),
         )
         return BiddingCycleItemResponse(
             rule_id=rule["id"],
@@ -816,13 +884,17 @@ class BiddingService:
                                         "variant_url": variant_payload["url"],
                                         "variant_matched": True,
                                     }
-                                return {
+                                resolved_payload = {
                                     "ok": True,
                                     "payload": payload,
                                     "attempts": attempt,
                                     "identifier": identifier,
                                     "variant_matched": not self._is_summary_buybox(payload),
                                 }
+                                if self._is_summary_buybox(payload):
+                                    last_result = resolved_payload
+                                    break
+                                return resolved_payload
                             last_result = {
                                 "ok": False,
                                 "status_code": response.status_code,
@@ -1086,6 +1158,65 @@ class BiddingService:
         )
         return updated or {**listing, "raw_payload": merged_payload}
 
+    def _recent_duplicate_write(
+        self,
+        *,
+        rule: dict[str, Any],
+        offer_id: str | None,
+        suggested_price: int,
+        now: Any,
+    ) -> bool:
+        window_seconds = max(0, int(settings.autobid_write_idempotency_window_seconds))
+        if window_seconds <= 0:
+            return False
+
+        last_applied_price = self._numeric(rule.get("last_applied_price"))
+        if last_applied_price is None or int(round(last_applied_price)) != int(suggested_price):
+            return False
+
+        last_reprice_at = rule.get("last_reprice_at")
+        if last_reprice_at is None or not hasattr(last_reprice_at, "tzinfo"):
+            return False
+        if getattr(last_reprice_at, "tzinfo", None) is None:
+            last_reprice_at = last_reprice_at.replace(tzinfo=now.tzinfo)
+        if (now - last_reprice_at).total_seconds() > window_seconds:
+            return False
+
+        decision = rule.get("last_decision") if isinstance(rule.get("last_decision"), dict) else {}
+        previous_offer_id = decision.get("offer_id")
+        if offer_id and previous_offer_id and str(previous_offer_id) != str(offer_id):
+            return False
+
+        return not str(rule.get("last_cycle_error") or "").startswith("api_error")
+
+    def _mark_listing_price_applied(
+        self,
+        *,
+        store: dict[str, Any],
+        listing: dict[str, Any],
+        applied_price: float,
+        applied_at: Any,
+    ) -> dict[str, Any]:
+        raw_payload = listing.get("raw_payload")
+        merged_payload = dict(raw_payload) if isinstance(raw_payload, dict) else {}
+        merged_payload.update(
+            {
+                "selling_price": applied_price,
+                "autobid_last_applied_price": applied_price,
+                "autobid_last_applied_at": applied_at.isoformat(),
+            }
+        )
+        updater = getattr(app_state, "update_store_listing", None)
+        if updater is None or not listing.get("id"):
+            return {**listing, "platform_price": applied_price, "raw_payload": merged_payload}
+        updated = updater(
+            store_id=store["id"],
+            listing_id=listing["id"],
+            platform_price=applied_price,
+            raw_payload=merged_payload,
+        )
+        return updated or {**listing, "platform_price": applied_price, "raw_payload": merged_payload}
+
     def _apply_offer_price(
         self,
         *,
@@ -1170,6 +1301,86 @@ class BiddingService:
             task_id=None,
             metadata={"operator_id": actor.get("id")},
         )
+
+    def _next_check_at(
+        self,
+        *,
+        last_action: str | None,
+        plan: str | None,
+        fail_count: int = 0,
+        now: Any = None,
+    ) -> Any:
+        return next_check_at(
+            last_action=last_action,
+            plan=plan,
+            fail_count=fail_count,
+            now=now,
+            jitter_seconds=max(0, int(settings.autobid_next_check_jitter_seconds)),
+        )
+
+    @staticmethod
+    def _skip_retry_weight(reason: str) -> int:
+        if reason in {"missing_plid", "missing_offer_id", "offer_match_untrusted"}:
+            return 4
+        if reason in {"listing_missing", "missing_price"}:
+            return 3
+        return 1
+
+    def _store_circuit_is_open(self, store_id: str) -> bool:
+        until = self._store_circuit_until.get(store_id)
+        if until is None:
+            return False
+        if until <= utcnow():
+            self._store_circuit_until.pop(store_id, None)
+            self._store_failure_streaks.pop(store_id, None)
+            return False
+        return True
+
+    def _record_store_cycle_health(
+        self,
+        *,
+        store_id: str,
+        processed_count: int,
+        failed_count: int,
+    ) -> None:
+        if processed_count <= 0:
+            return
+        if failed_count > 0 and failed_count >= processed_count:
+            streak = self._store_failure_streaks.get(store_id, 0) + 1
+            self._store_failure_streaks[store_id] = streak
+            threshold = max(1, int(settings.autobid_store_circuit_breaker_failure_cycles))
+            if streak >= threshold:
+                pause_seconds = max(1, int(settings.autobid_store_circuit_breaker_pause_seconds))
+                self._store_circuit_until[store_id] = utcnow() + timedelta(seconds=pause_seconds)
+            return
+
+        self._store_failure_streaks.pop(store_id, None)
+        self._store_circuit_until.pop(store_id, None)
+
+    def _admin_full_scan_is_due(self, store: dict[str, Any]) -> bool:
+        interval_minutes = max(0, int(settings.autobid_admin_full_scan_interval_minutes))
+        if interval_minutes <= 0 or not self._store_belongs_to_super_admin_tenant(store):
+            return False
+        last_scan_at = self._admin_full_scan_at.get(store["id"])
+        if last_scan_at is None:
+            return True
+        return utcnow() - last_scan_at >= timedelta(minutes=interval_minutes)
+
+    @staticmethod
+    def _store_belongs_to_super_admin_tenant(store: dict[str, Any]) -> bool:
+        tenant_id = store.get("tenant_id")
+        if not tenant_id:
+            return False
+        list_users = getattr(app_state, "list_users", None)
+        if list_users is None:
+            return False
+        try:
+            return any(
+                user.get("role") == "super_admin" and user.get("status") == "active"
+                for user in list_users(tenant_id)
+            )
+        except Exception:
+            return False
 
     def _store_plan(self, store: dict[str, Any]) -> str | None:
         entitlement_getter = getattr(app_state, "get_tenant_entitlement", None)
@@ -1445,7 +1656,9 @@ class BiddingService:
         if not normalized_tsin:
             return False
 
-        del detail_identifier
+        if self._normalize_tsin(detail_identifier) == normalized_tsin:
+            return True
+
         candidates: list[Any] = [
             payload.get("meta_identifier"),
             payload.get("tsin"),

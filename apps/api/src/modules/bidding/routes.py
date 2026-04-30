@@ -2,7 +2,7 @@ from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 
-from src.modules.auth.dependencies import require_roles
+from src.modules.auth.dependencies import require_roles, require_writable_feature_roles
 
 from .schemas import (
     BiddingCycleRequest,
@@ -25,7 +25,7 @@ BiddingReader = Annotated[
 ]
 BiddingWriter = Annotated[
     dict[str, Any],
-    Depends(require_roles("super_admin", "tenant_admin", "operator")),
+    Depends(require_writable_feature_roles("autobid", "super_admin", "tenant_admin", "operator")),
 ]
 
 

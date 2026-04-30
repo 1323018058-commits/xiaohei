@@ -113,8 +113,10 @@ export default function AutoBiddingPage() {
 
   const rows = useMemo(() => {
     const ruleBySku = new Map(rules.map((rule) => [rule.sku, rule]));
+    const seenRuleIds = new Set<string>();
     const listingRows: BiddingRow[] = listings.map((listing) => {
       const rule = ruleBySku.get(listing.sku) ?? null;
+      if (rule && !isEmptyInactiveRule(rule)) seenRuleIds.add(rule.rule_id);
       return {
         id: listing.listing_id,
         title: listing.title,
@@ -131,8 +133,16 @@ export default function AutoBiddingPage() {
       };
     });
 
-    return listingRows;
-  }, [listings, rules]);
+    if (!shouldShowRuleOnlyRows(statusFilter)) {
+      return listingRows;
+    }
+
+    const ruleOnlyRows = rules
+      .filter((rule) => !seenRuleIds.has(rule.rule_id) && !isEmptyInactiveRule(rule))
+      .map((rule) => ruleOnlyBiddingRow(rule));
+
+    return [...listingRows, ...ruleOnlyRows];
+  }, [listings, rules, statusFilter]);
 
   const dashboardMetrics = useMemo(() => buildBiddingMetrics(rows, storeStatus), [rows, storeStatus]);
 
@@ -302,6 +312,8 @@ export default function AutoBiddingPage() {
     }
     if (filter === "with_floor") {
       params.set("bidding_filter", "with_floor");
+    } else if (isRuleBackedListingFilter(filter)) {
+      params.set("bidding_filter", filter);
     }
     const pageData = await apiFetch<StoreListingListResponse>(
       `/api/v1/stores/${encodeURIComponent(storeId)}/listings?${params.toString()}`,
@@ -670,7 +682,7 @@ export default function AutoBiddingPage() {
             onClick={() => setStatusFilter("active")}
           />
           <BiddingMetricCard
-            label="赢得 BuyBox"
+            label="赢得最低价"
             value={dashboardMetrics.won}
             caption="当前由我方占领"
             active={statusFilter === "won"}
@@ -678,7 +690,7 @@ export default function AutoBiddingPage() {
             onClick={() => setStatusFilter("won")}
           />
           <BiddingMetricCard
-            label="丢失 BuyBox"
+            label="丢失最低价"
             value={dashboardMetrics.lost}
             caption="需关注竞对价格"
             active={statusFilter === "lost"}
@@ -779,7 +791,7 @@ export default function AutoBiddingPage() {
                 <tr className="border-b border-[#E7E2D8] bg-[#F7F4ED] text-xs text-[#706A5F]">
                   <th className="h-11 min-w-[360px] px-4 font-medium">商品信息</th>
                   <th className="h-11 whitespace-nowrap px-4 text-right font-medium">当前价</th>
-                  <th className="h-11 min-w-[220px] px-4 font-medium">竞价状态 & 当前 BuyBox</th>
+                  <th className="h-11 min-w-[220px] px-4 font-medium">竞价状态 & 当前最低价</th>
                   <th className="h-11 whitespace-nowrap px-4 text-right font-medium">保底价设置</th>
                   <th className="h-11 whitespace-nowrap px-4 text-right font-medium">库存</th>
                   <th className="h-11 whitespace-nowrap px-4 font-medium">下次检查</th>
@@ -856,7 +868,7 @@ export default function AutoBiddingPage() {
                     <div className="truncate text-xs font-semibold text-[#171717]">{rule.sku}</div>
                     <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs">
                       <span>{actionLabel(rule.last_action) || "暂无动作"}</span>
-                      <span>BuyBox {formatMoney(rule.last_buybox_price)}</span>
+                      <span>最低价 {formatMoney(rule.last_buybox_price)}</span>
                       <span>建议 {formatMoney(rule.last_suggested_price)}</span>
                     </div>
                   </div>
@@ -1060,6 +1072,40 @@ function isEmptyInactiveRule(rule: BiddingRule | null | undefined) {
       !rule.last_cycle_error &&
       !rule.repricing_blocked_reason,
   );
+}
+
+function shouldShowRuleOnlyRows(filter: BiddingStatusFilter) {
+  return ["active", "won", "lost", "alerts", "blocked", "paused"].includes(filter);
+}
+
+function isRuleBackedListingFilter(filter: BiddingStatusFilter) {
+  return ["active", "won", "lost", "alerts", "blocked", "paused"].includes(filter);
+}
+
+function ruleOnlyBiddingRow(rule: BiddingRule): BiddingRow {
+  const decision = isRecord(rule.last_decision) ? rule.last_decision : null;
+  const title = decisionText(decision, "title") ?? decisionText(decision, "product_title") ?? rule.sku;
+  return {
+    id: `rule:${rule.rule_id}`,
+    title,
+    sku: rule.sku,
+    listingId: rule.listing_id,
+    offerId: decisionText(decision, "offer_id"),
+    plid: normalizePlid(decisionText(decision, "plid")),
+    imageUrl: null,
+    currentPrice: numericValue(decision?.current_price) ?? rule.last_applied_price ?? null,
+    currency: "ZAR",
+    stockQuantity: null,
+    rawPayload: null,
+    rule,
+  };
+}
+
+function decisionText(decision: Record<string, unknown> | null, key: string) {
+  const value = decision?.[key];
+  if (typeof value === "string" && value.trim()) return value.trim();
+  if (typeof value === "number") return String(value);
+  return null;
 }
 
 function buildBiddingMetrics(rows: BiddingRow[], storeStatus: BiddingStoreStatus | null) {
@@ -1269,11 +1315,11 @@ function BiddingStatusCell({ row, state }: { row: BiddingRow; state: BiddingRowS
         {meta.label}
       </span>
       {state === "won" ? (
-        <div className="text-xs text-[#245B32]">当前 BuyBox {formatMoney(buyboxPrice ?? row.currentPrice)}</div>
+        <div className="text-xs text-[#245B32]">当前最低价 {formatMoney(buyboxPrice ?? row.currentPrice)}</div>
       ) : null}
       {state === "lost" || state === "lost_floor" ? (
         <div className="text-xs text-[#A33A24]">
-          竞对 BuyBox {formatMoney(buyboxPrice)}
+          竞对最低价 {formatMoney(buyboxPrice)}
         </div>
       ) : null}
       {state === "lost_floor" ? (
@@ -1611,8 +1657,8 @@ function reasonLabel(value: string) {
     offer_match_untrusted: "Offer 匹配不可信",
     listing_missing: "未同步商品",
     missing_price: "价格缺失",
-    buybox_refresh_failed: "BuyBox 刷新失败",
-    missing_buybox_price: "BuyBox 价格缺失",
+    buybox_refresh_failed: "最低价刷新失败",
+    missing_buybox_price: "最低价缺失",
   };
   return labels[value] ?? value;
 }

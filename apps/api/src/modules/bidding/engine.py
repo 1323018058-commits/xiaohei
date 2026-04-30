@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
+import random
 from typing import Any
 
 
@@ -54,10 +55,13 @@ def next_check_at(
     plan: str | None,
     fail_count: int = 0,
     now: datetime | None = None,
+    jitter_seconds: int = 0,
 ) -> datetime:
     base = now or utcnow()
+    jitter = random.randint(0, max(0, jitter_seconds)) if jitter_seconds > 0 else 0
     return base + timedelta(
-        minutes=next_check_delay_minutes(last_action, plan, fail_count)
+        minutes=next_check_delay_minutes(last_action, plan, fail_count),
+        seconds=jitter,
     )
 
 

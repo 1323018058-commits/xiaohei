@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { PackagePlus } from "lucide-react";
 import type { CSSProperties } from "react";
 
 export type DashboardNavItem = {
@@ -43,17 +42,15 @@ function NavSection({
   pathname: string;
   searchParams: ReturnType<typeof useSearchParams>;
 }) {
-  const activeHref = findActiveHref(items, pathname, searchParams);
-
   return (
     <section style={{ display: "grid", gap: 6 }}>
       <div style={sectionTitleStyle}>{title}</div>
       <div style={{ display: "grid", gap: 2 }}>
         {items.map((item) => {
-          const isActive = item.href === activeHref;
+          const isActive = matchesNavItem(item.href, pathname, searchParams);
           return (
             <Link key={item.href} href={item.href} style={itemStyle(isActive)}>
-              <NavIcon icon={item.icon} isActive={isActive} />
+              <span style={iconStyle(isActive)}>{item.icon ?? "•"}</span>
               <span style={itemLabelStyle(isActive)}>{item.label}</span>
             </Link>
           );
@@ -61,16 +58,6 @@ function NavSection({
       </div>
     </section>
   );
-}
-
-function findActiveHref(
-  items: DashboardNavItem[],
-  pathname: string,
-  searchParams: ReturnType<typeof useSearchParams>,
-) {
-  return items
-    .filter((item) => matchesNavItem(item.href, pathname, searchParams))
-    .sort((left, right) => right.href.length - left.href.length)[0]?.href;
 }
 
 function matchesNavItem(
@@ -91,18 +78,6 @@ function matchesNavItem(
 
   const targetParams = new URLSearchParams(queryString);
   return Array.from(targetParams.entries()).every(([key, value]) => searchParams.get(key) === value);
-}
-
-function NavIcon({ icon, isActive }: { icon?: string; isActive: boolean }) {
-  if (icon === "PackagePlus") {
-    return (
-      <span style={iconStyle(isActive)}>
-        <PackagePlus size={14} strokeWidth={1.8} />
-      </span>
-    );
-  }
-
-  return <span style={iconStyle(isActive)}>{icon ?? "•"}</span>;
 }
 
 const railStyle: CSSProperties = {
@@ -135,10 +110,6 @@ function itemStyle(isActive: boolean): CSSProperties {
 function iconStyle(isActive: boolean): CSSProperties {
   return {
     width: 18,
-    height: 18,
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
     textAlign: "center",
     color: isActive ? "#000000" : "#595959",
     fontSize: 13,

@@ -46,6 +46,88 @@
         }
       }
     },
+    "/api/auth/register/send-code": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Send Register Code",
+        "operationId": "send_register_code_api_auth_register_send_code_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhoneVerificationCodeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PhoneVerificationCodeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Register",
+        "operationId": "register_api_auth_register_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/logout": {
       "post": {
         "tags": [
@@ -233,6 +315,180 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TenantActionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/api/activation-cards": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "List Activation Cards",
+        "operationId": "list_activation_cards_admin_api_activation_cards_get",
+        "parameters": [
+          {
+            "name": "erp_session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Erp Session"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivationCardListResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Create Activation Cards",
+        "operationId": "create_activation_cards_admin_api_activation_cards_post",
+        "parameters": [
+          {
+            "name": "erp_session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Erp Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivationCardCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivationCardCreateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/api/activation-cards/{card_id}/void": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Void Activation Card",
+        "operationId": "void_activation_card_admin_api_activation_cards__card_id__void_post",
+        "parameters": [
+          {
+            "name": "card_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Card Id"
+            }
+          },
+          {
+            "name": "erp_session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Erp Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReasonRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivationCardActionResponse"
                 }
               }
             }
@@ -3583,7 +3839,7 @@
               "anyOf": [
                 {
                   "type": "number",
-                  "minimum": 0.0
+                  "minimum": 0
                 },
                 {
                   "type": "null"
@@ -3600,7 +3856,7 @@
               "anyOf": [
                 {
                   "type": "number",
-                  "minimum": 0.0
+                  "minimum": 0
                 },
                 {
                   "type": "null"
@@ -3617,8 +3873,8 @@
               "anyOf": [
                 {
                   "type": "number",
-                  "maximum": 5.0,
-                  "minimum": 0.0
+                  "maximum": 5,
+                  "minimum": 0
                 },
                 {
                   "type": "null"
@@ -4431,991 +4687,6 @@
         }
       }
     },
-    "/api/listing/images": {
-      "post": {
-        "tags": [
-          "listing"
-        ],
-        "summary": "Upload Listing Images",
-        "operationId": "upload_listing_images_api_listing_images_post",
-        "parameters": [
-          {
-            "name": "erp_session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Erp Session"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/Body_upload_listing_images_api_listing_images_post"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListingImageUploadResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/listing/images/validate-url": {
-      "post": {
-        "tags": [
-          "listing"
-        ],
-        "summary": "Validate Listing Image Url",
-        "operationId": "validate_listing_image_url_api_listing_images_validate_url_post",
-        "parameters": [
-          {
-            "name": "erp_session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Erp Session"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ListingImageUrlValidateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListingImageUrlValidateResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/listing/images/check-requirements": {
-      "post": {
-        "tags": [
-          "listing"
-        ],
-        "summary": "Check Listing Image Requirements",
-        "operationId": "check_listing_image_requirements_api_listing_images_check_requirements_post",
-        "parameters": [
-          {
-            "name": "erp_session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Erp Session"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ListingImageRequirementCheckRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListingImageRequirementCheckResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/listing/loadsheet/preview": {
-      "post": {
-        "tags": [
-          "listing"
-        ],
-        "summary": "Preview Listing Loadsheet",
-        "operationId": "preview_listing_loadsheet_api_listing_loadsheet_preview_post",
-        "parameters": [
-          {
-            "name": "erp_session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Erp Session"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ListingLoadsheetPreviewRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListingLoadsheetPreviewResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/listing/stores/{store_id}/submissions": {
-      "post": {
-        "tags": [
-          "listing"
-        ],
-        "summary": "Create Listing Submission",
-        "operationId": "create_listing_submission_api_listing_stores__store_id__submissions_post",
-        "parameters": [
-          {
-            "name": "store_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Store Id"
-            }
-          },
-          {
-            "name": "erp_session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Erp Session"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ListingSubmissionCreateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListingSubmissionCreateResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "listing"
-        ],
-        "summary": "List Listing Submissions",
-        "operationId": "list_listing_submissions_api_listing_stores__store_id__submissions_get",
-        "parameters": [
-          {
-            "name": "store_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Store Id"
-            }
-          },
-          {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Status"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1,
-              "title": "Page"
-            }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "maximum": 100,
-              "minimum": 1,
-              "default": 20,
-              "title": "Page Size"
-            }
-          },
-          {
-            "name": "erp_session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Erp Session"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListingSubmissionListResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/listing/stores/{store_id}/submissions/sync": {
-      "post": {
-        "tags": [
-          "listing"
-        ],
-        "summary": "Sync Store Listing Submissions",
-        "operationId": "sync_store_listing_submissions_api_listing_stores__store_id__submissions_sync_post",
-        "parameters": [
-          {
-            "name": "store_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Store Id"
-            }
-          },
-          {
-            "name": "erp_session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Erp Session"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListingSubmissionSyncResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/listing/submissions/{submission_id}": {
-      "get": {
-        "tags": [
-          "listing"
-        ],
-        "summary": "Get Listing Submission Detail",
-        "operationId": "get_listing_submission_detail_api_listing_submissions__submission_id__get",
-        "parameters": [
-          {
-            "name": "submission_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Submission Id"
-            }
-          },
-          {
-            "name": "erp_session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Erp Session"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListingSubmissionDetailResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/listing/submissions/{submission_id}/sync-status": {
-      "post": {
-        "tags": [
-          "listing"
-        ],
-        "summary": "Sync Listing Submission Status",
-        "operationId": "sync_listing_submission_status_api_listing_submissions__submission_id__sync_status_post",
-        "parameters": [
-          {
-            "name": "submission_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Submission Id"
-            }
-          },
-          {
-            "name": "erp_session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Erp Session"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListingSubmissionSyncResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/listing/submissions/{submission_id}/finalize-offer": {
-      "post": {
-        "tags": [
-          "listing"
-        ],
-        "summary": "Finalize Listing Submission Offer",
-        "operationId": "finalize_listing_submission_offer_api_listing_submissions__submission_id__finalize_offer_post",
-        "parameters": [
-          {
-            "name": "submission_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Submission Id"
-            }
-          },
-          {
-            "name": "erp_session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Erp Session"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListingFinalizeOfferResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/listing/ai/autopilot": {
-      "post": {
-        "tags": [
-          "listing"
-        ],
-        "summary": "Generate Listing Content",
-        "operationId": "generate_listing_content_api_listing_ai_autopilot_post",
-        "parameters": [
-          {
-            "name": "erp_session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Erp Session"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ListingAiAutopilotRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListingAiAutopilotResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/listing/categories/match": {
-      "post": {
-        "tags": [
-          "listing"
-        ],
-        "summary": "Match Category",
-        "operationId": "match_category_api_listing_categories_match_post",
-        "parameters": [
-          {
-            "name": "erp_session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Erp Session"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CategoryMatchRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CategoryMatchResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/listing/categories/search": {
-      "get": {
-        "tags": [
-          "listing"
-        ],
-        "summary": "Search Categories",
-        "operationId": "search_categories_api_listing_categories_search_get",
-        "parameters": [
-          {
-            "name": "q",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "maxLength": 200
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Q"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1,
-              "title": "Page"
-            }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "maximum": 100,
-              "minimum": 1,
-              "default": 20,
-              "title": "Page Size"
-            }
-          },
-          {
-            "name": "erp_session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Erp Session"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TakealotCategorySearchResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/listing/categories/{category_id}/requirements": {
-      "get": {
-        "tags": [
-          "listing"
-        ],
-        "summary": "Get Category Requirements",
-        "operationId": "get_category_requirements_api_listing_categories__category_id__requirements_get",
-        "parameters": [
-          {
-            "name": "category_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "title": "Category Id"
-            }
-          },
-          {
-            "name": "erp_session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Erp Session"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TakealotCategoryRequirementsResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/listing/brands/search": {
-      "get": {
-        "tags": [
-          "listing"
-        ],
-        "summary": "Search Brands",
-        "operationId": "search_brands_api_listing_brands_search_get",
-        "parameters": [
-          {
-            "name": "q",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string",
-                  "maxLength": 200
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Q"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 1,
-              "title": "Page"
-            }
-          },
-          {
-            "name": "page_size",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "maximum": 100,
-              "minimum": 1,
-              "default": 20,
-              "title": "Page Size"
-            }
-          },
-          {
-            "name": "erp_session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Erp Session"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TakealotBrandSearchResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/listing/jobs": {
       "get": {
         "tags": [
@@ -5678,6 +4949,65 @@
         }
       }
     },
+    "/api/subscription/redeem-card": {
+      "post": {
+        "tags": [
+          "subscription"
+        ],
+        "summary": "Redeem Activation Card",
+        "operationId": "redeem_activation_card_api_subscription_redeem_card_post",
+        "parameters": [
+          {
+            "name": "erp_session",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Erp Session"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RedeemActivationCardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RedeemActivationCardResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/webhooks/takealot": {
       "post": {
         "tags": [
@@ -5718,6 +5048,224 @@
   },
   "components": {
     "schemas": {
+      "ActivationCardActionResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success",
+            "default": true
+          },
+          "card": {
+            "$ref": "#/components/schemas/ActivationCardResponse"
+          }
+        },
+        "type": "object",
+        "required": [
+          "card"
+        ],
+        "title": "ActivationCardActionResponse"
+      },
+      "ActivationCardCreateRequest": {
+        "properties": {
+          "days": {
+            "type": "integer",
+            "maximum": 3660.0,
+            "minimum": 1.0,
+            "title": "Days"
+          },
+          "quantity": {
+            "type": "integer",
+            "maximum": 200.0,
+            "minimum": 1.0,
+            "title": "Quantity",
+            "default": 1
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "days"
+        ],
+        "title": "ActivationCardCreateRequest"
+      },
+      "ActivationCardCreateResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success",
+            "default": true
+          },
+          "cards": {
+            "items": {
+              "$ref": "#/components/schemas/ActivationCardResponse"
+            },
+            "type": "array",
+            "title": "Cards"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cards"
+        ],
+        "title": "ActivationCardCreateResponse"
+      },
+      "ActivationCardListResponse": {
+        "properties": {
+          "cards": {
+            "items": {
+              "$ref": "#/components/schemas/ActivationCardResponse"
+            },
+            "type": "array",
+            "title": "Cards"
+          }
+        },
+        "type": "object",
+        "required": [
+          "cards"
+        ],
+        "title": "ActivationCardListResponse"
+      },
+      "ActivationCardResponse": {
+        "properties": {
+          "card_id": {
+            "type": "string",
+            "title": "Card Id"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "code_suffix": {
+            "type": "string",
+            "title": "Code Suffix"
+          },
+          "days": {
+            "type": "integer",
+            "title": "Days"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created By"
+          },
+          "redeemed_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Redeemed By"
+          },
+          "redeemed_tenant_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Redeemed Tenant Id"
+          },
+          "redeemed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Redeemed At"
+          },
+          "voided_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voided By"
+          },
+          "voided_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Voided At"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "card_id",
+          "code_suffix",
+          "days",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ActivationCardResponse"
+      },
       "AdminActionResponse": {
         "properties": {
           "success": {
@@ -6104,6 +5652,7 @@
           "before": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -6115,6 +5664,7 @@
           "after": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -6376,6 +5926,11 @@
             "minimum": 1.0,
             "title": "Limit",
             "default": 50
+          },
+          "force": {
+            "type": "boolean",
+            "title": "Force",
+            "default": false
           }
         },
         "type": "object",
@@ -6643,6 +6198,7 @@
           "last_decision": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -6793,6 +6349,7 @@
           "last_cycle_summary": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -6817,39 +6374,6 @@
           "worker_cycle_limit"
         ],
         "title": "BiddingStoreStatusResponse"
-      },
-      "Body_upload_listing_images_api_listing_images_post": {
-        "properties": {
-          "store_id": {
-            "type": "string",
-            "title": "Store Id"
-          },
-          "submission_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Submission Id"
-          },
-          "files": {
-            "items": {
-              "type": "string",
-              "format": "binary"
-            },
-            "type": "array",
-            "title": "Files"
-          }
-        },
-        "type": "object",
-        "required": [
-          "store_id",
-          "files"
-        ],
-        "title": "Body_upload_listing_images_api_listing_images_post"
       },
       "BulkImportBiddingRuleItem": {
         "properties": {
@@ -6907,323 +6431,6 @@
           "rules"
         ],
         "title": "BulkImportBiddingRuleResponse"
-      },
-      "CategoryMatchRequest": {
-        "properties": {
-          "description": {
-            "type": "string",
-            "maxLength": 1000,
-            "minLength": 1,
-            "title": "Description"
-          },
-          "language_hint": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 32
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Language Hint"
-          },
-          "limit": {
-            "type": "integer",
-            "maximum": 5.0,
-            "minimum": 1.0,
-            "title": "Limit",
-            "default": 5
-          },
-          "use_ai": {
-            "type": "boolean",
-            "title": "Use Ai",
-            "default": true
-          }
-        },
-        "type": "object",
-        "required": [
-          "description"
-        ],
-        "title": "CategoryMatchRequest"
-      },
-      "CategoryMatchResponse": {
-        "properties": {
-          "suggestions": {
-            "items": {
-              "$ref": "#/components/schemas/CategoryMatchSuggestion"
-            },
-            "type": "array",
-            "title": "Suggestions"
-          },
-          "total_candidates": {
-            "type": "integer",
-            "title": "Total Candidates"
-          },
-          "catalog_ready": {
-            "type": "boolean",
-            "title": "Catalog Ready"
-          },
-          "ai_used": {
-            "type": "boolean",
-            "title": "Ai Used"
-          },
-          "vector_used": {
-            "type": "boolean",
-            "title": "Vector Used",
-            "default": false
-          },
-          "vector_candidates": {
-            "type": "integer",
-            "title": "Vector Candidates",
-            "default": 0
-          },
-          "keyword_candidates": {
-            "type": "integer",
-            "title": "Keyword Candidates",
-            "default": 0
-          },
-          "fuzzy_candidates": {
-            "type": "integer",
-            "title": "Fuzzy Candidates",
-            "default": 0
-          },
-          "embedding_model": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Embedding Model"
-          },
-          "embedding_dimensions": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Embedding Dimensions"
-          },
-          "translation_used": {
-            "type": "boolean",
-            "title": "Translation Used",
-            "default": false
-          },
-          "translation_model": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Translation Model"
-          },
-          "match_strategy": {
-            "type": "string",
-            "title": "Match Strategy",
-            "default": "keyword_rules"
-          },
-          "normalized_keywords": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Normalized Keywords"
-          },
-          "message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Message"
-          }
-        },
-        "type": "object",
-        "required": [
-          "suggestions",
-          "total_candidates",
-          "catalog_ready",
-          "ai_used"
-        ],
-        "title": "CategoryMatchResponse"
-      },
-      "CategoryMatchSuggestion": {
-        "properties": {
-          "category_id": {
-            "type": "integer",
-            "title": "Category Id"
-          },
-          "path_en": {
-            "type": "string",
-            "title": "Path En"
-          },
-          "path_zh": {
-            "type": "string",
-            "title": "Path Zh"
-          },
-          "confidence": {
-            "type": "number",
-            "title": "Confidence"
-          },
-          "min_required_images": {
-            "type": "integer",
-            "title": "Min Required Images"
-          },
-          "compliance_certificates": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Compliance Certificates"
-          },
-          "image_requirement_texts": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Image Requirement Texts"
-          },
-          "required_attributes": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "object"
-                }
-              ]
-            },
-            "type": "array",
-            "title": "Required Attributes"
-          },
-          "optional_attributes": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "object"
-                }
-              ]
-            },
-            "type": "array",
-            "title": "Optional Attributes"
-          },
-          "loadsheet_template_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Loadsheet Template Id"
-          },
-          "loadsheet_template_name": {
-            "type": "string",
-            "title": "Loadsheet Template Name",
-            "default": ""
-          },
-          "division": {
-            "type": "string",
-            "title": "Division",
-            "default": ""
-          },
-          "department": {
-            "type": "string",
-            "title": "Department",
-            "default": ""
-          },
-          "main_category_id": {
-            "type": "integer",
-            "title": "Main Category Id",
-            "default": 0
-          },
-          "main_category_name": {
-            "type": "string",
-            "title": "Main Category Name",
-            "default": ""
-          },
-          "lowest_category_name": {
-            "type": "string",
-            "title": "Lowest Category Name",
-            "default": ""
-          },
-          "lowest_category_raw": {
-            "type": "string",
-            "title": "Lowest Category Raw",
-            "default": ""
-          },
-          "attributes_ready": {
-            "type": "boolean",
-            "title": "Attributes Ready",
-            "default": false
-          },
-          "attribute_source": {
-            "type": "string",
-            "title": "Attribute Source",
-            "default": "missing"
-          },
-          "attribute_message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Attribute Message"
-          },
-          "translation_source": {
-            "type": "string",
-            "title": "Translation Source",
-            "default": "rules"
-          },
-          "matched_keywords": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Matched Keywords"
-          },
-          "match_reasons": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Match Reasons"
-          },
-          "source": {
-            "type": "string",
-            "title": "Source",
-            "default": "rules"
-          }
-        },
-        "type": "object",
-        "required": [
-          "category_id",
-          "path_en",
-          "path_zh",
-          "confidence",
-          "min_required_images"
-        ],
-        "title": "CategoryMatchSuggestion"
       },
       "CreateStoreRequest": {
         "properties": {
@@ -7298,6 +6505,7 @@
           "subscription_status": {
             "type": "string",
             "enum": [
+              "unactivated",
               "trialing",
               "active",
               "past_due",
@@ -7690,55 +6898,6 @@
         ],
         "title": "DashboardSummaryResponse"
       },
-      "DynamicAttributeDraft": {
-        "properties": {
-          "key": {
-            "type": "string",
-            "title": "Key"
-          },
-          "value": {
-            "anyOf": [
-              {},
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Value"
-          },
-          "value_type": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Value Type"
-          },
-          "source": {
-            "type": "string",
-            "title": "Source",
-            "default": "fallback"
-          },
-          "warning": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Warning"
-          }
-        },
-        "type": "object",
-        "required": [
-          "key"
-        ],
-        "title": "DynamicAttributeDraft"
-      },
       "ExtensionAuthRequest": {
         "properties": {
           "store_id": {
@@ -7812,6 +6971,30 @@
               }
             ],
             "title": "Title"
+          },
+          "barcode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Barcode"
+          },
+          "gtin": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gtin"
           },
           "sale_price_zar": {
             "anyOf": [
@@ -8262,637 +7445,6 @@
         "type": "object",
         "title": "HTTPValidationError"
       },
-      "ListingAiAutopilotRequest": {
-        "properties": {
-          "product_description": {
-            "type": "string",
-            "maxLength": 2000,
-            "minLength": 1,
-            "title": "Product Description"
-          },
-          "category_id": {
-            "type": "integer",
-            "minimum": 1.0,
-            "title": "Category Id"
-          },
-          "brand_name": {
-            "type": "string",
-            "maxLength": 255,
-            "title": "Brand Name",
-            "default": ""
-          },
-          "required_attributes": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "object"
-                }
-              ]
-            },
-            "type": "array",
-            "title": "Required Attributes"
-          },
-          "optional_attributes": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "object"
-                }
-              ]
-            },
-            "type": "array",
-            "title": "Optional Attributes"
-          },
-          "language_hint": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 32
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Language Hint"
-          },
-          "use_ai": {
-            "type": "boolean",
-            "title": "Use Ai",
-            "default": true
-          }
-        },
-        "type": "object",
-        "required": [
-          "product_description",
-          "category_id"
-        ],
-        "title": "ListingAiAutopilotRequest"
-      },
-      "ListingAiAutopilotResponse": {
-        "properties": {
-          "category_id": {
-            "type": "integer",
-            "title": "Category Id"
-          },
-          "category_path_en": {
-            "type": "string",
-            "title": "Category Path En"
-          },
-          "category_path_zh": {
-            "type": "string",
-            "title": "Category Path Zh"
-          },
-          "title": {
-            "type": "string",
-            "title": "Title"
-          },
-          "subtitle": {
-            "type": "string",
-            "title": "Subtitle"
-          },
-          "description": {
-            "type": "string",
-            "title": "Description"
-          },
-          "whats_in_the_box": {
-            "type": "string",
-            "title": "Whats In The Box"
-          },
-          "length_cm": {
-            "type": "number",
-            "title": "Length Cm"
-          },
-          "width_cm": {
-            "type": "number",
-            "title": "Width Cm"
-          },
-          "height_cm": {
-            "type": "number",
-            "title": "Height Cm"
-          },
-          "weight_g": {
-            "type": "integer",
-            "title": "Weight G"
-          },
-          "dynamic_attributes": {
-            "items": {
-              "$ref": "#/components/schemas/DynamicAttributeDraft"
-            },
-            "type": "array",
-            "title": "Dynamic Attributes"
-          },
-          "ai_used": {
-            "type": "boolean",
-            "title": "Ai Used"
-          },
-          "fallback_used": {
-            "type": "boolean",
-            "title": "Fallback Used"
-          },
-          "warnings": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Warnings"
-          }
-        },
-        "type": "object",
-        "required": [
-          "category_id",
-          "category_path_en",
-          "category_path_zh",
-          "title",
-          "subtitle",
-          "description",
-          "whats_in_the_box",
-          "length_cm",
-          "width_cm",
-          "height_cm",
-          "weight_g",
-          "ai_used",
-          "fallback_used"
-        ],
-        "title": "ListingAiAutopilotResponse"
-      },
-      "ListingFinalizeOfferResponse": {
-        "properties": {
-          "submission_id": {
-            "type": "string",
-            "title": "Submission Id"
-          },
-          "task_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Task Id"
-          },
-          "status": {
-            "type": "string",
-            "title": "Status"
-          },
-          "stage": {
-            "type": "string",
-            "title": "Stage"
-          },
-          "review_status": {
-            "type": "string",
-            "title": "Review Status"
-          },
-          "takealot_offer_id": {
-            "type": "string",
-            "title": "Takealot Offer Id",
-            "default": ""
-          },
-          "listing_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Listing Id"
-          },
-          "platform_product_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Platform Product Id"
-          },
-          "message": {
-            "type": "string",
-            "title": "Message"
-          },
-          "warnings": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Warnings"
-          }
-        },
-        "type": "object",
-        "required": [
-          "submission_id",
-          "status",
-          "stage",
-          "review_status",
-          "message"
-        ],
-        "title": "ListingFinalizeOfferResponse"
-      },
-      "ListingImageAsset": {
-        "properties": {
-          "id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Id"
-          },
-          "tenant_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Tenant Id"
-          },
-          "store_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Store Id"
-          },
-          "submission_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Submission Id"
-          },
-          "asset_type": {
-            "type": "string",
-            "title": "Asset Type",
-            "default": "image"
-          },
-          "source": {
-            "type": "string",
-            "title": "Source"
-          },
-          "original_file_name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Original File Name"
-          },
-          "file_name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "File Name"
-          },
-          "storage_path": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Storage Path"
-          },
-          "public_url": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Public Url"
-          },
-          "external_url": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "External Url"
-          },
-          "content_type": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Content Type"
-          },
-          "size_bytes": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Size Bytes"
-          },
-          "checksum_sha256": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Checksum Sha256"
-          },
-          "width": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Width"
-          },
-          "height": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Height"
-          },
-          "sort_order": {
-            "type": "integer",
-            "title": "Sort Order",
-            "default": 0
-          },
-          "validation_status": {
-            "type": "string",
-            "title": "Validation Status",
-            "default": "pending"
-          },
-          "validation_errors": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Validation Errors"
-          },
-          "warnings": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Warnings"
-          },
-          "created_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Created At"
-          },
-          "updated_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Updated At"
-          }
-        },
-        "type": "object",
-        "required": [
-          "source"
-        ],
-        "title": "ListingImageAsset"
-      },
-      "ListingImageRequirementCheckRequest": {
-        "properties": {
-          "category_id": {
-            "type": "integer",
-            "minimum": 1.0,
-            "title": "Category Id"
-          },
-          "image_urls": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Image Urls"
-          },
-          "asset_ids": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Asset Ids"
-          }
-        },
-        "type": "object",
-        "required": [
-          "category_id"
-        ],
-        "title": "ListingImageRequirementCheckRequest"
-      },
-      "ListingImageRequirementCheckResponse": {
-        "properties": {
-          "passed": {
-            "type": "boolean",
-            "title": "Passed"
-          },
-          "required_count": {
-            "type": "integer",
-            "title": "Required Count"
-          },
-          "current_count": {
-            "type": "integer",
-            "title": "Current Count"
-          },
-          "missing_count": {
-            "type": "integer",
-            "title": "Missing Count"
-          },
-          "warnings": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Warnings"
-          },
-          "valid_image_urls": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Valid Image Urls"
-          },
-          "valid_asset_ids": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Valid Asset Ids"
-          }
-        },
-        "type": "object",
-        "required": [
-          "passed",
-          "required_count",
-          "current_count",
-          "missing_count"
-        ],
-        "title": "ListingImageRequirementCheckResponse"
-      },
-      "ListingImageUploadResponse": {
-        "properties": {
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/ListingImageAsset"
-            },
-            "type": "array",
-            "title": "Items"
-          },
-          "warnings": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Warnings"
-          }
-        },
-        "type": "object",
-        "required": [
-          "items"
-        ],
-        "title": "ListingImageUploadResponse"
-      },
-      "ListingImageUrlValidateRequest": {
-        "properties": {
-          "image_url": {
-            "type": "string",
-            "maxLength": 2048,
-            "minLength": 1,
-            "title": "Image Url"
-          },
-          "check_remote": {
-            "type": "boolean",
-            "title": "Check Remote",
-            "default": true
-          }
-        },
-        "type": "object",
-        "required": [
-          "image_url"
-        ],
-        "title": "ListingImageUrlValidateRequest"
-      },
-      "ListingImageUrlValidateResponse": {
-        "properties": {
-          "image_url": {
-            "type": "string",
-            "title": "Image Url"
-          },
-          "valid": {
-            "type": "boolean",
-            "title": "Valid"
-          },
-          "content_type": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Content Type"
-          },
-          "size_bytes": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Size Bytes"
-          },
-          "warnings": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Warnings"
-          },
-          "errors": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Errors"
-          }
-        },
-        "type": "object",
-        "required": [
-          "image_url",
-          "valid"
-        ],
-        "title": "ListingImageUrlValidateResponse"
-      },
       "ListingJobListResponse": {
         "properties": {
           "jobs": {
@@ -9012,6 +7564,7 @@
           "raw_payload": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -9052,1456 +7605,6 @@
           "updated_at"
         ],
         "title": "ListingJobResponse"
-      },
-      "ListingLoadsheetAsset": {
-        "properties": {
-          "asset_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Asset Id"
-          },
-          "storage_path": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Storage Path"
-          },
-          "public_url": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Public Url"
-          },
-          "content_type": {
-            "type": "string",
-            "title": "Content Type"
-          },
-          "size_bytes": {
-            "type": "integer",
-            "title": "Size Bytes"
-          },
-          "checksum_sha256": {
-            "type": "string",
-            "title": "Checksum Sha256"
-          }
-        },
-        "type": "object",
-        "required": [
-          "content_type",
-          "size_bytes",
-          "checksum_sha256"
-        ],
-        "title": "ListingLoadsheetAsset"
-      },
-      "ListingLoadsheetPreviewRequest": {
-        "properties": {
-          "store_id": {
-            "type": "string",
-            "minLength": 1,
-            "title": "Store Id"
-          },
-          "category_id": {
-            "type": "integer",
-            "minimum": 1.0,
-            "title": "Category Id"
-          },
-          "brand_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 128
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Brand Id"
-          },
-          "brand_name": {
-            "type": "string",
-            "maxLength": 255,
-            "title": "Brand Name",
-            "default": ""
-          },
-          "sku": {
-            "type": "string",
-            "maxLength": 128,
-            "title": "Sku",
-            "default": ""
-          },
-          "barcode": {
-            "type": "string",
-            "maxLength": 128,
-            "title": "Barcode",
-            "default": ""
-          },
-          "title": {
-            "type": "string",
-            "maxLength": 255,
-            "title": "Title",
-            "default": ""
-          },
-          "subtitle": {
-            "type": "string",
-            "maxLength": 255,
-            "title": "Subtitle",
-            "default": ""
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 5000,
-            "title": "Description",
-            "default": ""
-          },
-          "whats_in_the_box": {
-            "type": "string",
-            "maxLength": 2000,
-            "title": "Whats In The Box",
-            "default": ""
-          },
-          "selling_price": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Selling Price"
-          },
-          "rrp": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rrp"
-          },
-          "stock_quantity": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Stock Quantity"
-          },
-          "minimum_leadtime_days": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Minimum Leadtime Days"
-          },
-          "seller_warehouse_id": {
-            "type": "string",
-            "maxLength": 128,
-            "title": "Seller Warehouse Id",
-            "default": ""
-          },
-          "length_cm": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Length Cm"
-          },
-          "width_cm": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Width Cm"
-          },
-          "height_cm": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Height Cm"
-          },
-          "weight_g": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Weight G"
-          },
-          "image_urls": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Image Urls"
-          },
-          "asset_ids": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Asset Ids"
-          },
-          "dynamic_attributes": {
-            "anyOf": [
-              {
-                "type": "object"
-              },
-              {
-                "items": {
-                  "$ref": "#/components/schemas/DynamicAttributeDraft"
-                },
-                "type": "array"
-              }
-            ],
-            "title": "Dynamic Attributes"
-          }
-        },
-        "type": "object",
-        "required": [
-          "store_id",
-          "category_id"
-        ],
-        "title": "ListingLoadsheetPreviewRequest"
-      },
-      "ListingLoadsheetPreviewResponse": {
-        "properties": {
-          "valid": {
-            "type": "boolean",
-            "title": "Valid"
-          },
-          "issues": {
-            "items": {
-              "$ref": "#/components/schemas/ListingLoadsheetValidationIssue"
-            },
-            "type": "array",
-            "title": "Issues"
-          },
-          "loadsheet_asset": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ListingLoadsheetAsset"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "generated_fields": {
-            "type": "object",
-            "title": "Generated Fields"
-          },
-          "missing_required_fields": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Missing Required Fields"
-          },
-          "warnings": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Warnings"
-          }
-        },
-        "type": "object",
-        "required": [
-          "valid"
-        ],
-        "title": "ListingLoadsheetPreviewResponse"
-      },
-      "ListingLoadsheetValidationIssue": {
-        "properties": {
-          "level": {
-            "type": "string",
-            "pattern": "^(error|warning)$",
-            "title": "Level"
-          },
-          "field": {
-            "type": "string",
-            "title": "Field"
-          },
-          "message": {
-            "type": "string",
-            "title": "Message"
-          }
-        },
-        "type": "object",
-        "required": [
-          "level",
-          "field",
-          "message"
-        ],
-        "title": "ListingLoadsheetValidationIssue"
-      },
-      "ListingSubmissionCreateRequest": {
-        "properties": {
-          "category_id": {
-            "type": "integer",
-            "minimum": 1.0,
-            "title": "Category Id"
-          },
-          "brand_id": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 128
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Brand Id"
-          },
-          "brand_name": {
-            "type": "string",
-            "maxLength": 255,
-            "title": "Brand Name",
-            "default": ""
-          },
-          "sku": {
-            "type": "string",
-            "maxLength": 128,
-            "title": "Sku",
-            "default": ""
-          },
-          "barcode": {
-            "type": "string",
-            "maxLength": 128,
-            "title": "Barcode",
-            "default": ""
-          },
-          "title": {
-            "type": "string",
-            "maxLength": 255,
-            "title": "Title",
-            "default": ""
-          },
-          "subtitle": {
-            "type": "string",
-            "maxLength": 255,
-            "title": "Subtitle",
-            "default": ""
-          },
-          "description": {
-            "type": "string",
-            "maxLength": 5000,
-            "title": "Description",
-            "default": ""
-          },
-          "whats_in_the_box": {
-            "type": "string",
-            "maxLength": 2000,
-            "title": "Whats In The Box",
-            "default": ""
-          },
-          "selling_price": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Selling Price"
-          },
-          "rrp": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rrp"
-          },
-          "stock_quantity": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Stock Quantity"
-          },
-          "minimum_leadtime_days": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Minimum Leadtime Days"
-          },
-          "seller_warehouse_id": {
-            "type": "string",
-            "maxLength": 128,
-            "title": "Seller Warehouse Id",
-            "default": ""
-          },
-          "length_cm": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Length Cm"
-          },
-          "width_cm": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Width Cm"
-          },
-          "height_cm": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Height Cm"
-          },
-          "weight_g": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Weight G"
-          },
-          "image_urls": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Image Urls"
-          },
-          "asset_ids": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Asset Ids"
-          },
-          "dynamic_attributes": {
-            "anyOf": [
-              {
-                "type": "object"
-              },
-              {
-                "items": {
-                  "$ref": "#/components/schemas/DynamicAttributeDraft"
-                },
-                "type": "array"
-              }
-            ],
-            "title": "Dynamic Attributes"
-          },
-          "submit_immediately": {
-            "type": "boolean",
-            "title": "Submit Immediately",
-            "default": false
-          }
-        },
-        "type": "object",
-        "required": [
-          "category_id"
-        ],
-        "title": "ListingSubmissionCreateRequest"
-      },
-      "ListingSubmissionCreateResponse": {
-        "properties": {
-          "submission_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Submission Id"
-          },
-          "task_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Task Id"
-          },
-          "status": {
-            "type": "string",
-            "title": "Status"
-          },
-          "stage": {
-            "type": "string",
-            "title": "Stage"
-          },
-          "message": {
-            "type": "string",
-            "title": "Message"
-          },
-          "reused_existing": {
-            "type": "boolean",
-            "title": "Reused Existing",
-            "default": false
-          },
-          "submit_immediately": {
-            "type": "boolean",
-            "title": "Submit Immediately",
-            "default": false
-          },
-          "submit_succeeded": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Submit Succeeded"
-          },
-          "takealot_submission_id": {
-            "type": "string",
-            "title": "Takealot Submission Id",
-            "default": ""
-          },
-          "official_status": {
-            "type": "string",
-            "title": "Official Status",
-            "default": ""
-          },
-          "error_code": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Error Code"
-          },
-          "error_message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Error Message"
-          },
-          "loadsheet_asset": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ListingLoadsheetAsset"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "validation_issues": {
-            "items": {
-              "$ref": "#/components/schemas/ListingLoadsheetValidationIssue"
-            },
-            "type": "array",
-            "title": "Validation Issues"
-          },
-          "warnings": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Warnings"
-          }
-        },
-        "type": "object",
-        "required": [
-          "status",
-          "stage",
-          "message"
-        ],
-        "title": "ListingSubmissionCreateResponse"
-      },
-      "ListingSubmissionDetailResponse": {
-        "properties": {
-          "submission_id": {
-            "type": "string",
-            "title": "Submission Id"
-          },
-          "tenant_id": {
-            "type": "string",
-            "title": "Tenant Id"
-          },
-          "store_id": {
-            "type": "string",
-            "title": "Store Id"
-          },
-          "listing_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Listing Id"
-          },
-          "task_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Task Id"
-          },
-          "status": {
-            "type": "string",
-            "title": "Status"
-          },
-          "stage": {
-            "type": "string",
-            "title": "Stage"
-          },
-          "review_status": {
-            "type": "string",
-            "title": "Review Status"
-          },
-          "sku": {
-            "type": "string",
-            "title": "Sku"
-          },
-          "barcode": {
-            "type": "string",
-            "title": "Barcode"
-          },
-          "title": {
-            "type": "string",
-            "title": "Title"
-          },
-          "category_id": {
-            "type": "integer",
-            "title": "Category Id"
-          },
-          "category_path": {
-            "type": "string",
-            "title": "Category Path"
-          },
-          "brand_id": {
-            "type": "string",
-            "title": "Brand Id",
-            "default": ""
-          },
-          "brand_name": {
-            "type": "string",
-            "title": "Brand Name",
-            "default": ""
-          },
-          "selling_price": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Selling Price"
-          },
-          "rrp": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rrp"
-          },
-          "stock_quantity": {
-            "type": "integer",
-            "title": "Stock Quantity"
-          },
-          "minimum_leadtime_days": {
-            "type": "integer",
-            "title": "Minimum Leadtime Days"
-          },
-          "takealot_submission_id": {
-            "type": "string",
-            "title": "Takealot Submission Id",
-            "default": ""
-          },
-          "takealot_offer_id": {
-            "type": "string",
-            "title": "Takealot Offer Id",
-            "default": ""
-          },
-          "platform_product_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Platform Product Id"
-          },
-          "official_status": {
-            "type": "string",
-            "title": "Official Status",
-            "default": ""
-          },
-          "error_code": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Error Code"
-          },
-          "error_message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Error Message"
-          },
-          "offer_error_message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Offer Error Message"
-          },
-          "loadsheet_asset": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ListingLoadsheetAsset"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "validation_issues": {
-            "items": {
-              "$ref": "#/components/schemas/ListingLoadsheetValidationIssue"
-            },
-            "type": "array",
-            "title": "Validation Issues"
-          },
-          "warnings": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Warnings"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Created At"
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Updated At"
-          },
-          "submitted_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Submitted At"
-          },
-          "last_checked_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Last Checked At"
-          },
-          "last_status_sync_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Last Status Sync At"
-          },
-          "finalized_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Finalized At"
-          },
-          "content_payload": {
-            "anyOf": [
-              {
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Content Payload"
-          },
-          "loadsheet_payload": {
-            "anyOf": [
-              {
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Loadsheet Payload"
-          },
-          "official_response": {
-            "anyOf": [
-              {
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Official Response"
-          }
-        },
-        "type": "object",
-        "required": [
-          "submission_id",
-          "tenant_id",
-          "store_id",
-          "status",
-          "stage",
-          "review_status",
-          "sku",
-          "barcode",
-          "title",
-          "category_id",
-          "category_path",
-          "stock_quantity",
-          "minimum_leadtime_days",
-          "created_at",
-          "updated_at"
-        ],
-        "title": "ListingSubmissionDetailResponse"
-      },
-      "ListingSubmissionItem": {
-        "properties": {
-          "submission_id": {
-            "type": "string",
-            "title": "Submission Id"
-          },
-          "tenant_id": {
-            "type": "string",
-            "title": "Tenant Id"
-          },
-          "store_id": {
-            "type": "string",
-            "title": "Store Id"
-          },
-          "listing_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Listing Id"
-          },
-          "task_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Task Id"
-          },
-          "status": {
-            "type": "string",
-            "title": "Status"
-          },
-          "stage": {
-            "type": "string",
-            "title": "Stage"
-          },
-          "review_status": {
-            "type": "string",
-            "title": "Review Status"
-          },
-          "sku": {
-            "type": "string",
-            "title": "Sku"
-          },
-          "barcode": {
-            "type": "string",
-            "title": "Barcode"
-          },
-          "title": {
-            "type": "string",
-            "title": "Title"
-          },
-          "category_id": {
-            "type": "integer",
-            "title": "Category Id"
-          },
-          "category_path": {
-            "type": "string",
-            "title": "Category Path"
-          },
-          "brand_id": {
-            "type": "string",
-            "title": "Brand Id",
-            "default": ""
-          },
-          "brand_name": {
-            "type": "string",
-            "title": "Brand Name",
-            "default": ""
-          },
-          "selling_price": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Selling Price"
-          },
-          "rrp": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Rrp"
-          },
-          "stock_quantity": {
-            "type": "integer",
-            "title": "Stock Quantity"
-          },
-          "minimum_leadtime_days": {
-            "type": "integer",
-            "title": "Minimum Leadtime Days"
-          },
-          "takealot_submission_id": {
-            "type": "string",
-            "title": "Takealot Submission Id",
-            "default": ""
-          },
-          "takealot_offer_id": {
-            "type": "string",
-            "title": "Takealot Offer Id",
-            "default": ""
-          },
-          "platform_product_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Platform Product Id"
-          },
-          "official_status": {
-            "type": "string",
-            "title": "Official Status",
-            "default": ""
-          },
-          "error_code": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Error Code"
-          },
-          "error_message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Error Message"
-          },
-          "offer_error_message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Offer Error Message"
-          },
-          "loadsheet_asset": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ListingLoadsheetAsset"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "validation_issues": {
-            "items": {
-              "$ref": "#/components/schemas/ListingLoadsheetValidationIssue"
-            },
-            "type": "array",
-            "title": "Validation Issues"
-          },
-          "warnings": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Warnings"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Created At"
-          },
-          "updated_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Updated At"
-          },
-          "submitted_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Submitted At"
-          },
-          "last_checked_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Last Checked At"
-          },
-          "last_status_sync_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Last Status Sync At"
-          },
-          "finalized_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Finalized At"
-          }
-        },
-        "type": "object",
-        "required": [
-          "submission_id",
-          "tenant_id",
-          "store_id",
-          "status",
-          "stage",
-          "review_status",
-          "sku",
-          "barcode",
-          "title",
-          "category_id",
-          "category_path",
-          "stock_quantity",
-          "minimum_leadtime_days",
-          "created_at",
-          "updated_at"
-        ],
-        "title": "ListingSubmissionItem"
-      },
-      "ListingSubmissionListResponse": {
-        "properties": {
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/ListingSubmissionItem"
-            },
-            "type": "array",
-            "title": "Items"
-          },
-          "total": {
-            "type": "integer",
-            "title": "Total"
-          },
-          "page": {
-            "type": "integer",
-            "title": "Page"
-          },
-          "page_size": {
-            "type": "integer",
-            "title": "Page Size"
-          }
-        },
-        "type": "object",
-        "required": [
-          "items",
-          "total",
-          "page",
-          "page_size"
-        ],
-        "title": "ListingSubmissionListResponse"
-      },
-      "ListingSubmissionStatusItem": {
-        "properties": {
-          "submission_id": {
-            "type": "string",
-            "title": "Submission Id"
-          },
-          "store_id": {
-            "type": "string",
-            "title": "Store Id"
-          },
-          "task_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Task Id"
-          },
-          "status": {
-            "type": "string",
-            "title": "Status"
-          },
-          "stage": {
-            "type": "string",
-            "title": "Stage"
-          },
-          "review_status": {
-            "type": "string",
-            "title": "Review Status"
-          },
-          "official_status": {
-            "type": "string",
-            "title": "Official Status",
-            "default": ""
-          },
-          "takealot_submission_id": {
-            "type": "string",
-            "title": "Takealot Submission Id",
-            "default": ""
-          },
-          "takealot_offer_id": {
-            "type": "string",
-            "title": "Takealot Offer Id",
-            "default": ""
-          },
-          "listing_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Listing Id"
-          },
-          "platform_product_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Platform Product Id"
-          },
-          "last_checked_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Last Checked At"
-          },
-          "last_status_sync_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Last Status Sync At"
-          },
-          "finalized_at": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date-time"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Finalized At"
-          },
-          "message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Message"
-          },
-          "warnings": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Warnings"
-          }
-        },
-        "type": "object",
-        "required": [
-          "submission_id",
-          "store_id",
-          "status",
-          "stage",
-          "review_status"
-        ],
-        "title": "ListingSubmissionStatusItem"
-      },
-      "ListingSubmissionSyncResponse": {
-        "properties": {
-          "store_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Store Id"
-          },
-          "submission_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Submission Id"
-          },
-          "task_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Task Id"
-          },
-          "queued_count": {
-            "type": "integer",
-            "title": "Queued Count",
-            "default": 0
-          },
-          "status": {
-            "type": "string",
-            "title": "Status"
-          },
-          "message": {
-            "type": "string",
-            "title": "Message"
-          },
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/ListingSubmissionStatusItem"
-            },
-            "type": "array",
-            "title": "Items"
-          },
-          "warnings": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Warnings"
-          }
-        },
-        "type": "object",
-        "required": [
-          "status",
-          "message"
-        ],
-        "title": "ListingSubmissionSyncResponse"
       },
       "LoginRequest": {
         "properties": {
@@ -10653,6 +7756,7 @@
           "raw_payload": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -10737,6 +7841,7 @@
           "payload": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -10827,6 +7932,7 @@
           "raw_payload": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -11012,6 +8118,55 @@
         },
         "type": "object",
         "title": "OrderSyncRequest"
+      },
+      "PhoneVerificationCodeRequest": {
+        "properties": {
+          "phone": {
+            "type": "string",
+            "maxLength": 32,
+            "minLength": 8,
+            "title": "Phone"
+          }
+        },
+        "type": "object",
+        "required": [
+          "phone"
+        ],
+        "title": "PhoneVerificationCodeRequest"
+      },
+      "PhoneVerificationCodeResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success",
+            "default": true
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "expires_at": {
+            "type": "string",
+            "title": "Expires At"
+          },
+          "debug_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Debug Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "phone",
+          "expires_at"
+        ],
+        "title": "PhoneVerificationCodeResponse"
       },
       "ProfitPreviewGuardrail": {
         "properties": {
@@ -11710,6 +8865,30 @@
             ],
             "title": "Title"
           },
+          "barcode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Barcode"
+          },
+          "gtin": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gtin"
+          },
           "category_path": {
             "anyOf": [
               {
@@ -11964,6 +9143,96 @@
           "reason"
         ],
         "title": "ReasonRequest"
+      },
+      "RedeemActivationCardRequest": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "maxLength": 64,
+            "minLength": 6,
+            "title": "Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code"
+        ],
+        "title": "RedeemActivationCardRequest"
+      },
+      "RedeemActivationCardResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success",
+            "default": true
+          },
+          "tenant_id": {
+            "type": "string",
+            "title": "Tenant Id"
+          },
+          "plan": {
+            "type": "string",
+            "title": "Plan"
+          },
+          "subscription_status": {
+            "type": "string",
+            "title": "Subscription Status"
+          },
+          "current_period_ends_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Current Period Ends At"
+          },
+          "added_days": {
+            "type": "integer",
+            "title": "Added Days"
+          }
+        },
+        "type": "object",
+        "required": [
+          "tenant_id",
+          "plan",
+          "subscription_status",
+          "current_period_ends_at",
+          "added_days"
+        ],
+        "title": "RedeemActivationCardResponse"
+      },
+      "RegisterRequest": {
+        "properties": {
+          "company_name": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 2,
+            "title": "Company Name"
+          },
+          "phone": {
+            "type": "string",
+            "maxLength": 32,
+            "minLength": 8,
+            "title": "Phone"
+          },
+          "verification_code": {
+            "type": "string",
+            "maxLength": 12,
+            "minLength": 4,
+            "title": "Verification Code"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 8,
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "company_name",
+          "phone",
+          "verification_code",
+          "password"
+        ],
+        "title": "RegisterRequest"
       },
       "SelectionFilterOptionsResponse": {
         "properties": {
@@ -12776,6 +10045,7 @@
           "raw_payload": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -13139,497 +10409,6 @@
         ],
         "title": "SystemSettingResponse"
       },
-      "TakealotBrandItem": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id"
-          },
-          "brand_id": {
-            "type": "string",
-            "title": "Brand Id"
-          },
-          "brand_name": {
-            "type": "string",
-            "title": "Brand Name"
-          },
-          "match_score": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Match Score"
-          },
-          "source": {
-            "type": "string",
-            "title": "Source",
-            "default": "catalog"
-          }
-        },
-        "type": "object",
-        "required": [
-          "id",
-          "brand_id",
-          "brand_name"
-        ],
-        "title": "TakealotBrandItem"
-      },
-      "TakealotBrandSearchResponse": {
-        "properties": {
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/TakealotBrandItem"
-            },
-            "type": "array",
-            "title": "Items"
-          },
-          "total": {
-            "type": "integer",
-            "title": "Total"
-          },
-          "page": {
-            "type": "integer",
-            "title": "Page"
-          },
-          "page_size": {
-            "type": "integer",
-            "title": "Page Size"
-          },
-          "catalog_ready": {
-            "type": "boolean",
-            "title": "Catalog Ready"
-          },
-          "message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Message"
-          }
-        },
-        "type": "object",
-        "required": [
-          "items",
-          "total",
-          "page",
-          "page_size",
-          "catalog_ready"
-        ],
-        "title": "TakealotBrandSearchResponse"
-      },
-      "TakealotCategoryItem": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id"
-          },
-          "category_id": {
-            "type": "integer",
-            "title": "Category Id"
-          },
-          "division": {
-            "type": "string",
-            "title": "Division"
-          },
-          "department": {
-            "type": "string",
-            "title": "Department"
-          },
-          "main_category_id": {
-            "type": "integer",
-            "title": "Main Category Id"
-          },
-          "main_category_name": {
-            "type": "string",
-            "title": "Main Category Name"
-          },
-          "lowest_category_name": {
-            "type": "string",
-            "title": "Lowest Category Name"
-          },
-          "lowest_category_raw": {
-            "type": "string",
-            "title": "Lowest Category Raw"
-          },
-          "path_en": {
-            "type": "string",
-            "title": "Path En"
-          },
-          "path_zh": {
-            "type": "string",
-            "title": "Path Zh"
-          },
-          "min_required_images": {
-            "type": "integer",
-            "title": "Min Required Images"
-          },
-          "compliance_certificates": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Compliance Certificates"
-          },
-          "image_requirement_texts": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Image Requirement Texts"
-          },
-          "required_attributes": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "object"
-                }
-              ]
-            },
-            "type": "array",
-            "title": "Required Attributes"
-          },
-          "optional_attributes": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "object"
-                }
-              ]
-            },
-            "type": "array",
-            "title": "Optional Attributes"
-          },
-          "loadsheet_template_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Loadsheet Template Id"
-          },
-          "loadsheet_template_name": {
-            "type": "string",
-            "title": "Loadsheet Template Name",
-            "default": ""
-          },
-          "attributes_ready": {
-            "type": "boolean",
-            "title": "Attributes Ready",
-            "default": false
-          },
-          "attribute_source": {
-            "type": "string",
-            "title": "Attribute Source",
-            "default": "missing"
-          },
-          "attribute_message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Attribute Message"
-          },
-          "translation_source": {
-            "type": "string",
-            "title": "Translation Source",
-            "default": "rules"
-          },
-          "match_score": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Match Score"
-          },
-          "source": {
-            "type": "string",
-            "title": "Source",
-            "default": "catalog"
-          }
-        },
-        "type": "object",
-        "required": [
-          "id",
-          "category_id",
-          "division",
-          "department",
-          "main_category_id",
-          "main_category_name",
-          "lowest_category_name",
-          "lowest_category_raw",
-          "path_en",
-          "path_zh",
-          "min_required_images"
-        ],
-        "title": "TakealotCategoryItem"
-      },
-      "TakealotCategoryRequirementsResponse": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id"
-          },
-          "category_id": {
-            "type": "integer",
-            "title": "Category Id"
-          },
-          "division": {
-            "type": "string",
-            "title": "Division"
-          },
-          "department": {
-            "type": "string",
-            "title": "Department"
-          },
-          "main_category_id": {
-            "type": "integer",
-            "title": "Main Category Id"
-          },
-          "main_category_name": {
-            "type": "string",
-            "title": "Main Category Name"
-          },
-          "lowest_category_name": {
-            "type": "string",
-            "title": "Lowest Category Name"
-          },
-          "lowest_category_raw": {
-            "type": "string",
-            "title": "Lowest Category Raw"
-          },
-          "path_en": {
-            "type": "string",
-            "title": "Path En"
-          },
-          "path_zh": {
-            "type": "string",
-            "title": "Path Zh"
-          },
-          "min_required_images": {
-            "type": "integer",
-            "title": "Min Required Images"
-          },
-          "compliance_certificates": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Compliance Certificates"
-          },
-          "image_requirement_texts": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Image Requirement Texts"
-          },
-          "required_attributes": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "object"
-                }
-              ]
-            },
-            "type": "array",
-            "title": "Required Attributes"
-          },
-          "optional_attributes": {
-            "items": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "object"
-                }
-              ]
-            },
-            "type": "array",
-            "title": "Optional Attributes"
-          },
-          "loadsheet_template_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Loadsheet Template Id"
-          },
-          "loadsheet_template_name": {
-            "type": "string",
-            "title": "Loadsheet Template Name",
-            "default": ""
-          },
-          "attributes_ready": {
-            "type": "boolean",
-            "title": "Attributes Ready",
-            "default": false
-          },
-          "attribute_source": {
-            "type": "string",
-            "title": "Attribute Source",
-            "default": "missing"
-          },
-          "attribute_message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Attribute Message"
-          },
-          "translation_source": {
-            "type": "string",
-            "title": "Translation Source",
-            "default": "rules"
-          },
-          "match_score": {
-            "anyOf": [
-              {
-                "type": "number"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Match Score"
-          },
-          "source": {
-            "type": "string",
-            "title": "Source",
-            "default": "catalog"
-          },
-          "catalog_ready": {
-            "type": "boolean",
-            "title": "Catalog Ready",
-            "default": true
-          },
-          "message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Message"
-          },
-          "matching_variants": {
-            "type": "integer",
-            "title": "Matching Variants",
-            "default": 1
-          },
-          "raw_payload": {
-            "anyOf": [
-              {
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Raw Payload"
-          }
-        },
-        "type": "object",
-        "required": [
-          "id",
-          "category_id",
-          "division",
-          "department",
-          "main_category_id",
-          "main_category_name",
-          "lowest_category_name",
-          "lowest_category_raw",
-          "path_en",
-          "path_zh",
-          "min_required_images"
-        ],
-        "title": "TakealotCategoryRequirementsResponse"
-      },
-      "TakealotCategorySearchResponse": {
-        "properties": {
-          "items": {
-            "items": {
-              "$ref": "#/components/schemas/TakealotCategoryItem"
-            },
-            "type": "array",
-            "title": "Items"
-          },
-          "total": {
-            "type": "integer",
-            "title": "Total"
-          },
-          "page": {
-            "type": "integer",
-            "title": "Page"
-          },
-          "page_size": {
-            "type": "integer",
-            "title": "Page Size"
-          },
-          "catalog_ready": {
-            "type": "boolean",
-            "title": "Catalog Ready"
-          },
-          "message": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Message"
-          }
-        },
-        "type": "object",
-        "required": [
-          "items",
-          "total",
-          "page",
-          "page_size",
-          "catalog_ready"
-        ],
-        "title": "TakealotCategorySearchResponse"
-      },
       "TakealotWebhookAck": {
         "properties": {
           "accepted": {
@@ -13780,6 +10559,7 @@
           "details": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -13971,6 +10751,7 @@
           "ui_meta": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -14130,6 +10911,7 @@
           "error_details": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -14317,6 +11099,7 @@
           "ui_meta": {
             "anyOf": [
               {
+                "additionalProperties": true,
                 "type": "object"
               },
               {
@@ -14440,6 +11223,16 @@
           "sync_enabled": {
             "type": "boolean",
             "title": "Sync Enabled"
+          },
+          "extension_enabled": {
+            "type": "boolean",
+            "title": "Extension Enabled",
+            "default": false
+          },
+          "listing_enabled": {
+            "type": "boolean",
+            "title": "Listing Enabled",
+            "default": false
           }
         },
         "type": "object",
@@ -14656,6 +11449,17 @@
           "remaining": {
             "$ref": "#/components/schemas/TenantRemaining"
           },
+          "features": {
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "type": "object",
+            "title": "Features"
+          },
+          "is_writable": {
+            "type": "boolean",
+            "title": "Is Writable"
+          },
           "warnings": {
             "items": {
               "type": "string"
@@ -14673,6 +11477,8 @@
           "limits",
           "usage",
           "remaining",
+          "features",
+          "is_writable",
           "warnings"
         ],
         "title": "TenantUsageResponse"
@@ -14946,6 +11752,7 @@
               {
                 "type": "string",
                 "enum": [
+                  "unactivated",
                   "trialing",
                   "active",
                   "past_due",
@@ -15019,6 +11826,13 @@
           "type": {
             "type": "string",
             "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
           }
         },
         "type": "object",
